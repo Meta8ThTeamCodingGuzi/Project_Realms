@@ -26,7 +26,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
         characterStats = GetComponent<ICharacterStats>();
         if (characterStats == null)
         {
-            Debug.LogError($"No ICharacterStats found on {gameObject.name}");
+            Debug.LogError($"이색기 스탯 안달림 {gameObject.name}");
         }
 
         UpdateMoveSpeed();
@@ -34,17 +34,6 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
     #region 전투관련
     public virtual bool IsAlive => characterStats.GetStatValue(StatType.Health) > 0;
-
-    public virtual bool CanAttack(Unit target)
-    {
-        if (target == null || !target.IsAlive || !IsAlive) return false;
-
-        float attackRange = characterStats.GetStatValue(StatType.AttackRange);
-        float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-
-        return distanceToTarget <= attackRange;
-    }
-
     public virtual void Attack(Unit target)
     {
         if (attackCoroutine != null)
@@ -53,6 +42,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
         }
         attackCoroutine = StartCoroutine(AttackRoutine(target));
     }
+
 
     public virtual void StopAttack()
     {
@@ -89,6 +79,16 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
         }
 
         attackCoroutine = null;
+    }
+
+    public virtual bool CanAttack(Unit target)
+    {
+        if (target == null || !target.IsAlive || !IsAlive) return false;
+
+        float attackRange = characterStats.GetStatValue(StatType.AttackRange);
+        float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+
+        return distanceToTarget <= attackRange;
     }
 
     protected virtual void PerformAttack(Unit target)
