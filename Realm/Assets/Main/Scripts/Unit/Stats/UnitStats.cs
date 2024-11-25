@@ -10,17 +10,18 @@ public class UnitStats : MonoBehaviour, ICharacterStats
         public float BaseValue;
     }
 
-    [Header("Base Stats")]
+    [Header("유닛 기본 스탯"), Tooltip("배열에다 스탯타입으로 추가해서 넣으면 기본으로 설정됩니당^^")]
     [SerializeField]
     protected StatInitializer[] initialStats = new StatInitializer[]
     {
+        new StatInitializer { Type = StatType.Level, BaseValue = 1f },
         new StatInitializer { Type = StatType.MaxHealth, BaseValue = 100f },
         new StatInitializer { Type = StatType.Health, BaseValue = 100f },
         new StatInitializer { Type = StatType.Attack, BaseValue = 10f },
         new StatInitializer { Type = StatType.Defense, BaseValue = 10f },
         new StatInitializer { Type = StatType.MoveSpeed, BaseValue = 5f },
         new StatInitializer { Type = StatType.AttackSpeed, BaseValue = 1f },
-        new StatInitializer { Type = StatType.AttackRange, BaseValue = 2f }
+        new StatInitializer { Type = StatType.AttackRange, BaseValue = 2f },
     };
 
     protected Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
@@ -36,6 +37,10 @@ public class UnitStats : MonoBehaviour, ICharacterStats
 
         foreach (var statInit in initialStats)
         {
+            if (stats.ContainsKey(statInit.Type)) 
+            {
+                Debug.Log($"스탯 중복이네용! 혼날래용!~ {statInit.Type}");
+            }
             stats[statInit.Type] = new Stat(statInit.BaseValue);
 
             if (statInit.Type == StatType.MaxHealth)
@@ -49,7 +54,7 @@ public class UnitStats : MonoBehaviour, ICharacterStats
             if (!stats.ContainsKey(statType))
             {
                 stats[statType] = new Stat(0f);
-                Debug.LogWarning($"Stat {statType} was not initialized. Setting to 0.");
+                Debug.LogWarning($"스탯 {statType} 초기화 되지 않았습니다 0으로 초기화됩니다.");
             }
         }
     }
@@ -60,7 +65,7 @@ public class UnitStats : MonoBehaviour, ICharacterStats
         {
             return stat.Value;
         }
-        Debug.LogWarning($"Stat {statType} not found!");
+        Debug.LogWarning($"스탯 {statType} 없음 !!!");
         return 0f;
     }
 
@@ -72,12 +77,9 @@ public class UnitStats : MonoBehaviour, ICharacterStats
             if (statType == StatType.MaxHealth)
             {
                 oldMaxHealth = stat.Value;
-            }
 
-            stat.AddModifier(modifier);
+                stat.AddModifier(modifier);
 
-            if (statType == StatType.MaxHealth)
-            {
                 float newMaxHealth = stat.Value;
                 if (oldMaxHealth > 0)
                 {
@@ -94,6 +96,11 @@ public class UnitStats : MonoBehaviour, ICharacterStats
                     }
                 }
             }
+            else 
+            { 
+                stat.AddModifier(modifier); 
+            }
+                
         }
     }
 

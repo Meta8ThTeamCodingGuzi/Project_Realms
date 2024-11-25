@@ -132,7 +132,8 @@ GameObject:
   m_Component:
   - component: {fileID: 93605041}
   - component: {fileID: 93605040}
-  - component: {fileID: 93605039}
+  - component: {fileID: 93605042}
+  - component: {fileID: 93605043}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -140,29 +141,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &93605039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 93605038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73fbec874cdc82446b4df37c71e893e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialStats:
-  - Type: 0
-    BaseValue: 100
-  - Type: 1
-    BaseValue: 100
-  - Type: 2
-    BaseValue: 10
-  - Type: 3
-    BaseValue: 10
-  - Type: 4
-    BaseValue: 5
 --- !u!114 &93605040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,6 +169,55 @@ Transform:
   - {fileID: 1374354709}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &93605042
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93605038}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &93605043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93605038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73fbec874cdc82446b4df37c71e893e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialStats:
+  - Type: 1
+    BaseValue: 100
+  - Type: 2
+    BaseValue: 100
+  - Type: 3
+    BaseValue: 10
+  - Type: 4
+    BaseValue: 10
+  - Type: 5
+    BaseValue: 5
+  - Type: 6
+    BaseValue: 1
+  - Type: 7
+    BaseValue: 2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

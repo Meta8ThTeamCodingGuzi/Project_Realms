@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Stat : MonoBehaviour
+public class Stat
 {
     private float baseValue;
     private readonly List<StatModifier> modifiers;
