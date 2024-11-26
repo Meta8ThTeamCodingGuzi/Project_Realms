@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using static UnityEngine.CullingGroup;
 
-public abstract class StateHandler<T> :MonoBehaviour
+public abstract class StateHandler<T>
 {
     public T target;
     
