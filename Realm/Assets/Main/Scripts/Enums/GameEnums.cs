@@ -11,13 +11,13 @@ public enum StatType
     AttackSpeed,
     AttackRange,
     ExpRange,
-    DropExp,
+    DropExp
 }
 
-public enum SkillStatType 
+public enum SkillStatType
 {
     #region 스킬 공통 스탯
-    
+
     SkillLevel,
     Damage,
     Duration,
