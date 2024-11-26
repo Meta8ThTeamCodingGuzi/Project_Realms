@@ -21,6 +21,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
     protected virtual void Initialize()
     {
         agent = GetComponent<NavMeshAgent>();
+
         if (agent == null)
         {
             agent = gameObject.AddComponent<NavMeshAgent>();
@@ -31,6 +32,8 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
         {
             Debug.LogError($"이색기 스탯 안달림 {gameObject.name}");
         }
+
+        characterStats.InitializeStats();
 
         UpdateMoveSpeed();
     }
@@ -158,7 +161,6 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
     protected virtual void UpdateMoveSpeed()
     {
-        print("업데이트무브스피드 호출");
         if (characterStats != null)
         {
             MoveSpeed = characterStats.GetStatValue(StatType.MoveSpeed);

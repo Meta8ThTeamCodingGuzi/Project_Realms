@@ -27,10 +27,14 @@ public class Monster : Unit, IPoolable
         {
             patrolPoint.Add(setPatrolTransform.position);
         }
-        m_StateHandler =  new MonsterStateHandler(this);
-        base.Initialize();
 
+        if (m_StateHandler == null)
+        {
+            m_StateHandler = new MonsterStateHandler(this);
+        }
         m_StateHandler.Initialize();
+
+        base.Initialize();
 
     }
     public void targetMove(Unit unit)
