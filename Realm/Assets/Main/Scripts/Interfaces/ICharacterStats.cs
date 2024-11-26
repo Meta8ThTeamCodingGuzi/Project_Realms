@@ -1,5 +1,6 @@
 public interface ICharacterStats
 {
+    void InitializeStats();
     /// <summary>
     /// 특정 스탯의 최종 계산된 값을 반환.
     /// 스탯의 현재 값만 필요할 때 사용.

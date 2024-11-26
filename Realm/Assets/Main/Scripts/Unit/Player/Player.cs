@@ -25,12 +25,17 @@ public class Player : Unit
 
     protected override void Initialize()
     {
-        base.Initialize();
         if (characterStats == null)
         {
-            UnitStats unitStats = gameObject.AddComponent<UnitStats>();
-            characterStats = unitStats;
+            // PlayerStat 컴포넌트를 찾아서 사용
+            characterStats = GetComponent<PlayerStat>();
+            if (characterStats == null)
+            {
+                Debug.LogError("PlayerStat component not found!");
+            }
         }
+        characterStats.InitializeStats();
+        base.Initialize();
     }
 
     private void Update()

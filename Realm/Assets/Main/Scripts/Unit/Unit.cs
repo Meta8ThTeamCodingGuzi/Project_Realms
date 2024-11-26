@@ -154,6 +154,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
     protected virtual void UpdateMoveSpeed()
     {
+        print("업데이트무브스피드 호출");
         if (characterStats != null)
         {
             MoveSpeed = characterStats.GetStatValue(StatType.MoveSpeed);

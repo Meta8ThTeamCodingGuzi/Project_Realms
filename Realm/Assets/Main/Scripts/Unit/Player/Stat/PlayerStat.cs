@@ -36,7 +36,7 @@ public class PlayerStat : UnitStats
         new StatInitializer
         {
             Type = StatType.MoveSpeed,
-            BaseValue = 1f,
+            BaseValue = 7f,
             PointIncrease = 0.5f    
         },
         new StatInitializer

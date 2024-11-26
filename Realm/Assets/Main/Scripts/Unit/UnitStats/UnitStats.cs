@@ -16,21 +16,18 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
 
     protected Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
 
-    protected virtual void Awake()
-    {
-        InitializeStats();
-    }
-
     protected abstract StatInitializer[] GetInitialStats();
 
-    protected virtual void InitializeStats()
+    public virtual void InitializeStats()
     {
         stats.Clear();
-
         var initialStats = GetInitialStats();
+
+        Debug.Log($"Initializing stats with {initialStats.Length} values");
 
         foreach (var statInit in initialStats)
         {
+            Debug.Log($"Initializing {statInit.Type} with base value {statInit.BaseValue}");
             stats[statInit.Type] = new FloatStat(statInit.BaseValue, statInit.PointIncrease);
 
             if (statInit.Type == StatType.MaxHealth)
@@ -44,7 +41,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
             if (!stats.ContainsKey(statType))
             {
                 stats[statType] = new FloatStat(0f);
-                Debug.LogWarning($"스탯 {statType} 초기화 되지 않았습니다 0으로 초기화됩니다.");
+                Debug.LogWarning($"스탯 {statType} 이 없는데용");
             }
         }
     }
