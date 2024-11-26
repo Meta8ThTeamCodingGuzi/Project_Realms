@@ -28,9 +28,14 @@ public class CameraObstacleController : MonoBehaviour, IInitializable
 
     public void Update()
     {
+       
+    }
+
+    private void RayCastObstacleCleaner()
+    {
         RestoreTransparency();
 
-        foreach (Transform rayPos in rayPositions) 
+        foreach (Transform rayPos in rayPositions)
         {
             Vector3 directionToPlayer = (playerTarget.transform.position - rayPos.position).normalized;
             Ray ray = new Ray(rayPos.position, directionToPlayer);
