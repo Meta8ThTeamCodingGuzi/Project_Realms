@@ -19,7 +19,7 @@
 </details>
 
 <details>
-<summary>### 김현지</summary>
+<summary> 김현지</summary>
 
 - [ ] Task 1
 - [ ] Task 2
