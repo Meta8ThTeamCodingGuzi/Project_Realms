@@ -1,22 +1,22 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Player : Unit
 {
     [System.Serializable]
     public class LevelData
     {
-        public float baseExpRequired = 100f;  // 1·¹º§¿¡¼­ 2·¹º§·Î °¡´Âµ¥ ÇÊ¿äÇÑ °æÇèÄ¡
+        public float baseExpRequired = 100f;  // 1ë ˆë²¨ì—ì„œ 2ë ˆë²¨ë¡œ ê°€ëŠ”ë° í•„ìš”í•œ ê²½í—˜ì¹˜
 
-        [Tooltip("·¹º§ ±¸°£º° °æÇèÄ¡ Áõ°¡À²")]
-        public float[] growthRates = new float[] { 1.2f, 1.4f, 1.6f };  // ±¸°£º° Áõ°¡À²
+        [Tooltip("ë ˆë²¨ êµ¬ê°„ë³„ ê²½í—˜ì¹˜ ì¦ê°€ìœ¨")]
+        public float[] growthRates = new float[] { 1.2f, 1.4f, 1.6f };  // êµ¬ê°„ë³„ ì¦ê°€ìœ¨
 
-        [Tooltip("Áõ°¡À²ÀÌ º¯°æµÇ´Â ·¹º§")]
-        public int[] levelBreakpoints = new int[] { 10, 30, 50 };  // ±¸°£ ºĞ±âÁ¡
+        [Tooltip("ì¦ê°€ìœ¨ì´ ë³€ê²½ë˜ëŠ” ë ˆë²¨")]
+        public int[] levelBreakpoints = new int[] { 10, 30, 50 };  // êµ¬ê°„ ë¶„ê¸°ì 
     }
 
-
     [SerializeField] private LevelData levelData;
-    private float totalExp = 0f;  // ´©Àû °æÇèÄ¡
+    private float totalExp = 0f;  // ëˆ„ì  ê²½í—˜ì¹˜
+    private LayerMask groundLayerMask;
 
     protected override void Awake()
     {
@@ -26,7 +26,7 @@ public class Player : Unit
     {
         if (characterStats == null)
         {
-            // PlayerStat ÄÄÆ÷³ÍÆ®¸¦ Ã£¾Æ¼­ »ç¿ë
+            // PlayerStat ì»´í¬ë„ŒíŠ¸ë¥¼ ì°¾ì•„ì„œ ì‚¬ìš©
             characterStats = GetComponent<PlayerStat>();
             if (characterStats == null)
             {
@@ -34,6 +34,8 @@ public class Player : Unit
             }
         }
         characterStats.InitializeStats();
+        groundLayerMask = LayerMask.GetMask("Ground");
+        Debug.Log($"Ground Layer Mask: {groundLayerMask}");
         base.Initialize();
     }
 
@@ -48,25 +50,35 @@ public class Player : Unit
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+            Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 1f);
+
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
             {
+                Debug.Log($"Hit object layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
                 if (hit.collider.TryGetComponent<Monster>(out Monster monster))
                 {
                     Attack(monster);
+                    return;
                 }
-                else
-                {
-                    MoveTo(hit.point);
-                }
+            }
+
+            if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
+            {
+                Debug.Log($"Ground hit at: {hit.point}");
+                MoveTo(hit.point);
+            }
+            else
+            {
+                Debug.Log("No ground detected");
             }
         }
     }
 
-    #region ·¹º§ ½Ã½ºÅÛ
+    #region ë ˆë²¨ ì‹œìŠ¤í…œ
     public float TotalExp => totalExp;
     public float ExpToNextLevel => CalculateRequiredExp(GetCurrentLevel());
 
-    // ÇöÀç ·¹º§¿¡¼­ÀÇ °æÇèÄ¡ ºñÀ² °è»ê
+    // í˜„ì¬ ë ˆë²¨ì—ì„œì˜ ê²½í—˜ì¹˜ ë¹„ìœ¨ ê³„ì‚°
     public float ExpPercentage
     {
         get
@@ -86,11 +98,11 @@ public class Player : Unit
         float oldExp = totalExp;
         totalExp += amount;
 
-        // ·¹º§¾÷ Ã¼Å©
+        // ë ˆë²¨ì—… ì²´í¬
         int oldLevel = CalculateLevelFromExp(oldExp);
         int newLevel = CalculateLevelFromExp(totalExp);
 
-        // ·¹º§¾÷ÀÌ ¹ß»ıÇß´Ù¸é
+        // ë ˆë²¨ì—…ì´ ë°œìƒí–ˆë‹¤ë©´
         if (newLevel > oldLevel)
         {
             for (int i = oldLevel + 1; i <= newLevel; i++)
@@ -100,7 +112,7 @@ public class Player : Unit
         }
     }
 
-    // ´©Àû °æÇèÄ¡·Î ·¹º§ °è»ê
+    // ëˆ„ì  ê²½í—˜ì¹˜ë¡œ ë ˆë²¨ ê³„ì‚°
     private int CalculateLevelFromExp(float exp)
     {
         int level = 1;
@@ -115,7 +127,7 @@ public class Player : Unit
         return level;
     }
 
-    // Æ¯Á¤ ·¹º§±îÁö ÇÊ¿äÇÑ ÃÑ °æÇèÄ¡ °è»ê
+    // íŠ¹ì • ë ˆë²¨ê¹Œì§€ í•„ìš”í•œ ì´ ê²½í—˜ì¹˜ ê³„ì‚°
     private float CalculateTotalExpForLevel(int level)
     {
         float total = 0f;
@@ -128,8 +140,8 @@ public class Player : Unit
 
     private float CalculateRequiredExp(int level)
     {
-        // ÇöÀç ·¹º§¿¡ ÇØ´çÇÏ´Â Áõ°¡À² Ã£±â
-        float currentGrowthRate = levelData.growthRates[0];  // ±âº» Áõ°¡À²
+        // í˜„ì¬ ë ˆë²¨ì— í•´ë‹¹í•˜ëŠ” ì¦ê°€ìœ¨ ì°¾ê¸°
+        float currentGrowthRate = levelData.growthRates[0];  // ê¸°ë³¸ ì¦ê°€ìœ¨
 
         for (int i = 0; i < levelData.levelBreakpoints.Length; i++)
         {
@@ -139,17 +151,17 @@ public class Player : Unit
             }
         }
 
-        // ·¹º§º° ÇÊ¿ä °æÇèÄ¡ °è»ê
+        // ë ˆë²¨ë³„ í•„ìš” ê²½í—˜ì¹˜ ê³„ì‚°
         return levelData.baseExpRequired * Mathf.Pow(currentGrowthRate, level - 1);
     }
 
     private void PerformLevelUp(int newLevel)
     {
-        // ·¹º§ Áõ°¡
+        // ë ˆë²¨ ì¦ê°€
         StatModifier levelMod = new StatModifier(1f, StatModifierType.Flat, this);
         characterStats.AddModifier(StatType.Level, levelMod);
 
-        // ·¹º§¾÷ º¸»ó
+        // ë ˆë²¨ì—… ë³´ìƒ
         if (TryGetComponent<StatPointSystem>(out var statPointSystem))
         {
             statPointSystem.AddStatPoints(5);
@@ -161,7 +173,7 @@ public class Player : Unit
     protected virtual void OnLevelUp()
     {
         Debug.Log($"Level Up! Current Level: {GetCurrentLevel()}");
-        // ·¹º§¾÷ ÀÌÆåÆ®, »ç¿îµå µî Ãß°¡
+        // ë ˆë²¨ì—… ì´í™íŠ¸, ì‚¬ìš´ë“œ ë“± ì¶”ê°€
     }
 
     private int GetCurrentLevel()
