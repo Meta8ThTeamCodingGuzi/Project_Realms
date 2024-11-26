@@ -7,9 +7,11 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 {
     protected NavMeshAgent agent;
     protected ICharacterStats characterStats;
+    public ICharacterStats CharacterStats => characterStats;
 
-    private float lastAttackTime;
-    private Coroutine attackCoroutine;
+
+    protected float lastAttackTime;
+    protected Coroutine attackCoroutine;
 
     protected virtual void Awake()
     {
@@ -61,6 +63,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
         {
             if (CanAttack(target))
             {
+                agent.ResetPath();
                 float currentTime = Time.time;
                 float attackSpeed = characterStats.GetStatValue(StatType.AttackSpeed);
                 float timeBetweenAttacks = 1f / attackSpeed;
@@ -82,6 +85,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
         attackCoroutine = null;
     }
+  
 
     public virtual bool CanAttack(Unit target)
     {

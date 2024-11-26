@@ -12,7 +12,7 @@ public class ProjectileSkillStat : SkillStat
         {
             Type = SkillStatType.Damage,
             BaseValue = 10f,
-            GrowthValue = 5f,     // 레벨당 고정값 증가
+            GrowthValue = 5f,      // 레벨당 고정값 증가
             growthPercent = 10f    // 레벨당 % 증가
         },
         new StatInitializer 

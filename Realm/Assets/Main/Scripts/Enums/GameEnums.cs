@@ -11,6 +11,7 @@ public enum StatType
     AttackSpeed,
     AttackRange,
     ExpRange,
+    DropExp,
 }
 
 public enum SkillStatType 
