@@ -13,11 +13,13 @@ public class MonsterAttackState : State<Monster>
     public override void OnEnter()
     {
         target.Attack(target.targetPlayer);
+        base.OnEnter();
     }
 
     public override void OnExit()
     {
         target.StopAttack();
+        base.OnExit();
     }
 
     public override void OnUpdate()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,21 +15,23 @@ public class MonsterIdleState : State<Monster>
     public override void OnEnter()
     {
         target.nextPatrol();
+        base.OnEnter();
     }
 
     public override void OnExit()
     {
         patrolTime = 0;
+        base.OnExit();
     }
 
     public override void OnUpdate()
     {
-        patrolTime = Time.deltaTime;
+        patrolTime += Time.deltaTime;
         if (target.CharacterStats.GetStatValue(StatType.Health) <= 0)
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
         }
-        if (patrolTime > 3f)
+        if (patrolTime > 5f)
         {
             target.M_StateHandler.TransitionTo(new MonsterMoveState(target));
         }

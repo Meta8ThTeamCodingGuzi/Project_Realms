@@ -29,7 +29,7 @@ public class MonsterMoveState : State<Monster>
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
         }
-        target.MoveTo(target.nowTarget.position);
+        target.MoveTo(target.nowTarget);
         if (target.ReachNowPoint())
         {
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));

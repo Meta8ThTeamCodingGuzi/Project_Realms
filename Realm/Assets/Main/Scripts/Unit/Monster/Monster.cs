@@ -12,21 +12,30 @@ public class Monster : Unit, IPoolable
     public Player targetPlayer;
 
     [SerializeField]
-    private Transform[] setPatrolTransform;
+    private Transform[] setPatrolTransforms;
+
+    private List<Vector3> patrolPoint = new List<Vector3>();
 
 
     private int patrolKey = 0;
-    public Transform nowTarget;
+    public Vector3 nowTarget;
 
 
     protected override void Initialize()
-    {
-        m_StateHandler = GetComponent<MonsterStateHandler>();
+    { 
+        foreach (Transform setPatrolTransform in setPatrolTransforms)
+        {
+            patrolPoint.Add(setPatrolTransform.position);
+        }
+
+        m_StateHandler =  new MonsterStateHandler(this);
+        m_StateHandler.Initialize();
+
         base.Initialize();
     }
     public bool ReachNowPoint()
     {
-        float distanceToTarget = Vector3.Distance(transform.position, nowTarget.position);
+        float distanceToTarget = Vector3.Distance(transform.position, nowTarget);
 
         return distanceToTarget <= agent.stoppingDistance ||
        !agent.hasPath ||
@@ -89,13 +98,13 @@ public class Monster : Unit, IPoolable
     public void nextPatrol()
     {
         patrolKey++;
-        if (patrolKey > setPatrolTransform.Length)
+        if (patrolKey >= patrolPoint.Count)
         { 
             patrolKey = 0;
-            nowTarget = setPatrolTransform[patrolKey];
+            nowTarget = patrolPoint[patrolKey];
             return;
         }
-        nowTarget = setPatrolTransform[patrolKey];
+        nowTarget = patrolPoint[patrolKey];
     }
     public void OnReturnToPool()
     {
