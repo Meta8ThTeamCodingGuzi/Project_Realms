@@ -8,6 +8,7 @@ public class MonsterMoveState : State<Monster>
     {
         this.target = target;
     }
+    private float MoveStateTime = 0;
 
     public override void OnEnter()
     {
@@ -16,14 +17,15 @@ public class MonsterMoveState : State<Monster>
 
     public override void OnExit()
     {
+        MoveStateTime = 0;
         base.OnExit();
     }
 
     public override void OnUpdate()
     {
+        MoveStateTime += Time.deltaTime;
         if (!target.IsAlive)
-        {
-            
+        {            
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
             return;
         }
@@ -36,7 +38,7 @@ public class MonsterMoveState : State<Monster>
         { 
             target.MoveTo(target.nowTarget);
         }
-        if (target.HasReachedDestination())
+        if (target.HasReachedDestination()|| MoveStateTime>15f)
         {
             target.StopMoving();
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
