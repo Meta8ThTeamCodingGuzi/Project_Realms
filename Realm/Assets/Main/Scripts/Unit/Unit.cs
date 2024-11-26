@@ -164,11 +164,34 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
             MoveSpeed = characterStats.GetStatValue(StatType.MoveSpeed);
         }
     }
+    public virtual bool HasReachedDestination()
+    {
+        // 경로가 없거나 에이전트가 비활성화된 경우
+        if (agent == null || !agent.isActiveAndEnabled) return false;
+
+        // 경로가 유효하지 않은 경우
+        if (agent.pathStatus == NavMeshPathStatus.PathInvalid) return false;
+
+        // 남은 거리가 거의 없고 경로가 유효한 경우
+        if (!agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     #endregion
 
     #region 기즈모 관련
 #if UNITY_EDITOR
-   
+
     private void OnDrawGizmosSelected()
     {
         if (characterStats != null)

@@ -27,20 +27,11 @@ public class Monster : Unit, IPoolable
         {
             patrolPoint.Add(setPatrolTransform.position);
         }
-
         m_StateHandler =  new MonsterStateHandler(this);
+        base.Initialize();
+
         m_StateHandler.Initialize();
 
-        base.Initialize();
-    }
-    public bool ReachNowPoint()
-    {
-        float distanceToTarget = Vector3.Distance(transform.position, nowTarget);
-
-        return distanceToTarget <= agent.stoppingDistance ||
-       !agent.hasPath ||
-       agent.pathStatus == NavMeshPathStatus.PathInvalid ||
-       agent.velocity.sqrMagnitude < 0.1f;
     }
     public void targetMove(Unit unit)
     {

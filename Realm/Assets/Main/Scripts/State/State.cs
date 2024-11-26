@@ -30,7 +30,7 @@ public abstract class State<T> : IState where T : Component
 
     public virtual void OnExit()
     {
-        Debug.Log($"{this.GetType().Name} 종료");
+        Debug.Log($"{this.GetType().Name} 종료"); 
     }
 
     public virtual void OnUpdate()
