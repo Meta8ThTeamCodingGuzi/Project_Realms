@@ -21,21 +21,25 @@ public class MonsterMoveState : State<Monster>
 
     public override void OnUpdate()
     {
+        if (!target.IsAlive)
+        {
+            
+            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+            return;
+        }
         if (target.FindPlayer(6f))
         {
             target.M_StateHandler.TransitionTo(new FollowState(target));
+            return;
         }
-        if (target.CharacterStats.GetStatValue(StatType.Health) <= 0)
-        {
-            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+        if (!target.IsMoving) 
+        { 
+            target.MoveTo(target.nowTarget);
         }
-        target.MoveTo(target.nowTarget);
-        if (target.ReachNowPoint())
+        if (target.HasReachedDestination())
         {
+            target.StopMoving();
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
         }
-
-
-
     }
 }

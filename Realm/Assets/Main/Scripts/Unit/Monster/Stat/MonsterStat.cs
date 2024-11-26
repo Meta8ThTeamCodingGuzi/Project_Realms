@@ -53,7 +53,7 @@ public class MonsterStat : UnitStats
         },
         new StatInitializer()
         {
-            Type =StatType.MaxHealth,
+            Type = StatType.MaxHealth,
             BaseValue = 250f,
             PointIncrease = 50f,
         },

@@ -41,7 +41,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
             if (!stats.ContainsKey(statType))
             {
                 stats[statType] = new FloatStat(0f);
-                Debug.LogWarning($"스탯 {statType} 이 없는데용");
+                Debug.Log($"이 객체는 {statType} 스탯 안쓰는 스탯인가요?");
             }
         }
     }

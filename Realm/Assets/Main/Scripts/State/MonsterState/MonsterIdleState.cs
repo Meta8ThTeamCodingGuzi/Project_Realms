@@ -27,8 +27,9 @@ public class MonsterIdleState : State<Monster>
     public override void OnUpdate()
     {
         patrolTime += Time.deltaTime;
-        if (target.CharacterStats.GetStatValue(StatType.Health) <= 0)
+        if (!target.IsAlive)
         {
+            Debug.Log($"{target.CharacterStats.GetStatValue(StatType.Health)}");
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
         }
         if (patrolTime > 5f)
