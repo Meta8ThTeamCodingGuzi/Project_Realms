@@ -21,6 +21,18 @@ public class FollowState : State<Monster>
 
     public override void OnUpdate()
     {
-        base.OnUpdate();
+        if(target.CharacterStats.GetStatValue(StatType.Health) <= 0)
+        {
+            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+        }
+        if (target.CanAttack(target.targetPlayer))
+        {
+            target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
+        }
+        if (!target.FindPlayer(10f))
+        {
+            target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+        }
+        target.targetMove(target.targetPlayer);
     }
 }

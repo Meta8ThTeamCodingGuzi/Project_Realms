@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MonsterIdleState : State<Monster>
 {
-    float patrol;
+    private float patrolTime;
 
     public MonsterIdleState(Monster target) : base(target) 
     { 
@@ -13,27 +13,29 @@ public class MonsterIdleState : State<Monster>
 
     public override void OnEnter()
     {
-        base.OnEnter();
+        target.nextPatrol();
     }
 
     public override void OnExit()
     {
-        patrol = 0;
+        patrolTime = 0;
     }
 
     public override void OnUpdate()
     {
-        float patrol = Time.deltaTime;
-        if(target.characterStats.)
-        if (patrol > 3f)
+        patrolTime = Time.deltaTime;
+        if (target.CharacterStats.GetStatValue(StatType.Health) <= 0)
         {
-            target.M_StateGandler.TransitionTo(new MonsterMoveState(target));
+            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+        }
+        if (patrolTime > 3f)
+        {
+            target.M_StateHandler.TransitionTo(new MonsterMoveState(target));
         }
         if (target.FindPlayer(10f))
         {
-            target.M_StateGandler.TransitionTo(new FollowState(target));
+            target.M_StateHandler.TransitionTo(new FollowState(target));
         }
-
     }
 
 }

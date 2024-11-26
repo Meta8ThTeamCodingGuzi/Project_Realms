@@ -7,6 +7,8 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 {
     protected NavMeshAgent agent;
     protected ICharacterStats characterStats;
+    public ICharacterStats CharacterStats => characterStats;
+
 
     protected float lastAttackTime;
     protected Coroutine attackCoroutine;
@@ -83,6 +85,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
         attackCoroutine = null;
     }
+  
 
     public virtual bool CanAttack(Unit target)
     {
