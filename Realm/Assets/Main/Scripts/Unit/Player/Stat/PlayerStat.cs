@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerStat : UnitStats
 {
@@ -13,6 +14,18 @@ public class PlayerStat : UnitStats
             Type = StatType.Level,
             BaseValue = 1f,
             PointIncrease = 0f
+        },
+        new StatInitializer
+        {
+            Type = StatType.AttackRange,
+            BaseValue = 1f,
+            PointIncrease = 0.5f
+        },
+        new StatInitializer 
+        {
+            Type = StatType.AttackSpeed,
+            BaseValue = 1f,
+            PointIncrease = 0.5f
         },
         new StatInitializer
         {

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Skill : MonoBehaviour
 {
+    public string skillName = "기본 스킬";
     [SerializeField] protected SkillStat skillStat;
     protected int skillLevel = 1;
 

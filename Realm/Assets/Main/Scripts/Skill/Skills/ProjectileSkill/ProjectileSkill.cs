@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ProjectileSkill : Skill
 {
+    
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform firePoint;
     private ProjectileSkillStat projectileStats;
