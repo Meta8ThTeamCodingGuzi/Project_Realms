@@ -8,8 +8,8 @@ public class WeaponItem : Item
     protected override void ApplyStats(ICharacterStats stats)
     {
         //              ƒ≥∏Ø≈ÕΩ∫≈»,   Ω∫≈» ¡æ∑˘    , æ∆¿Ã≈€ Ω∫≈» ,  µ°/∞ˆø¨ªÍ »Æ¿Œ
-        ApplyStatModifier(stats, StatType.Attack, attackBonus, StatModifierType.Flat);
+        ApplyStatModifier(stats, StatType.Damage, attackBonus, StatModifierType.Flat);
 
-        ApplyStatModifier(stats, StatType.Attack, attackPercentBonus, StatModifierType.PercentAdd);
+        ApplyStatModifier(stats, StatType.Damage, attackPercentBonus, StatModifierType.PercentAdd);
     }
 }

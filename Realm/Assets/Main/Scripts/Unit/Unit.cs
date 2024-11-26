@@ -1,6 +1,7 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using UnityEditor;
 
 public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 {
@@ -26,13 +27,14 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
         characterStats = GetComponent<ICharacterStats>();
         if (characterStats == null)
         {
-            Debug.LogError($"ÀÌ»ö±â ½ºÅÈ ¾È´Þ¸² {gameObject.name}");
+            Debug.LogError($"ì´ìƒ‰ê¸° ìŠ¤íƒ¯ ì•ˆë‹¬ë¦¼ {gameObject.name}");
         }
 
         UpdateMoveSpeed();
     }
 
-    #region ÀüÅõ°ü·Ã
+
+    #region ì „íˆ¬ê´€ë ¨
     public virtual bool IsAlive => characterStats.GetStatValue(StatType.Health) > 0;
     public virtual void Attack(Unit target)
     {
@@ -71,7 +73,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
             }
             else
             {
-                // ´ë»óÀÌ °ø°Ý ¹üÀ§¸¦ ¹þ¾î³µÀ» °æ¿ì
+                // ëŒ€ìƒì´ ê³µê²© ë²”ìœ„ë¥¼ ë²—ì–´ë‚¬ì„ ê²½ìš°
                 MoveTo(target.transform.position);
             }
 
@@ -95,7 +97,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
     {
         if (target != null && target.IsAlive)
         {
-            float damage = characterStats.GetStatValue(StatType.Attack);
+            float damage = characterStats.GetStatValue(StatType.Damage);
             target.TakeDamage(damage);
             OnAttackPerformed(target);
         }
@@ -103,8 +105,8 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
     protected virtual void OnAttackPerformed(Unit target)
     {
-        // ¿©±â¿¡ °ø°Ý ÀÌÆåÆ® , ¾Ö´Ï¸ÞÀÌ¼Çµî µé¾î°¡¸é µÉµí.
-        Debug.Log($"{gameObject.name}ÀÌ(°¡) {target.gameObject.name}À»(¸¦) °ø°ÝÇß½À´Ï´Ù.");
+        // ì—¬ê¸°ì— ê³µê²© ì´íŽ™íŠ¸ , ì• ë‹ˆë©”ì´ì…˜ë“± ë“¤ì–´ê°€ë©´ ë ë“¯.
+        Debug.Log($"{gameObject.name}ì´(ê°€) {target.gameObject.name}ì„(ë¥¼) ê³µê²©í–ˆìŠµë‹ˆë‹¤.");
     }
 
     public virtual void TakeDamage(float damage)
@@ -113,11 +115,11 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
         float defense = characterStats.GetStatValue(StatType.Defense);
 
-        // ÃÖÁ¾µ¥¹ÌÁö = µ¥¹ÌÁö * (100 / (100 + ¹æ¾î·Â))
+        // ìµœì¢…ë°ë¯¸ì§€ = ë°ë¯¸ì§€ * (100 / (100 + ë°©ì–´ë ¥))
         float damageMultiplier = 100f / (100f + defense);
         float finalDamage = damage * damageMultiplier;
 
-        // ÃÖ¼Ò 1ÀÇ µ¥¹ÌÁö´Â µé¾î°¡µµ·Ï ¼³Á¤ÇßÀ¾´Ï´Ù.
+        // ìµœì†Œ 1ì˜ ë°ë¯¸ì§€ëŠ” ë“¤ì–´ê°€ë„ë¡ ì„¤ì •í–ˆìë‹ˆë‹¤.
         finalDamage = Mathf.Max(1f, finalDamage);
 
         StatModifier healthMod = new StatModifier(-finalDamage, StatModifierType.Flat);
@@ -125,7 +127,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
     }
     #endregion
 
-    #region ¿òÁ÷ÀÓ °ü·Ã
+    #region ì›€ì§ìž„ ê´€ë ¨
     public virtual float MoveSpeed
     {
         get => agent.speed;
@@ -157,5 +159,37 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
             MoveSpeed = characterStats.GetStatValue(StatType.MoveSpeed);
         }
     }
+    #endregion
+
+    #region ê¸°ì¦ˆëª¨ ê´€ë ¨
+#if UNITY_EDITOR
+   
+    private void OnDrawGizmosSelected()
+    {
+        if (characterStats != null)
+        {
+            float attackRange = characterStats.GetStatValue(StatType.AttackRange);
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.2f);
+            Gizmos.DrawSphere(transform.position, attackRange);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (characterStats != null)
+        {
+            float attackRange = characterStats.GetStatValue(StatType.AttackRange);
+            Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
+            Gizmos.DrawWireSphere(transform.position, attackRange);
+
+            if (UnityEditor.Selection.activeGameObject == gameObject)
+            {
+                Gizmos.color = new Color(1f, 0f, 0f, 0.1f);
+                Gizmos.DrawSphere(transform.position, attackRange);
+            }
+        }
+    }
+
+#endif
     #endregion
 }

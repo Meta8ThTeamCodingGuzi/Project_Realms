@@ -67525,8 +67525,8 @@ GameObject:
   - component: {fileID: 2595500537072334322}
   - component: {fileID: 8346237446671459321}
   - component: {fileID: 5182518961806019363}
+  - component: {fileID: 1295231472853041351}
   - component: {fileID: 5604505093730366554}
-  - component: {fileID: 8245483092716568530}
   - component: {fileID: 4788100504179467450}
   m_Layer: 0
   m_Name: Player
@@ -67595,6 +67595,43 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1295231472853041351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8981643832512085641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b950f6b86b29f284296d40bda15fc0fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialStats:
+  - Type: 0
+    BaseValue: 1
+    PointIncrease: 0
+  - Type: 3
+    BaseValue: 5
+    PointIncrease: 3
+  - Type: 5
+    BaseValue: 1
+    PointIncrease: 0.5
+  - Type: 1
+    BaseValue: 500
+    PointIncrease: 0.5
+  - Type: 4
+    BaseValue: 20
+    PointIncrease: 30
+  - Type: 8
+    BaseValue: 3
+    PointIncrease: 2
+  - Type: 7
+    BaseValue: 3
+    PointIncrease: 2
+  - Type: 6
+    BaseValue: 3
+    PointIncrease: 2
 --- !u!114 &5604505093730366554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67607,33 +67644,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ebdb5cfa4ad9cc408e8f33c39011bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8245483092716568530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8981643832512085641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73fbec874cdc82446b4df37c71e893e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialStats:
-  - Type: 0
-    BaseValue: 100
-  - Type: 1
-    BaseValue: 100
-  - Type: 2
-    BaseValue: 10
-  - Type: 3
-    BaseValue: 10
-  - Type: 4
-    BaseValue: 5
-  - Type: 5
-    BaseValue: 1
-  - Type: 6
-    BaseValue: 2
+  levelData:
+    baseExpRequired: 100
+    growthRates:
+    - 1.2
+    - 1.4
+    - 1.6
+    levelBreakpoints: 0a0000001e00000032000000
 --- !u!136 &4788100504179467450
 CapsuleCollider:
   m_ObjectHideFlags: 0
