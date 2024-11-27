@@ -6,12 +6,11 @@ using UnityEngine;
 
 public class AreaSkill : Skill
 {
-    [SerializeField]private Area areaPrefab;
+    [SerializeField]private FakeArea areaPrefab;
     [SerializeField]private Vector3 spawnPoint;
     private AreaSkillStat areaSkillStat;
     private Coroutine spawnCoroutine;
     private bool isSkillActive = false;
-
 
     private void Awake()
     {
@@ -73,10 +72,9 @@ public class AreaSkill : Skill
 
             AreaData areaData = new AreaData()
             {
-                Damage = areaSkillStat.GetStatValue<float>(SkillStatType.Damage),
-                Duration =areaSkillStat.GetStatValue<float>(SkillStatType.Duration),
-                AreaScale = areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileScale),
-                
+                damage = areaSkillStat.GetStatValue<float>(SkillStatType.Damage),
+                duration =areaSkillStat.GetStatValue<float>(SkillStatType.Duration),
+                areaScale = areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileScale),
             };
 
             SpawnArea(areaData);
@@ -88,7 +86,7 @@ public class AreaSkill : Skill
 
     private void SpawnArea(AreaData data)
     {
-        Area area = PoolManager.Instance.Spawn<Area>
+        FakeArea area = PoolManager.Instance.Spawn<FakeArea>
             (areaPrefab.gameObject, spawnPoint,Quaternion.identity);
         area.Initialize(data);
     }
@@ -103,8 +101,8 @@ public class AreaSkill : Skill
 
 public struct AreaData
 {
-    public float Damage;
-    public float Duration;
-    public float AreaScale;
+    public float damage;
+    public float duration;
+    public float areaScale;
 
 }

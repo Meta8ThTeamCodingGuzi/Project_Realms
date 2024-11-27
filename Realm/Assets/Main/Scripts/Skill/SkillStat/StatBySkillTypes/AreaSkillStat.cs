@@ -57,6 +57,12 @@ public class AreaSkillStat : SkillStat
             Type =SkillStatType.IsTraceMouse,
             IsBoolStat = true,
             GrowthValue = 0f
+        },
+        new StatInitializer
+        {
+            Type = SkillStatType.IsHoming,
+            BaseValue = 0f,
+            IsBoolStat = true
         }
 
     };

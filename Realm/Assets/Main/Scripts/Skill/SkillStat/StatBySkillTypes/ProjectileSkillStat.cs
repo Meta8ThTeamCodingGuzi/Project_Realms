@@ -49,13 +49,13 @@ public class ProjectileSkillStat : SkillStat
         {
             Type = SkillStatType.InnerInterval,
             BaseValue = 0f,
-            GrowthValue = 0.1f  
+            GrowthValue = 0f  
         },
         new StatInitializer 
         {
             Type = SkillStatType.ShotInterval,
             BaseValue = 0f,
-            GrowthValue = 0.1f   
+            GrowthValue = 0f   
         },                       
         new StatInitializer 
         {
