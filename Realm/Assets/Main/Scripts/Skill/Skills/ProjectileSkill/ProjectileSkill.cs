@@ -13,6 +13,7 @@ public class ProjectileSkill : Skill
     private void Awake()
     {
         projectileStats = (ProjectileSkillStat)skillStat;
+        
     }
 
     protected override void UseSkill()

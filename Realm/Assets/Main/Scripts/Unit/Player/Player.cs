@@ -18,10 +18,11 @@ public class Player : Unit
     private float totalExp = 0f;  // 누적 경험치
     private LayerMask groundLayerMask;
 
-    protected override void Awake()
+    private void Start()
     {
         Initialize();
     }
+
     protected override void Initialize()
     {
         if (characterStats == null)
@@ -33,11 +34,11 @@ public class Player : Unit
                 Debug.LogError("PlayerStat component not found!");
             }
         }
+        base.Initialize();
         characterStats.InitializeStats();
         groundLayerMask = LayerMask.GetMask("Ground");
         Debug.Log($"Ground Layer Mask: {groundLayerMask}");
-        base.Initialize();
-        GameManager.Instance.player = this;
+        GameManager.Instance.player =this;
     }
 
     private void Update()
