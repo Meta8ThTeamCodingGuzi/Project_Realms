@@ -46,7 +46,10 @@ public enum SkillStatType
     ShotInterval,
     [Tooltip("연사 속도")]
     InnerInterval,
-
+    [Tooltip("마우스커서 추적할지 안할지")]
+    IsTraceMouse,
+    [Tooltip("스킬 쿨타임")]
+    Cooldown
     #endregion
 }
 

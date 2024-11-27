@@ -31,7 +31,7 @@ public class AreaSkillStat : SkillStat
         new StatInitializer
         {
             Type = SkillStatType.ProjectileScale,
-            BaseValue = 10f,
+            BaseValue = 5f,
             GrowthValue= 0.1f
         },
         new StatInitializer
@@ -42,8 +42,8 @@ public class AreaSkillStat : SkillStat
         },
         new StatInitializer
         {
-            Type = SkillStatType.ShotInterval,
-            BaseValue =1f,
+            Type = SkillStatType.Cooldown,
+            BaseValue =7f,
             GrowthValue = 0f
         },
         new StatInitializer
@@ -51,8 +51,13 @@ public class AreaSkillStat : SkillStat
             Type = SkillStatType.InnerInterval,
             BaseValue = 1f,
             GrowthValue = 0f
+        },
+        new StatInitializer
+        {
+            Type =SkillStatType.IsTraceMouse,
+            IsBoolStat = true,
+            GrowthValue = 0f
         }
-
 
     };
 
