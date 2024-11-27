@@ -54,7 +54,6 @@ public class ObstacleSightRemover : MonoBehaviour
 
     private void OnDestroy()
     {
-        // 모든 오브젝트의 알파값을 원래대로 복구
         foreach (var kvp in originalAlphas)
         {
             if (kvp.Key != null)

@@ -13,11 +13,6 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
     protected float lastAttackTime;
     protected Coroutine attackCoroutine;
 
-    protected virtual void Awake()
-    {
-        Initialize();
-    }
-
     protected virtual void Initialize()
     {
         agent = GetComponent<NavMeshAgent>();

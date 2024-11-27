@@ -3,16 +3,18 @@ using System.Collections;
 
 public class ProjectileSkill : Skill
 {
-    
+   
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform firePoint;
     private ProjectileSkillStat projectileStats;
     private Coroutine fireCoroutine;
     private bool isSkillActive = false;
 
-    private void Awake()
+    public override void Initialize()
     {
+        base.Initialize();
         projectileStats = (ProjectileSkillStat)skillStat;
+        projectileStats.InitializeStats();
     }
 
     protected override void UseSkill()
@@ -87,7 +89,7 @@ public class ProjectileSkill : Skill
     {
         base.LevelUp();
 
-        Debug.Log($"Level {skillLevel} Stats:");
+        Debug.Log($"Level {projectileStats.GetStatValue<int>(SkillStatType.SkillLevel)} Stats:");
         Debug.Log($"Damage: {projectileStats.GetStatValue<float>(SkillStatType.Damage)}");
         Debug.Log($"ProjectileCount: {projectileStats.GetStatValue<float>(SkillStatType.ProjectileCount)}");
         Debug.Log($"IsHoming: {projectileStats.GetStatValue<bool>(SkillStatType.IsHoming)}");
