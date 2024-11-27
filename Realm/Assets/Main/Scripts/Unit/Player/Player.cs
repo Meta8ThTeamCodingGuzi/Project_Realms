@@ -18,7 +18,7 @@ public class Player : Unit
     private float totalExp = 0f;  // 누적 경험치
     private LayerMask groundLayerMask;
 
-    protected void Start()
+    protected override void Awake()
     {
         Initialize();
     }
@@ -37,7 +37,7 @@ public class Player : Unit
         groundLayerMask = LayerMask.GetMask("Ground");
         Debug.Log($"Ground Layer Mask: {groundLayerMask}");
         base.Initialize();
-        //GameManager.Instance.player = this;
+        GameManager.Instance.player = this;
     }
 
     private void Update()
