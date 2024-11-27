@@ -13,6 +13,8 @@ public abstract class SkillStat : MonoBehaviour
         public float BaseValue;
         [Tooltip("토글식 스탯인지(딸깍)")]
         public bool IsBoolStat;
+        [Tooltip("정수형 스탯인지")]
+        public bool IsIntStat;
         [Tooltip("레벨당 증가량 (고정)")]
         public float GrowthValue = 0f;
         [Tooltip("레벨당 증가율 (%)")]
@@ -21,17 +23,15 @@ public abstract class SkillStat : MonoBehaviour
     }
 
     protected Dictionary<SkillStatType, Stat> skillStats = new Dictionary<SkillStatType, Stat>();
-    protected int currentLevel = 1;
 
-    protected virtual void Awake()
-    {
-        InitializeStats();
-    }
+    public int currentLevel = 0;
 
     protected abstract StatInitializer[] GetInitialStats();
 
-    protected virtual void InitializeStats()
+    public virtual void InitializeStats()
     {
+        print("스킬 스탯 초기화 호출");
+
         skillStats.Clear();
         var initialStats = GetInitialStats();
 
@@ -41,6 +41,15 @@ public abstract class SkillStat : MonoBehaviour
             {
                 skillStats[statInit.Type] = new BoolStat(statInit.BaseValue > 0);
             }
+            if(statInit.IsIntStat) 
+            {
+                skillStats[statInit.Type] = new IntStat(Mathf.RoundToInt(statInit.BaseValue));
+                if (statInit.Type == SkillStatType.SkillLevel)
+                {
+                    currentLevel = Mathf.RoundToInt(statInit.BaseValue);
+                    print($"현재레벨 셋팅함 : {currentLevel}");
+                }
+            }
             else
             {
                 skillStats[statInit.Type] = new LevelableStat(
@@ -48,15 +57,6 @@ public abstract class SkillStat : MonoBehaviour
                     statInit.GrowthValue,
                     statInit.GrowthRate
                 );
-            }
-        }
-
-        foreach (SkillStatType skillStatType in System.Enum.GetValues(typeof(SkillStatType)))
-        {
-            if (!skillStats.ContainsKey(skillStatType))
-            {
-                skillStats[skillStatType] = new FloatStat(0f);
-                Debug.LogWarning($"스킬스탯 {skillStatType} 초기화 되지 않았습니다 0으로 초기화됩니다.");
             }
         }
 
@@ -111,7 +111,6 @@ public abstract class SkillStat : MonoBehaviour
 
     public virtual void SetSkillLevel(int level)
     {
-        currentLevel = level;
         foreach (var stat in skillStats.Values)
         {
             if (stat is LevelableStat levelableStat)

@@ -14,6 +14,10 @@ public enum StatType
     DropExp
 }
 
+public enum SkillID 
+{
+    TestSkill
+}
 public enum SkillStatType
 {
     #region 스킬 공통 스탯
