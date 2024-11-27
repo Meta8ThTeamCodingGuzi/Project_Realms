@@ -17,6 +17,14 @@ public class AreaSkill : Skill
         areaSkillStat = (AreaSkillStat)skillStat;
         
     }
+    public void skillshot()
+    {
+        if (!isSkillActive)
+        {
+            isSkillActive = true;
+            spawnCoroutine = StartCoroutine(SpawnRoutine());
+        }
+    }
     protected override void UseSkill()
     {
         if (!isSkillActive)
