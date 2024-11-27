@@ -103,12 +103,14 @@ public class Monster : Unit, IPoolable
     }
     public void OnReturnToPool()
     {
-        throw new System.NotImplementedException();
+        targetPlayer = null;
     }
 
     public void OnSpawnFromPool()
     {
-        throw new System.NotImplementedException();
+        float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
+        characterStats.AddModifier(StatType.Level, new StatModifier(playerLevel, StatModifierType.Flat,this,SourceType.BaseStats));  
+        Initialize();
     }
 
 }

@@ -37,6 +37,7 @@ public class Player : Unit
         groundLayerMask = LayerMask.GetMask("Ground");
         Debug.Log($"Ground Layer Mask: {groundLayerMask}");
         base.Initialize();
+        GameManager.Instance.player = this;
     }
 
     private void Update()
