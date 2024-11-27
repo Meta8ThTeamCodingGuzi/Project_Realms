@@ -27,6 +27,11 @@ public class FakeArea : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        durationTime += Time.deltaTime;
+    }
+
     private IEnumerator AttackRoutine()
     {
         while (true)

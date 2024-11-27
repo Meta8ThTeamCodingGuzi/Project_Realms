@@ -10,6 +10,14 @@ public class ProjectileSkill : Skill
     private Coroutine fireCoroutine;
     private bool isSkillActive = false;
 
+    //임시로 만들어놓은거임 삭제해야함
+    public void skillshot()
+    {
+        Initialize();
+        UseSkill();
+        
+    }
+
     public override void Initialize()
     {
         base.Initialize();
@@ -55,7 +63,7 @@ public class ProjectileSkill : Skill
                 Speed = projectileStats.GetStatValue<float>(SkillStatType.ProjectileSpeed),
                 Range = projectileStats.GetStatValue<float>(SkillStatType.ProjectileRange),
                 PierceCount = Mathf.RoundToInt(projectileStats.GetStatValue<float>(SkillStatType.PierceCount)),
-                IsHoming = projectileStats.GetStatValue<bool>(SkillStatType.IsHoming),
+                IsHoming = true,//projectileStats.GetStatValue<bool>(SkillStatType.IsHoming),
                 HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange)
             };
 
