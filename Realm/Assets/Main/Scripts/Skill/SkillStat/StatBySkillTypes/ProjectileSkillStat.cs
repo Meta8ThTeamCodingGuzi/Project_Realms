@@ -8,6 +8,11 @@ public class ProjectileSkillStat : SkillStat
     [SerializeField]
     private StatInitializer[] initialStats = new StatInitializer[]
     {
+        new StatInitializer
+        {
+            Type = SkillStatType.SkillLevel,
+            BaseValue = 1f
+        },
         new StatInitializer 
         {
             Type = SkillStatType.Damage,
@@ -49,13 +54,13 @@ public class ProjectileSkillStat : SkillStat
         {
             Type = SkillStatType.InnerInterval,
             BaseValue = 0f,
-            GrowthValue = 0.1f  
+            GrowthValue = 0f  
         },
         new StatInitializer 
         {
             Type = SkillStatType.ShotInterval,
             BaseValue = 0f,
-            GrowthValue = 0.1f   
+            GrowthValue = 0f   
         },                       
         new StatInitializer 
         {
@@ -73,6 +78,11 @@ public class ProjectileSkillStat : SkillStat
 
     protected override StatInitializer[] GetInitialStats()
     {
+        Debug.Log($"initialStats count: {initialStats.Length}");
+        foreach (var stat in initialStats)
+        {
+            Debug.Log($"Stat: {stat.Type}, BaseValue: {stat.BaseValue}");
+        }
         return initialStats;
     }
 }

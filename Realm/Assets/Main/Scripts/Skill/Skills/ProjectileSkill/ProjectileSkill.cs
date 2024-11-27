@@ -3,16 +3,18 @@ using System.Collections;
 
 public class ProjectileSkill : Skill
 {
-    
+   
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform firePoint;
     private ProjectileSkillStat projectileStats;
     private Coroutine fireCoroutine;
     private bool isSkillActive = false;
 
-    private void Awake()
+    public override void Initialize()
     {
+        base.Initialize();
         projectileStats = (ProjectileSkillStat)skillStat;
+        projectileStats.InitializeStats();
     }
 
     protected override void UseSkill()
@@ -41,12 +43,12 @@ public class ProjectileSkill : Skill
     {
         while (isSkillActive)
         {
-            // ½ºÅÈ °¡Á®¿À±â
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             float shotInterval = projectileStats.GetStatValue<float>(SkillStatType.ShotInterval);
             float innerInterval = projectileStats.GetStatValue<float>(SkillStatType.InnerInterval);
             int projectileCount = Mathf.RoundToInt(projectileStats.GetStatValue<float>(SkillStatType.ProjectileCount));
 
-            // Åõ»çÃ¼ µ¥ÀÌÅÍ ÁØºñ
+            // ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½
             ProjectileData projectileData = new ProjectileData
             {
                 Damage = projectileStats.GetStatValue<float>(SkillStatType.Damage),
@@ -57,37 +59,37 @@ public class ProjectileSkill : Skill
                 HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange)
             };
 
-            // ¿©·¯ Åõ»çÃ¼ ¹ß»ç
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ß»ï¿½
             for (int i = 0; i < projectileCount; i++)
             {
                 FireProjectile(projectileData);
 
-                // Åõ»çÃ¼ »çÀÌÀÇ °£°ÝÀÌ ÀÖ´Ù¸é ´ë±â
+                // ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½
                 if (innerInterval > 0 && i < projectileCount - 1)
                 {
                     yield return new WaitForSeconds(innerInterval);
                 }
             }
 
-            // ´ÙÀ½ ¹ß»ç±îÁö ´ë±â
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             yield return new WaitForSeconds(shotInterval);
         }
     }
 
     private void FireProjectile(ProjectileData data)
     {
-        // ¿©±â¼­ ¹ß»ç °¢µµ³ª ÆÐÅÏÀ» Ãß°¡ÇÏ¸é ÁÁÀ»µí
+        // ï¿½ï¿½ï¿½â¼­ ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Projectile projectile = PoolManager.Instance.Spawn<Projectile>
             (projectilePrefab.gameObject, firePoint.position, firePoint.rotation);
         projectile.Initialize(data);
     }
 
-    // ½ºÅ³ °­È­ ½Ã
+    // ï¿½ï¿½Å³ ï¿½ï¿½È­ ï¿½ï¿½
     public override void LevelUp()
     {
         base.LevelUp();
 
-        Debug.Log($"Level {skillLevel} Stats:");
+        Debug.Log($"Level {projectileStats.GetStatValue<int>(SkillStatType.SkillLevel)} Stats:");
         Debug.Log($"Damage: {projectileStats.GetStatValue<float>(SkillStatType.Damage)}");
         Debug.Log($"ProjectileCount: {projectileStats.GetStatValue<float>(SkillStatType.ProjectileCount)}");
         Debug.Log($"IsHoming: {projectileStats.GetStatValue<bool>(SkillStatType.IsHoming)}");
@@ -99,7 +101,7 @@ public class ProjectileSkill : Skill
     }
 }
 
-// Åõ»çÃ¼ µ¥ÀÌÅÍ ±¸Á¶Ã¼ (±¸Á¶Ã¼·Î µ¥ÀÌÅÍ¸¦ °¨½Î Åõ»çÃ¼¿¡ ³Ñ°ÜÁÖ´Â ¹æ½Ä)
+// ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼ (ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ñ°ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½)
 public struct ProjectileData
 {
     public float Damage;

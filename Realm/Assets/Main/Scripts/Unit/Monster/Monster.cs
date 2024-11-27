@@ -20,6 +20,11 @@ public class Monster : Unit, IPoolable
     private int patrolKey = 0;
     public Vector3 nowTarget;
 
+    //TODO:: 몬스터 스폰로직 생기면 지우세요
+    private void Start()
+    {
+        Initialize();
+    }
 
     protected override void Initialize()
     { 
@@ -33,8 +38,8 @@ public class Monster : Unit, IPoolable
             m_StateHandler = new MonsterStateHandler(this);
         }
         m_StateHandler.Initialize();
-
         base.Initialize();
+        targetPlayer = null;
 
     }
     public void targetMove(Unit unit)
@@ -103,7 +108,7 @@ public class Monster : Unit, IPoolable
     }
     public void OnReturnToPool()
     {
-        targetPlayer = null;
+ 
     }
 
     public void OnSpawnFromPool()

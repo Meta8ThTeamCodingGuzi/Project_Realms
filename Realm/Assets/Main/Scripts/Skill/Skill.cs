@@ -4,21 +4,32 @@ using UnityEngine;
 
 public abstract class Skill : MonoBehaviour
 {
-    public string skillName = "기본 스킬";
-    [SerializeField] protected SkillStat skillStat;
-    protected int skillLevel = 1;
+    [SerializeField] public SkillData data;
+    [SerializeField] public SkillStat skillStat;
+
+    public virtual void Initialize()
+    {
+        print("스킬 초기화 함수 호출");
+        if (skillStat == null)
+        {
+            skillStat = GetComponent<SkillStat>();
+            if (skillStat == null)
+            {
+                Debug.LogError("SkillStat component not found!");
+            }
+        }
+    }
 
     public virtual void LevelUp()
     {
-        skillLevel++;
+        skillStat.AddModifier(SkillStatType.SkillLevel, new StatModifier(1, StatModifierType.Flat, SourceType.BaseStats));
         // SkillStat에 레벨 파라미터로 넘기면 지가 알아해라
-        skillStat.SetSkillLevel(skillLevel);
+        skillStat.SetSkillLevel(skillStat.GetStatValue<int>(SkillStatType.SkillLevel));
     }
 
     public virtual void SetLevel(int level)
     {
-        skillLevel = Mathf.Max(1, level);
-        skillStat.SetSkillLevel(skillLevel);
+        skillStat.SetSkillLevel(level);
     }
 
     //스킬 사용 구현하십시오

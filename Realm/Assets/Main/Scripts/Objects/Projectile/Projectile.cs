@@ -51,13 +51,13 @@ public class Projectile : MonoBehaviour
 
         foreach (var collider in colliders)
         {
-            if (collider.CompareTag("Enemy"))
+            if (collider.TryGetComponent<Monster>(out Monster monster))
             {
-                float distance = Vector3.Distance(transform.position, collider.transform.position);
+                float distance = Vector3.Distance(transform.position, monster.transform.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
-                    target = collider.transform;
+                    target = monster.transform;
                 }
             }
         }
@@ -65,17 +65,14 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.TryGetComponent<Monster>(out Monster monster))
         {
             // 单固瘤 贸府
-            if (other.TryGetComponent<IDamageable>(out var damageable))
-            {
-                damageable.TakeDamage(data.Damage);
-            }
+            monster.TakeDamage(data.Damage);
 
             // 包烹 贸府
             remainingPierceCount--;
-            if (remainingPierceCount < 0)
+            if (remainingPierceCount <= 0)
             {
                 PoolManager.Instance.Despawn(this);
             }
