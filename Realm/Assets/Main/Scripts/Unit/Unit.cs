@@ -154,7 +154,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
         }
     }
 
-    protected virtual void UpdateMoveSpeed()
+    public virtual void UpdateMoveSpeed()
     {
         if (characterStats != null)
         {

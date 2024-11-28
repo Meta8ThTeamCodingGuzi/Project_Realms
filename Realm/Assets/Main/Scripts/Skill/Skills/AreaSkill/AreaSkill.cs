@@ -114,6 +114,7 @@ public class AreaSkill : Skill
         area.Initialize(data);
     }
 
+
     public override void LevelUp()
     {
         base.LevelUp();

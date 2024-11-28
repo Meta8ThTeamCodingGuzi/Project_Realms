@@ -58,6 +58,7 @@ public class Player : Unit
     private void Update()
     {
         MovetoCursor();
+
     }
 
     private void MovetoCursor()
