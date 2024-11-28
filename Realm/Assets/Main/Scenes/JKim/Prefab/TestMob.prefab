@@ -15083,6 +15083,7 @@ GameObject:
   - component: {fileID: 2782305075955864832}
   - component: {fileID: 3996009144990521464}
   - component: {fileID: 4564732965348354241}
+  - component: {fileID: 8777446325425096804}
   m_Layer: 7
   m_Name: TestMob
   m_TagString: Untagged
@@ -15236,6 +15237,33 @@ CapsuleCollider:
   m_Height: 1.521693
   m_Direction: 1
   m_Center: {x: 0, y: 0.2608465, z: 0}
+--- !u!54 &8777446325425096804
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5164216856533850883}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5251881295201190039
 GameObject:
   m_ObjectHideFlags: 0

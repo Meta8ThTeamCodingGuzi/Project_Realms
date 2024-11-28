@@ -8,7 +8,7 @@ public class BuffSkill : Skill
     private BuffSkillStat buffSkillStat;
     private Coroutine BuffCoroutine;
     [SerializeField]protected StatType statType;
-    [SerializeField] protected StatModifierType modifierType;
+    [SerializeField]protected StatModifierType modifierType;
     private bool isBuffaction = true;
     private bool isSkillActive = false;
 
@@ -24,14 +24,16 @@ public class BuffSkill : Skill
     {
         if (BuffCoroutine != null)
         {
-           StopSkill();
+           StopBuff();
         }
         BuffCoroutine = StartCoroutine(ApplyBuff());
     }
-
-
-
     protected virtual void StopSkill()
+    {
+
+    }
+
+    protected virtual void StopBuff()
     {
         if (BuffCoroutine != null)
         {
@@ -54,23 +56,26 @@ public class BuffSkill : Skill
 
     private void OnDisable()
     {
-        StopSkill();
+        StopBuff();
     }
 
     public override void LevelUp()
     {
         base.LevelUp();
     }
+
     #region 플레이어 버프세팅 버프제거 로직
     protected virtual void PlayerSetBuff(StatType statType,float value,StatModifierType modType) 
     {
         StatModifier StatModifier = new StatModifier(value , modType, this,SourceType.Buff);
         GameManager.Instance.player.CharacterStats.AddModifier(statType, StatModifier);
+        GameManager.Instance.player.UpdateMoveSpeed();
     }
 
     protected virtual void PlayerRemoveBuff(StatType statType)
     {
         GameManager.Instance.player.CharacterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
+        GameManager.Instance.player.UpdateMoveSpeed();
     }
     #endregion
 }
