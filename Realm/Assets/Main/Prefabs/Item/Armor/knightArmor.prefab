@@ -4095,7 +4095,7 @@ GameObject:
   - component: {fileID: 6946990782795065395}
   - component: {fileID: 2480765774105237111}
   m_Layer: 0
-  m_Name: ArmorBase
+  m_Name: knightArmor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

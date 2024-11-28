@@ -16197,7 +16197,7 @@ GameObject:
   - component: {fileID: 7157143663406452439}
   - component: {fileID: 7871822322757355019}
   m_Layer: 0
-  m_Name: ArmorBase 2
+  m_Name: IronArmor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
