@@ -53,7 +53,14 @@ public enum SkillStatType
     [Tooltip("마우스커서 추적할지 안할지")]
     IsTraceMouse,
     [Tooltip("스킬 쿨타임")]
-    Cooldown
+    Cooldown,
+    #endregion
+
+    #region 버프스킬 관련 스탯
+    [Tooltip("버프의 적용량")]
+    BuffValue,
+    [Tooltip("디버프 적용 범위")]
+    DeBuffAreaScale
     #endregion
 }
 
