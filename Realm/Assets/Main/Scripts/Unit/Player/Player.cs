@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Player : Unit
@@ -17,8 +16,7 @@ public class Player : Unit
     }
 
     [SerializeField] private LevelData levelData;
-    public List<Skill> skillList = new List<Skill>();
-    public List<Skill> activatedSkills = new List<Skill>();
+    private SkillController skillController;
     private float totalExp = 0f;  // 누적 경험치
     private LayerMask groundLayerMask;
 
@@ -26,7 +24,6 @@ public class Player : Unit
     {
         Initialize();
     }
-
     protected override void Initialize()
     {
         Debug.Log("Player Initialize 시작");
@@ -39,12 +36,23 @@ public class Player : Unit
             }
         }
         groundLayerMask = LayerMask.GetMask("Ground");
+        Debug.Log($"Ground Layer Mask: {groundLayerMask}");
         base.Initialize();
         GameManager.Instance.player = this;
 
-        Debug.Log("스킬 추가 전 스킬 리스트 수: " + skillList.Count);
-        //skillList.Add(SkillManager.Instance.GetSkill(SkillID.TestSkill));
-        //OnSkillSelect(SkillID.TestSkill);
+        skillController = GetComponent<SkillController>();
+        if (skillController == null)
+        {
+            skillController = gameObject.AddComponent<SkillController>();
+        }
+
+        // 테스트 스킬 추가 예시
+        Skill testSkill = SkillManager.Instance.GetSkill(SkillID.TestSkill);
+        if (testSkill != null)
+        {
+            skillController.AddSkill(testSkill);
+            skillController.EquipSkill(testSkill, KeyCode.Q); // Q 슬롯에 장착
+        }
     }
 
     private void Update()
@@ -190,56 +198,6 @@ public class Player : Unit
         return Mathf.RoundToInt(characterStats.GetStatValue(StatType.Level));
     }
     #endregion
-
-
-    private void OnSkillSelect(SkillID skillID)
-    {
-        Debug.Log($"OnSkillSelect 시작: 현재 플레이어 스킬 리스트 수: {skillList.Count}");
-        
-        Skill skillToRemove = null;
-
-        foreach (Skill skill in skillList)
-        {
-            Debug.Log($"검사 중인 스킬: {skill.data.skillID}");
-            if (skill.data == null)
-            {
-                Debug.LogError($"스킬의 데이터가 null입니다!");
-                continue;
-            }
-
-            if (skill.data.skillID == skillID)
-            {
-                Debug.Log($"일치하는 스킬 찾음: {skillID}");
-
-                if (PoolManager.Instance == null)
-                {
-                    Debug.LogError("PoolManager.Instance가 null입니다!");
-                    return;
-                }
-
-                Skill selectedSkill = Instantiate(skill.gameObject,transform).GetComponent<Skill>();
-                if (selectedSkill != null)
-                { 
-                    skillToRemove = skill;
-                    activatedSkills.Add(skill);
-                    selectedSkill.Initialize();
-                    Debug.Log("스킬이 성공적으로 스폰되었습니다.");
-                    Debug.Log($"활성화된 스킬 이름 : {selectedSkill.data.skillID}");
-                    Debug.Log($"활성화된 스킬 레벨 : {selectedSkill.skillStat.GetStatValue<int>(SkillStatType.SkillLevel)}");
-                }
-                else
-                {
-                    Debug.LogError("스킬 스폰에 실패했습니다!");
-                }
-                break;
-            }
-        }
-
-        if (skillToRemove != null)
-        {
-            skillList.Remove(skillToRemove);
-        }
-    }
 
     public float GetAttack()
     {

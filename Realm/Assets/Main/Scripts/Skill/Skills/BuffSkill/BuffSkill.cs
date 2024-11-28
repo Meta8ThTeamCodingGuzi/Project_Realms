@@ -9,8 +9,6 @@ public class BuffSkill : Skill
     private Coroutine BuffCoroutine;
     [SerializeField]protected StatType statType;
     [SerializeField]protected StatModifierType modifierType;
-    private bool isBuffaction = true;
-    private bool isSkillActive = false;
 
     public override void Initialize()
     {
@@ -38,10 +36,7 @@ public class BuffSkill : Skill
         }
         BuffCoroutine = StartCoroutine(ApplyBuff());
     }
-    protected virtual void StopSkill()
-    {
-
-    }
+    protected virtual void StopSkill(){}
 
     protected virtual void StopBuff()
     {

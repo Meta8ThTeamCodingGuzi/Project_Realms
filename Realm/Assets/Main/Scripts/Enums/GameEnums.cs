@@ -20,48 +20,49 @@ public enum SkillID
 }
 public enum SkillStatType
 {
-    #region 스킬 공통 스탯
+    #region Common Skill Stats
 
     SkillLevel,
     Damage,
     Duration,
-
-    #endregion
-
-    #region 투사체스킬관련 스탯
-
-    [Tooltip("투사체 속도")]
-    ProjectileSpeed,
-    [Tooltip("투사체 사거리")]
-    ProjectileRange,
-    [Tooltip("투사체 크기")]
-    ProjectileScale,
-    [Tooltip("한번 발사에 몇개 발사할지")]
-    ProjectileCount,
-    [Tooltip("폭발 반경(폭발 투사체일경우)")]
-    ExplosionRadius,
-    [Tooltip("유도기능 활성화 (인스펙터에서 BoolStat으로 체크할것!)")]
-    IsHoming,
-    [Tooltip("유도사거리")]
-    HomingRange,
-    [Tooltip("투사체 관통 횟수")]
-    PierceCount,
-    [Tooltip("발사 간격")]
-    ShotInterval,
-    [Tooltip("연사 속도")]
-    InnerInterval,
-    [Tooltip("마우스커서 추적할지 안할지")]
-    IsTraceMouse,
-    [Tooltip("스킬 쿨타임")]
     Cooldown,
+    HomingLevel,
+
     #endregion
 
-    #region 버프스킬 관련 스탯
-    [Tooltip("버프의 적용량")]
-    BuffValue,
-    [Tooltip("디버프 적용 범위")]
-    DeBuffAreaScale
+    #region Projectile Related Skills
+
+    ProjectileSpeed,
+    ProjectileRange,
+    ProjectileScale,
+    ProjectileCount,
+    ExplosionRadius,
+    IsHoming,
+    HomingRange,
+    PierceCount,
+    ShotInterval,
+    InnerInterval,
+    
     #endregion
+
+    #region Area Related Stats
+    
+    SpawnRange,
+    SpawnScale,
+    SpawnCount,
+    SpawnInterval,
+    IsSpawnAtCursor,
+    IsSpawnAtEnemy,
+
+    #endregion
+
+    #region Buff Related Stats
+    
+    BuffValue,
+    DeBuffAreaScale,
+    
+    #endregion
+
 }
 
 public enum SourceType
