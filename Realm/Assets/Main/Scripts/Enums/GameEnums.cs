@@ -58,7 +58,9 @@ public enum SkillStatType
 
     #region 버프스킬 관련 스탯
     [Tooltip("버프의 적용량")]
-    BuffValue
+    BuffValue,
+    [Tooltip("디버프 적용 범위")]
+    DeBuffAreaScale
     #endregion
 }
 

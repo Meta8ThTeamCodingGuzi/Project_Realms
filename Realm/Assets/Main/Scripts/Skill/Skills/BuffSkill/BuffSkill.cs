@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuffSkill : Skill
 {
     private BuffSkillStat buffSkillStat;
-    private Coroutine BuffCoroutine; 
+    private Coroutine BuffCoroutine;
+    [SerializeField]protected StatType statType;
+    [SerializeField] protected StatModifierType modifierType;
+    private bool isBuffaction = true;
     private bool isSkillActive = false;
 
     public override void Initialize()
@@ -13,6 +17,7 @@ public class BuffSkill : Skill
         base.Initialize();
         buffSkillStat = (BuffSkillStat)skillStat;
         buffSkillStat.InitializeStats();
+
     }
 
     protected override void UseSkill()
@@ -23,6 +28,9 @@ public class BuffSkill : Skill
         }
         BuffCoroutine = StartCoroutine(ApplyBuff());
     }
+
+
+
     protected virtual void StopSkill()
     {
         if (BuffCoroutine != null)
@@ -30,13 +38,19 @@ public class BuffSkill : Skill
             StopCoroutine(BuffCoroutine);
             BuffCoroutine = null;
         }
+        PlayerRemoveBuff(statType);
     }
 
     protected virtual IEnumerator ApplyBuff()
     {
-        print("자식에서 버프 내용 구현하세요");
+        PlayerSetBuff(statType, buffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
+        yield return new WaitForSeconds(buffSkillStat.GetStatValue<float>(SkillStatType.Duration));
+        PlayerRemoveBuff(statType);
+        BuffCoroutine = null;
         yield break;
     }
+
+
 
     private void OnDisable()
     {
@@ -47,4 +61,16 @@ public class BuffSkill : Skill
     {
         base.LevelUp();
     }
+    #region 플레이어 버프세팅 버프제거 로직
+    protected virtual void PlayerSetBuff(StatType statType,float value,StatModifierType modType) 
+    {
+        StatModifier StatModifier = new StatModifier(value , modType, this,SourceType.Buff);
+        GameManager.Instance.player.CharacterStats.AddModifier(statType, StatModifier);
+    }
+
+    protected virtual void PlayerRemoveBuff(StatType statType)
+    {
+        GameManager.Instance.player.CharacterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
+    }
+    #endregion
 }
