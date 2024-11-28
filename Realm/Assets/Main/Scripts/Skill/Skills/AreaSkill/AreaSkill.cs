@@ -61,8 +61,7 @@ public class AreaSkill : Skill
                 Vector3 dir = (hit.point - transform.position).normalized;
                 spawnPoint = dir * areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
             }
-        } 
-
+        }
 
     } 
 
@@ -75,7 +74,6 @@ public class AreaSkill : Skill
     {
         while (isSkillActive)
         {
-            SetSpawnPoint();
             float areaRange = areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
             float ShotInterval = areaSkillStat.GetStatValue<float>(SkillStatType.Cooldown);
 
@@ -96,7 +94,8 @@ public class AreaSkill : Skill
     private void SpawnArea(AreaData data)
     {
         FakeArea area = PoolManager.Instance.Spawn<FakeArea>
-            (areaPrefab.gameObject, spawnPoint,Quaternion.identity);
+        (areaPrefab.gameObject, spawnPoint, Quaternion.identity);
+        
         area.Initialize(data);
     }
 
