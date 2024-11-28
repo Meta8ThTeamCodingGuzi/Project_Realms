@@ -3,14 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FakeArea : MonoBehaviour
+public class AreaEffect : MonoBehaviour
 {
-    private AreaData areaData;
+    private AreaEffectData areaData;
     private float durationTime;
-    private Coroutine attackCoroutine;
-  
+    private Coroutine attackCoroutine;  
 
-    public void Initialize(AreaData Data)
+    public void Initialize(AreaEffectData Data)
     {
         this.areaData = Data;
         transform.localScale = Vector3.one * areaData.areaScale;
@@ -24,7 +23,6 @@ public class FakeArea : MonoBehaviour
         {
             attackCoroutine = StartCoroutine(AttackRoutine());
         }
-
     }
 
     private void Update()
@@ -36,27 +34,27 @@ public class FakeArea : MonoBehaviour
     {
         while (true)
         {
-            if (areaData.duration < durationTime) PoolManager.Instance.Despawn<FakeArea>(this);
+            if (areaData.duration < durationTime) PoolManager.Instance.Despawn<AreaEffect>(this);
             Collider[] colliders = Physics.OverlapSphere(transform.position,areaData.areaScale);
 
             foreach (Collider collider in colliders)
             {
                 if (collider.TryGetComponent<Monster>(out Monster monster))
                 {
-                    print("몬스터 TakeDamage호출");
                     monster.TakeDamage(areaData.damage);
                 }
             }
             yield return new WaitForSeconds(1f);
         }
     }
+
     private void StopAttack()
     {
         if (attackCoroutine != null)
         {
             StopCoroutine(attackCoroutine);
             attackCoroutine = null;
-            PoolManager.Instance.Despawn<FakeArea>(this);
+            PoolManager.Instance.Despawn<AreaEffect>(this);
         }
         
     }

@@ -12,62 +12,40 @@ public class AreaSkillStat : SkillStat
 
         new StatInitializer
         {
-            Type =SkillStatType.Damage,
-            BaseValue = 5f,
-            GrowthValue =5f,
-            growthPercent =10f
+            Type = SkillStatType.Damage,
         },
-        new StatInitializer {
-            Type =SkillStatType.Duration,
-            BaseValue = 5f,
-            GrowthValue = 1f
+        new StatInitializer 
+        {
+            Type = SkillStatType.Duration,
         },
         new StatInitializer
         {
-            Type= SkillStatType.ProjectileRange,
-            BaseValue = 10f,
-            GrowthValue =0f
+            Type = SkillStatType.SpawnRange,
         },
         new StatInitializer
         {
-            Type = SkillStatType.ProjectileScale,
-            BaseValue = 5f,
-            GrowthValue= 0.1f
+            Type = SkillStatType.SpawnScale,
         },
         new StatInitializer
         {
-            Type = SkillStatType.ProjectileCount,
-            BaseValue = 1f,
-            GrowthValue = 0f
+            Type = SkillStatType.SpawnCount,
         },
         new StatInitializer
         {
-            Type = SkillStatType.Cooldown,
-            BaseValue =7f,
-            GrowthValue = 0f
+            Type = SkillStatType.SpawnInterval,
         },
         new StatInitializer
         {
-            Type = SkillStatType.InnerInterval,
-            BaseValue = 1f,
-            GrowthValue = 0f
+            Type = SkillStatType.IsSpawnAtCursor,
         },
         new StatInitializer
         {
-            Type =SkillStatType.IsTraceMouse,
-            IsBoolStat = true,
-            GrowthValue = 0f
+            Type = SkillStatType.IsSpawnAtEnemy,
         },
-        new StatInitializer
-        {
-            Type = SkillStatType.IsHoming,
-            BaseValue = 0f,
-            IsBoolStat = true
-        }
 
     };
 
-        protected override StatInitializer[] GetInitialStats()
+    protected override StatInitializer[] GetInitialStats()
     {
         return initialStats;
     }

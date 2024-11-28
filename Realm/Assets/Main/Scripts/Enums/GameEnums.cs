@@ -22,10 +22,17 @@ public enum SkillStatType
 {
     #region 스킬 공통 스탯
 
+    [Tooltip("스킬 레벨")]
     SkillLevel,
+    [Tooltip("스킬 데미지")]
     Damage,
+    [Tooltip("스킬 지속시간")]
     Duration,
-
+    [Tooltip("스킬 쿨타임")]
+    Cooldown,
+    [Tooltip("몇레벨때 호밍 활성화할지 (증가량 0으로 설정 부탁드립니다)")]
+    HomingLevel,
+    
     #endregion
 
     #region 투사체스킬관련 스탯
@@ -50,10 +57,24 @@ public enum SkillStatType
     ShotInterval,
     [Tooltip("연사 속도")]
     InnerInterval,
-    [Tooltip("마우스커서 추적할지 안할지")]
-    IsTraceMouse,
-    [Tooltip("스킬 쿨타임")]
-    Cooldown
+    
+    #endregion
+
+    #region 범위스킬 관련 스탯
+    
+    [Tooltip("소환 사거리")]
+    SpawnRange,
+    [Tooltip("소환한 물체 크기")]
+    SpawnScale,
+    [Tooltip("한번에 소환할 갯수")]
+    SpawnCount,
+    [Tooltip("소환 간격")]
+    SpawnInterval,
+    [Tooltip("마우스 커서에서 소환할지 (0이면 false)")]
+    IsSpawnAtCursor,
+    [Tooltip("적의 위치를 참조하여 소환할지 (0이면 false)")]
+    IsSpawnAtEnemy,
+
     #endregion
 }
 

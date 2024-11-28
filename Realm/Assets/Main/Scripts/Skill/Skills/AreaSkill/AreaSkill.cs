@@ -1,17 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using TreeEditor;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class AreaSkill : Skill
 {
-    [SerializeField]private FakeArea areaPrefab;
-    [SerializeField]private Vector3 spawnPoint;
+    [SerializeField] private AreaEffect areaPrefab;
+    [SerializeField] private Vector3 spawnPoint;
     private AreaSkillStat areaSkillStat;
-    private Coroutine spawnCoroutine;
-    private bool isSkillActive = false;
-
 
     public override void Initialize()
     {
@@ -20,98 +18,112 @@ public class AreaSkill : Skill
         areaSkillStat.InitializeStats();
     }
 
-    //임시로 만든거임 삭제해야함
-    public void skillshot()
-    {
-        Initialize();
-        UseSkill();
-    }
     protected override void UseSkill()
     {
-        if (!isSkillActive)
-        {
-            isSkillActive = true;
-            spawnCoroutine = StartCoroutine(SpawnRoutine());
-        }
-    }
-    protected virtual void StopSkill()
-    {
-        if (isSkillActive)
-        {
-            isSkillActive = false;
-            if (spawnCoroutine != null)
-            {
-                StopCoroutine(spawnCoroutine);
-                spawnCoroutine = null;
-            }
-        }
-    }
-    private void SetSpawnPoint()
-    {
-        if (true)//areaSkillStat.GetStatValue<bool>(SkillStatType.IsTraceMouse))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            Physics.Raycast(ray, out RaycastHit hit, 1000f);
-
-            spawnPoint = hit.point;
-
-            if (Vector3.Distance(transform.position, hit.point)>areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange))
-            {
-                Vector3 dir = (hit.point - transform.position).normalized;
-                spawnPoint = dir * areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
-            }
-        } 
-
-
-    } 
-
-    private void OnDisable()
-    {
-        StopSkill();
+        StartCoroutine(SpawnSequence());
     }
 
-    private IEnumerator SpawnRoutine()
+    private IEnumerator SpawnSequence()
     {
-        while (isSkillActive)
-        {
-            SetSpawnPoint();
-            float areaRange = areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
-            float ShotInterval = areaSkillStat.GetStatValue<float>(SkillStatType.Cooldown);
+        int spawnCount = Mathf.RoundToInt(areaSkillStat.GetStatValue<float>(SkillStatType.SpawnCount));
+        float spawnInterval = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnInterval);
 
-            AreaData areaData = new AreaData()
+        for (int i = 0; i < spawnCount; i++)
+        {
+            AreaEffectData areaData = new AreaEffectData()
             {
                 damage = areaSkillStat.GetStatValue<float>(SkillStatType.Damage),
-                duration =areaSkillStat.GetStatValue<float>(SkillStatType.Duration),
-                areaScale = areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileScale),
+                duration = areaSkillStat.GetStatValue<float>(SkillStatType.Duration),
+                areaScale = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnScale),
             };
 
             SpawnArea(areaData);
 
-         yield return new WaitForSeconds(ShotInterval);
-
+            if (spawnInterval > 0 && i < spawnCount - 1)
+            {
+                yield return new WaitForSeconds(spawnInterval);
+            }
         }
     }
 
-    private void SpawnArea(AreaData data)
+    private void SetSpawnPoint()
     {
-        FakeArea area = PoolManager.Instance.Spawn<FakeArea>
-            (areaPrefab.gameObject, spawnPoint,Quaternion.identity);
+        if (areaSkillStat.GetStatValue<int>(SkillStatType.IsSpawnAtCursor) == 1)
+        {
+            SpawnAtMouseCursor();
+        }
+        else if (areaSkillStat.GetStatValue<int>(SkillStatType.IsSpawnAtEnemy) == 1)
+        {
+            SpawnAtEnemyPosition();
+        }
+        else
+        {
+            SpawnAtMouseCursor();
+        }
+    }
+
+    private void SpawnAtMouseCursor()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(ray, out RaycastHit hit, 1000f);
+
+        spawnPoint = hit.point;
+
+        if (Vector3.Distance(transform.position, hit.point) > areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange))
+        {
+            Vector3 dir = (hit.point - transform.position).normalized;
+            spawnPoint = dir * areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange);
+        }
+    }
+
+    private void SpawnAtEnemyPosition()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange));
+        Transform nearestMonster = null;
+        float nearestDistance = float.MaxValue;
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.TryGetComponent<Monster>(out Monster monster))
+            {
+                float distance = Vector3.Distance(transform.position, monster.transform.position);
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestMonster = monster.transform;
+                }
+            }
+        }
+        if (nearestMonster != null)
+        {
+            spawnPoint = nearestMonster.position;
+        }
+        else
+        {
+            SpawnAtMouseCursor();
+        }
+    }
+
+
+    private void SpawnArea(AreaEffectData data)
+    {
+        SetSpawnPoint();
+        AreaEffect area = PoolManager.Instance.Spawn<AreaEffect>
+            (areaPrefab.gameObject, spawnPoint, Quaternion.identity);
         area.Initialize(data);
     }
 
     public override void LevelUp()
     {
         base.LevelUp();
+        PrintAllStats();
     }
-
- 
 }
 
-public struct AreaData
+public struct AreaEffectData
 {
     public float damage;
     public float duration;
     public float areaScale;
-
 }
