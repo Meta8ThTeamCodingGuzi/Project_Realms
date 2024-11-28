@@ -20,62 +20,49 @@ public enum SkillID
 }
 public enum SkillStatType
 {
-    #region ��ų ���� ����
+    #region Common Skill Stats
 
-    [Tooltip("��ų ����")]
     SkillLevel,
-    [Tooltip("��ų ������")]
     Damage,
-    [Tooltip("��ų ���ӽð�")]
     Duration,
-    [Tooltip("��ų ��Ÿ��")]
     Cooldown,
-    [Tooltip("����� ȣ�� Ȱ��ȭ���� (������ 0���� ���� ��Ź�帳�ϴ�)")]
     HomingLevel,
-    
+
     #endregion
 
-    #region ����ü��ų���� ����
+    #region Projectile Related Skills
 
-    [Tooltip("����ü �ӵ�")]
     ProjectileSpeed,
-    [Tooltip("����ü ��Ÿ�")]
     ProjectileRange,
-    [Tooltip("����ü ũ��")]
     ProjectileScale,
-    [Tooltip("�ѹ� �߻翡 � �߻�����")]
     ProjectileCount,
-    [Tooltip("���� �ݰ�(���� ����ü�ϰ��)")]
     ExplosionRadius,
-    [Tooltip("������� Ȱ��ȭ (�ν����Ϳ��� BoolStat���� üũ�Ұ�!)")]
     IsHoming,
-    [Tooltip("������Ÿ�")]
     HomingRange,
-    [Tooltip("����ü ���� Ƚ��")]
     PierceCount,
-    [Tooltip("�߻� ����")]
     ShotInterval,
-    [Tooltip("���� �ӵ�")]
     InnerInterval,
     
     #endregion
 
-    #region ������ų ���� ����
+    #region Area Related Stats
     
-    [Tooltip("��ȯ ��Ÿ�")]
     SpawnRange,
-    [Tooltip("��ȯ�� ��ü ũ��")]
     SpawnScale,
-    [Tooltip("�ѹ��� ��ȯ�� ����")]
     SpawnCount,
-    [Tooltip("��ȯ ����")]
     SpawnInterval,
-    [Tooltip("���콺 Ŀ������ ��ȯ���� (0�̸� false)")]
     IsSpawnAtCursor,
-    [Tooltip("���� ��ġ�� �����Ͽ� ��ȯ���� (0�̸� false)")]
     IsSpawnAtEnemy,
 
     #endregion
+
+    #region Buff Related Stats
+    
+    BuffValue,
+    DeBuffAreaScale,
+    
+    #endregion
+
 }
 
 public enum SourceType
