@@ -11,10 +11,6 @@ public class DebuffSKill : Skill
     [SerializeField] protected StatModifierType modifierType;
     private bool isSkillActive = true;
 
-    private void Start()
-    {
-        Initialize();
-    }
 
     public override void Initialize()
     {

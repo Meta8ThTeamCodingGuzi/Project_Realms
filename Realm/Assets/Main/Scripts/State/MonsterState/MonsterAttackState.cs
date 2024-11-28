@@ -11,7 +11,8 @@ public class MonsterAttackState : State<Monster>
     }
 
     public override void OnEnter()
-    {
+    {        
+        target.M_Animator.SetTrigger("Attack");
         target.Attack(target.targetPlayer);
         base.OnEnter();
     }
@@ -24,6 +25,10 @@ public class MonsterAttackState : State<Monster>
 
     public override void OnUpdate()
     {
+        if (target.isTakeDamage)
+        {
+            target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+        }
         if (!target.FindPlayer(10f))
         {
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));

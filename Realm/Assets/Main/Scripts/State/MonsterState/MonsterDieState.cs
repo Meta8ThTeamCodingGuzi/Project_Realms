@@ -11,7 +11,7 @@ public class MonsterDieState : State<Monster>
 
     public override void OnEnter()
     {
-        PoolManager.Instance.Despawn(target);
+        target.DieCroutine();
     }
 
     public override void OnExit()

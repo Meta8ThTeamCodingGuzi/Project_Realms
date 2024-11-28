@@ -12,7 +12,7 @@ public class MonsterStateHandler : StateHandler<Monster>
     public override void Initialize()
     {
         CurrentState = new MonsterIdleState(target);
-        CurrentState.OnEnter();   
+        CurrentState.OnEnter();
         base.Initialize();
     }
 }

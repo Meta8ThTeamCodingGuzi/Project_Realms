@@ -19,6 +19,16 @@ public class BuffSkill : Skill
         buffSkillStat.InitializeStats();
 
     }
+    //지워야함
+    private void Start()
+    {
+        Initialize();
+    }
+    //지워야함
+    public void onskill()
+    {
+        UseSkill();
+    }
 
     protected override void UseSkill()
     {
@@ -67,15 +77,18 @@ public class BuffSkill : Skill
     #region 플레이어 버프세팅 버프제거 로직
     protected virtual void PlayerSetBuff(StatType statType,float value,StatModifierType modType) 
     {
+        print($"적용전 : {GameManager.Instance.player.CharacterStats.GetStatValue(statType)}");
         StatModifier StatModifier = new StatModifier(value , modType, this,SourceType.Buff);
         GameManager.Instance.player.CharacterStats.AddModifier(statType, StatModifier);
-        GameManager.Instance.player.UpdateMoveSpeed();
+        print($"적용후 : {GameManager.Instance.player.CharacterStats.GetStatValue(statType)}");
+        GameManager.Instance.player.UpdateMoveSpeed();       
     }
 
     protected virtual void PlayerRemoveBuff(StatType statType)
     {
         GameManager.Instance.player.CharacterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
         GameManager.Instance.player.UpdateMoveSpeed();
+        print($"버프 빠짐 : {GameManager.Instance.player.CharacterStats.GetStatValue(statType)}");
     }
     #endregion
 }

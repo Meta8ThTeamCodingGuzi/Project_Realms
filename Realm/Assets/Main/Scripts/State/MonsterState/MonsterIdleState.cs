@@ -16,21 +16,22 @@ public class MonsterIdleState : State<Monster>
     {
         target.nextPatrol();
         base.OnEnter();
+        target.M_Animator.SetBool("Idle",true);
     }
 
     public override void OnExit()
     {
         patrolTime = 0;
         base.OnExit();
+        target.M_Animator.SetBool("Idle", false);
     }
 
     public override void OnUpdate()
     {
         patrolTime += Time.deltaTime;
-        if (!target.IsAlive)
+        if (target.isTakeDamage)
         {
-            Debug.Log($"{target.CharacterStats.GetStatValue(StatType.Health)}");
-            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+            target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
         }
         if (patrolTime > 5f)
         {
