@@ -12,11 +12,20 @@ public class PointAttackSkill : Skill
     private Coroutine spawnCoroutine;
     private bool isSkillActive = false;
 
-    private void Awake()
+    //임시로 만든거임 삭제해야함
+    public void skillshot()
     {
-        areaSkillStat = (AreaSkillStat)skillStat;
-
+        Initialize();
+        UseSkill();
     }
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        areaSkillStat = (AreaSkillStat)skillStat;
+        areaSkillStat.InitializeStats();
+    }
+
     protected override void UseSkill()
     {
         if (!isSkillActive)
@@ -39,7 +48,7 @@ public class PointAttackSkill : Skill
     }
     private void SetSpawnPoint()
     {
-        if (areaSkillStat.GetStatValue<bool>(SkillStatType.IsHoming))
+        if (true)//areaSkillStat.GetStatValue<bool>(SkillStatType.IsHoming))
         {
             Collider[] colliders = Physics.OverlapSphere(transform.position,
                 areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange));
@@ -54,20 +63,19 @@ public class PointAttackSkill : Skill
                 }
             }
         }
-        if (areaSkillStat.GetStatValue<bool>(SkillStatType.IsTraceMouse))
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(ray, out RaycastHit hit, 1000f);
+
+        spawnPoint = hit.point;
+
+        if (Vector3.Distance(transform.position, hit.point) > areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            Physics.Raycast(ray, out RaycastHit hit, 1000f);
-
-            spawnPoint = hit.point;
-
-            if (Vector3.Distance(transform.position, hit.point) > areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange))
-            {
-                Vector3 dir = (hit.point - transform.position).normalized;
-                spawnPoint = dir * areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
-            }
+            Vector3 dir = (hit.point - transform.position).normalized;
+            spawnPoint = dir * areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
         }
+
 
 
     }
@@ -81,7 +89,7 @@ public class PointAttackSkill : Skill
     {
         while (isSkillActive)
         {
-            SetSpawnPoint();
+
             float areaRange = areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
             float coolDown = areaSkillStat.GetStatValue<float>(SkillStatType.Cooldown);
             float innerInterval = areaSkillStat.GetStatValue<float>(SkillStatType.InnerInterval);
@@ -96,8 +104,9 @@ public class PointAttackSkill : Skill
                 Range = areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange),
             };
 
-            for (int i = 0; i  < pointAttackCount; i++)
+            for (int i = 0; i < pointAttackCount; i++)
             {
+                SetSpawnPoint();
                 SpawnPointAttack(pointData);
 
                 if (innerInterval > 0 && i < pointAttackCount - 1)

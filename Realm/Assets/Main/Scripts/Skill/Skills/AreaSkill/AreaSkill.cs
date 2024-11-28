@@ -12,18 +12,19 @@ public class AreaSkill : Skill
     private Coroutine spawnCoroutine;
     private bool isSkillActive = false;
 
-    private void Awake()
+
+    public override void Initialize()
     {
+        base.Initialize();
         areaSkillStat = (AreaSkillStat)skillStat;
-        
+        areaSkillStat.InitializeStats();
     }
+
+    //임시로 만든거임 삭제해야함
     public void skillshot()
     {
-        if (!isSkillActive)
-        {
-            isSkillActive = true;
-            spawnCoroutine = StartCoroutine(SpawnRoutine());
-        }
+        Initialize();
+        UseSkill();
     }
     protected override void UseSkill()
     {
@@ -47,7 +48,7 @@ public class AreaSkill : Skill
     }
     private void SetSpawnPoint()
     {
-        if (areaSkillStat.GetStatValue<bool>(SkillStatType.IsTraceMouse))
+        if (true)//areaSkillStat.GetStatValue<bool>(SkillStatType.IsTraceMouse))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 

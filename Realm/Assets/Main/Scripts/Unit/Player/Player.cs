@@ -43,8 +43,8 @@ public class Player : Unit
         GameManager.Instance.player = this;
 
         Debug.Log("스킬 추가 전 스킬 리스트 수: " + skillList.Count);
-        skillList.Add(SkillManager.Instance.GetSkill(SkillID.TestSkill));
-        OnSkillSelect(SkillID.TestSkill);
+        //skillList.Add(SkillManager.Instance.GetSkill(SkillID.TestSkill));
+        //OnSkillSelect(SkillID.TestSkill);
     }
 
     private void Update()
