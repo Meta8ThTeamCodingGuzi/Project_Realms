@@ -10,6 +10,7 @@ public class AreaSkill : Skill
     [SerializeField]private Vector3 spawnPoint;
     private AreaSkillStat areaSkillStat;
     private Coroutine spawnCoroutine;
+    private bool isSpawnPoint = false;
     private bool isSkillActive = false;
 
 
@@ -61,8 +62,12 @@ public class AreaSkill : Skill
                 Vector3 dir = (hit.point - transform.position).normalized;
                 spawnPoint = dir * areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
             }
-        }
 
+            isSpawnPoint = false;
+            
+        }
+        spawnPoint = this.transform.position;
+        isSpawnPoint = true;
     } 
 
     private void OnDisable()
@@ -95,9 +100,10 @@ public class AreaSkill : Skill
     {
         FakeArea area = PoolManager.Instance.Spawn<FakeArea>
         (areaPrefab.gameObject, spawnPoint, Quaternion.identity);
-        
+        if (isSpawnPoint) area.transform.SetParent(this.transform); 
         area.Initialize(data);
     }
+
 
     public override void LevelUp()
     {

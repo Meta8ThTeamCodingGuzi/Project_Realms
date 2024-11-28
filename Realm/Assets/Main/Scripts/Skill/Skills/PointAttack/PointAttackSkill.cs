@@ -76,8 +76,6 @@ public class PointAttackSkill : Skill
             spawnPoint = dir * areaSkillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
         }
 
-
-
     }
 
     private void OnDisable()
@@ -106,7 +104,7 @@ public class PointAttackSkill : Skill
 
             for (int i = 0; i < pointAttackCount; i++)
             {
-                SetSpawnPoint();
+                
                 SpawnPointAttack(pointData);
 
                 if (innerInterval > 0 && i < pointAttackCount - 1)
@@ -122,6 +120,7 @@ public class PointAttackSkill : Skill
 
     private void SpawnPointAttack(PointData data)
     {
+        SetSpawnPoint();
         PointAttack area = PoolManager.Instance.Spawn<PointAttack>
             (PointAttackPrefab.gameObject, spawnPoint, Quaternion.identity);
         area.Initialize(data);
