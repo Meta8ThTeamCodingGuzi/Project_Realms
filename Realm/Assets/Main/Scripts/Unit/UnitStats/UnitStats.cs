@@ -35,7 +35,10 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
                 stats[StatType.Health] = new FloatStat(statInit.BaseValue, statInit.PointIncrease);
             }
         }
+    }
 
+    private void CheckStats()
+    {
         foreach (StatType statType in System.Enum.GetValues(typeof(StatType)))
         {
             if (!stats.ContainsKey(statType))

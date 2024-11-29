@@ -7,6 +7,11 @@ public class ProjectileSkill : Skill
     [SerializeField] private Transform firePoint;
     private ProjectileSkillStat projectileStats;
 
+    public void Start()
+    {
+        Initialize();
+    }
+
     public override void Initialize()
     {
         base.Initialize();

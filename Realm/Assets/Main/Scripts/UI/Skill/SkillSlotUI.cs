@@ -6,7 +6,6 @@ using Unity.VisualScripting;
 public class SkillSlotUI : MonoBehaviour
 {
     [SerializeField] private Image skillIcon;
-    [SerializeField] private Image cooldownOverlay;
     [SerializeField] private TextMeshProUGUI hotkeyText;
     [SerializeField] private TextMeshProUGUI cooldownText;
 
@@ -22,12 +21,12 @@ public class SkillSlotUI : MonoBehaviour
         {
             skillIcon.sprite = skill.data.skillIcon.sprite;
             skillIcon.enabled = true;
+            skillIcon.color = Color.white;
             hotkeyText.text = key.ToString();
         }
         else
         {
             skillIcon.enabled = false;
-            cooldownOverlay.fillAmount = 0;
             hotkeyText.text = key.ToString();
             cooldownText.text = "";
         }
@@ -45,12 +44,13 @@ public class SkillSlotUI : MonoBehaviour
         if (currentSkill.IsOnCooldown)
         {
             float cooldownRatio = currentSkill.RemainingCooldown / currentSkill.TotalCooldown;
-            cooldownOverlay.fillAmount = cooldownRatio;
+            Color iconColor = Color.Lerp(Color.gray, Color.white, 1 - cooldownRatio);
+            skillIcon.color = iconColor;
             cooldownText.text = Mathf.Ceil(currentSkill.RemainingCooldown).ToString();
         }
         else
         {
-            cooldownOverlay.fillAmount = 0;
+            skillIcon.color = Color.white;
             cooldownText.text = "";
         }
     }
