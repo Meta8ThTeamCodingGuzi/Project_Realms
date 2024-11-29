@@ -14,6 +14,10 @@ public class ProjectileSkillStat : SkillStat
         },
         new StatInitializer
         {
+            Type= SkillStatType.ManaCost
+        },
+        new StatInitializer
+        {
             Type = SkillStatType.HomingLevel,
         },
         new StatInitializer 

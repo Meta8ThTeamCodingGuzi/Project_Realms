@@ -14,6 +14,10 @@ public class AreaSkillStat : SkillStat
         {
             Type = SkillStatType.Damage,
         },
+        new StatInitializer
+        {
+            Type= SkillStatType.ManaCost
+        },
         new StatInitializer 
         {
             Type = SkillStatType.Duration,

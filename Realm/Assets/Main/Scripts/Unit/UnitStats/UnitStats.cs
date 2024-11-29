@@ -34,6 +34,10 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
             {
                 stats[StatType.Health] = new FloatStat(statInit.BaseValue, statInit.PointIncrease);
             }
+            if( statInit.Type == StatType.MaxMana)
+            {
+                stats[StatType.Mana] = new FloatStat(statInit.BaseValue, statInit.PointIncrease);
+            }
         }
 
         foreach (StatType statType in System.Enum.GetValues(typeof(StatType)))

@@ -21,7 +21,7 @@ public class MonsterTakeDamageState : State<Monster>
     {
         MoveStateTime = 0;
         base.OnExit();
-        target.isTakeDamage = false;
+        target.wasAttacked = false;
     }
 
     public override void OnUpdate()

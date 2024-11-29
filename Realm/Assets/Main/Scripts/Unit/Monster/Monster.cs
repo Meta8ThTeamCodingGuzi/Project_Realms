@@ -15,7 +15,8 @@ public class Monster : Unit, IPoolable
 
     private List<Vector3> patrolPoint = new List<Vector3>();
 
-    public bool isTakeDamage = false;
+    public bool wasAttacked = false;
+    public bool isattacked = true;
 
 
     private int patrolKey = 0;
@@ -82,7 +83,7 @@ public class Monster : Unit, IPoolable
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(500);
-        isTakeDamage = true;
+        wasAttacked = true;
     }
 
     protected override IEnumerator AttackRoutine(Unit target)
@@ -129,6 +130,12 @@ public class Monster : Unit, IPoolable
         print("몬스터 다이 호출중");
         yield return new WaitForSeconds(3f);
         PoolManager.Instance.Despawn(this);
+    }
+
+    public override void Attack(Unit target)
+    {
+        base.Attack(target);
+        isattacked = false;
     }
 
     public void OnReturnToPool()

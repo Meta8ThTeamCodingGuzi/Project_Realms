@@ -43,7 +43,13 @@ public class PlayerStat : UnitStats
         {
             Type = StatType.MaxHealth,
             BaseValue = 500f,
-            PointIncrease = 0.5f    
+            PointIncrease = 50f    
+        },
+        new StatInitializer
+        {
+            Type = StatType.MaxMana,
+            BaseValue = 300f,
+            PointIncrease = 20f
         },
         new StatInitializer
         {

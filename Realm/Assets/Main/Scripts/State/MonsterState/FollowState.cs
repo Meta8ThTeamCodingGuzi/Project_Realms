@@ -27,7 +27,7 @@ public class FollowState : State<Monster>
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
         }
-        if (target.isTakeDamage)
+        if (target.wasAttacked)
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
         }
