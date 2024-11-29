@@ -18,11 +18,6 @@ public class SkillController : MonoBehaviour
 
     private void Initialize()
     {
-        Initialize();
-    }
-
-    private void Initialize()
-    {
         if (player == null)
             player = GetComponent<Player>();
 
