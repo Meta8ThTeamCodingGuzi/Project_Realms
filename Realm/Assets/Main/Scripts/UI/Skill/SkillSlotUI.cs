@@ -8,9 +8,12 @@ public class SkillSlotUI : MonoBehaviour
     [SerializeField] private Image skillIcon;
     [SerializeField] private TextMeshProUGUI hotkeyText;
     [SerializeField] private TextMeshProUGUI cooldownText;
+    [SerializeField] private Button button;
+    private SkillSelectUI skillSelectUI;
 
     private Skill currentSkill;
     private KeyCode hotkey;
+    private RectTransform rectTransform;
 
     public void SetSkill(Skill skill, KeyCode key)
     {
@@ -19,7 +22,7 @@ public class SkillSlotUI : MonoBehaviour
 
         if (skill != null && skill.data != null)
         {
-            skillIcon.sprite = skill.data.skillIcon.sprite;
+            skillIcon.sprite = skill.data.skillIcon;
             skillIcon.enabled = true;
             skillIcon.color = Color.white;
             hotkeyText.text = key.ToString();
@@ -27,9 +30,25 @@ public class SkillSlotUI : MonoBehaviour
         else
         {
             skillIcon.enabled = false;
-            if(hotkeyText != null) { hotkeyText.text = key.ToString(); }            
+            if (hotkeyText != null) { hotkeyText.text = key.ToString(); }
             cooldownText.text = "";
         }
+    }
+
+    public void SetSkillSelectUI(SkillSelectUI selectUI)
+    {
+        this.skillSelectUI = selectUI;
+    }
+
+    private void Start()
+    {
+        button.onClick.AddListener(OnSlotClicked);
+        rectTransform = GetComponent<RectTransform>();
+    }
+
+    private void OnSlotClicked()
+    {
+        skillSelectUI.ShowSkillSelect(hotkey, rectTransform);
     }
 
     private void Update()

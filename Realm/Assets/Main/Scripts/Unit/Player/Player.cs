@@ -17,7 +17,7 @@ public class Player : Unit
     }
 
     [SerializeField] private LevelData levelData;
-    private SkillController skillController;
+    internal SkillController skillController;
     private float totalExp = 0f;  // 누적 경험치
     private LayerMask groundLayerMask;
 

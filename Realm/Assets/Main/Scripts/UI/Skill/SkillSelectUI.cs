@@ -8,6 +8,8 @@ public class SkillSelectUI : MonoBehaviour
     [SerializeField] private Transform skillButtonContainer;
     [SerializeField] private SkillSelectButton skillButtonPrefab;
     [SerializeField] private SkillController skillController;
+    [SerializeField] private Vector2 offset = new Vector2(0, 10f);
+    private RectTransform panelRectTransform;
 
     private KeyCode currentSelectedSlot;
     private List<SkillSelectButton> spawnedButtons = new List<SkillSelectButton>();
@@ -15,6 +17,7 @@ public class SkillSelectUI : MonoBehaviour
     private void Start()
     {
         Initialize();
+        panelRectTransform = skillSelectPanel.GetComponent<RectTransform>();
     }
 
     private void Initialize()
@@ -25,11 +28,20 @@ public class SkillSelectUI : MonoBehaviour
         skillSelectPanel.SetActive(false);
     }
 
-    public void ShowSkillSelect(KeyCode slotKey)
+    public void ShowSkillSelect(KeyCode slotKey, RectTransform slotTransform)
     {
+        if (skillSelectPanel.activeSelf && currentSelectedSlot != slotKey)
+        {
+            ClosePanel();
+        }
+
         currentSelectedSlot = slotKey;
         ClearSkillButtons();
         CreateSkillButtons();
+
+        Vector2 slotPosition = slotTransform.position;
+        panelRectTransform.position = slotPosition + offset;
+
         skillSelectPanel.SetActive(true);
     }
 

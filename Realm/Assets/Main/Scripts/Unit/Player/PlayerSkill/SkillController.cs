@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class SkillController : MonoBehaviour
 {
-    private const int MAX_ACTIVE_SKILLS = 6; // QWER ���� ��
+    private const int MAX_ACTIVE_SKILLS = 6;
 
     [SerializeField] private Player player;
     private Dictionary<KeyCode, Skill> skillSlots = new Dictionary<KeyCode, Skill>();
@@ -14,6 +14,17 @@ public class SkillController : MonoBehaviour
     private void Start()
     {
         Initialize();
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var skill in availableSkills)
+        {
+            if (skill != null)
+            {
+                Destroy(skill.gameObject);
+            }
+        }
     }
 
     private void Initialize()
@@ -50,32 +61,32 @@ public class SkillController : MonoBehaviour
         if (!availableSkills.Contains(skill))
         {
             availableSkills.Add(skill);
-            skill.Initialize();
         }
     }
 
-    public void EquipSkill(Skill skill, KeyCode slot)
+    public void EquipSkill(Skill skillPrefab, KeyCode slot)
     {
         if (!skillSlots.ContainsKey(slot))
             return;
 
-        if (!availableSkills.Contains(skill))
+        if (!availableSkills.Contains(skillPrefab))
             return;
 
         if (skillSlots[slot] != null)
         {
+            Destroy(skillSlots[slot].gameObject);
             activeSkills.Remove(skillSlots[slot]);
         }
 
-        skillSlots[slot] = skill;
-        if (!activeSkills.Contains(skill))
-        {
-            activeSkills.Add(skill);
-        }
+        Skill newSkill = Instantiate(skillPrefab, transform);
+        newSkill.Initialize();
+
+        skillSlots[slot] = newSkill;
+        activeSkills.Add(newSkill);
 
         if (skillBarUI != null)
         {
-            skillBarUI.UpdateSkillSlot(slot, skill);
+            skillBarUI.UpdateSkillSlot(slot, newSkill);
         }
     }
 
