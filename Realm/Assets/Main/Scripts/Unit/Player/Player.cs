@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : Unit
 {
@@ -70,8 +71,13 @@ public class Player : Unit
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            // UI 요소 클릭 체크
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return; // UI 요소를 클릭한 경우 이동하지 않음
+            }
 
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 1f);
 
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
@@ -86,12 +92,12 @@ public class Player : Unit
 
             if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
             {
-                Debug.Log($"Ground hit at: {hit.point}");
+                //Debug.Log($"Ground hit at: {hit.point}");
                 MoveTo(hit.point);
             }
             else
             {
-                Debug.Log("No ground detected");
+                //Debug.Log("No ground detected");
             }
         }
     }

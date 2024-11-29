@@ -14,6 +14,11 @@ public class SkillSelectUI : MonoBehaviour
 
     private void Start()
     {
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         if (skillController == null)
             skillController = FindObjectOfType<SkillController>();
 

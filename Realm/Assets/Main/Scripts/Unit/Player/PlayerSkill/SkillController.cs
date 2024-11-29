@@ -11,16 +11,22 @@ public class SkillController : MonoBehaviour
     public List<Skill> activeSkills = new List<Skill>();
     [SerializeField] private SkillBarUI skillBarUI;
 
-    private void Awake()
+    private void Start()
+    {
+        Initialize();
+    }
+
+    private void Initialize()
     {
         if (player == null)
             player = GetComponent<Player>();
 
-        // QWER 키 초기화
         skillSlots[KeyCode.Q] = null;
         skillSlots[KeyCode.W] = null;
         skillSlots[KeyCode.E] = null;
         skillSlots[KeyCode.R] = null;
+        skillSlots[KeyCode.Mouse0] = null;
+        skillSlots[KeyCode.Mouse1] = null;
     }
 
     private void Update()

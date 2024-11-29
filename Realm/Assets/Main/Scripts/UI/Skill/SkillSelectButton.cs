@@ -7,7 +7,6 @@ using Unity.VisualScripting;
 public class SkillSelectButton : MonoBehaviour
 {
     [SerializeField] private Image skillIcon;
-    [SerializeField] private TextMeshProUGUI skillNameText;
     [SerializeField] private TextMeshProUGUI skillLevelText;
     [SerializeField] private Button button;
 
@@ -20,8 +19,7 @@ public class SkillSelectButton : MonoBehaviour
         this.onSkillSelected = callback;
 
         skillIcon.sprite = skill.data.skillIcon.sprite;
-        skillNameText.text = skill.data.skillID.ToString();
-        skillLevelText.text = $"Lv.{skill.skillStat.GetStatValue<int>(SkillStatType.SkillLevel)}";
+        skillLevelText.text = $"{skill.skillStat.GetStatValue<int>(SkillStatType.SkillLevel)}";
 
         button.onClick.AddListener(() => onSkillSelected?.Invoke(skill));
     }

@@ -27,7 +27,7 @@ public class SkillSlotUI : MonoBehaviour
         else
         {
             skillIcon.enabled = false;
-            hotkeyText.text = key.ToString();
+            if(hotkeyText != null) { hotkeyText.text = key.ToString(); }            
             cooldownText.text = "";
         }
     }
