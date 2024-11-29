@@ -5,6 +5,6 @@ using UnityEngine.UI;
 
 public class SkillData : MonoBehaviour
 {
-    public Image skillIcon;
+    public Sprite skillIcon;
     public SkillID skillID;
 }

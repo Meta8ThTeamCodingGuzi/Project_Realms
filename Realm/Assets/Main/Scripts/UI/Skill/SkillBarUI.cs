@@ -12,6 +12,7 @@ public class SkillBarUI : MonoBehaviour
 
     [SerializeField] private SkillController skillController;
     [SerializeField] private List<SkillSlotMapping> skillSlots;
+    [SerializeField] private SkillSelectUI skillSelectUI;
 
     private void Start()
     {
@@ -22,7 +23,7 @@ public class SkillBarUI : MonoBehaviour
     {
         if (skillController == null)
         {
-            skillController = FindObjectOfType<SkillController>();
+            skillController = GameManager.Instance.player.skillController;
         }
 
         InitializeSlots();
@@ -32,6 +33,7 @@ public class SkillBarUI : MonoBehaviour
     {
         foreach (var slot in skillSlots)
         {
+            slot.slotUI.SetSkillSelectUI(skillSelectUI);
             slot.slotUI.SetSkill(null, slot.hotkey);
         }
     }

@@ -17,7 +17,7 @@ public class Player : Unit
     }
 
     [SerializeField] private LevelData levelData;
-    private SkillController skillController;
+    internal SkillController skillController;
     private float totalExp = 0f;  // 누적 경험치
     private LayerMask groundLayerMask;
 
@@ -25,6 +25,7 @@ public class Player : Unit
     {
         Initialize();
     }
+
     protected override void Initialize()
     {
         Debug.Log("Player Initialize 시작");
@@ -47,8 +48,7 @@ public class Player : Unit
             skillController = gameObject.AddComponent<SkillController>();
         }
 
-        // 테스트 스킬 추가 예시
-        //SkillTest();
+        skillController.Initialize();
     }
 
     private void SkillTest()

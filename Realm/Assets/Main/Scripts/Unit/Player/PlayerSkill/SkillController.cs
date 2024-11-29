@@ -1,22 +1,19 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 
 public class SkillController : MonoBehaviour
 {
-    private const int MAX_ACTIVE_SKILLS = 6; // QWER ���� ��
+    private const int MAX_ACTIVE_SKILLS = 6;
 
     [SerializeField] private Player player;
     private Dictionary<KeyCode, Skill> skillSlots = new Dictionary<KeyCode, Skill>();
-    public List<Skill> availableSkills = new List<Skill>();
+    public List<Skill> availableSkillPrefabs = new List<Skill>();
+    private Dictionary<SkillID, Skill> initializedSkills = new Dictionary<SkillID, Skill>();
     public List<Skill> activeSkills = new List<Skill>();
     [SerializeField] private SkillBarUI skillBarUI;
 
-    private void Start()
-    {
-        Initialize();
-    }
-
-    private void Initialize()
+    public void Initialize()
     {
         if (player == null)
             player = GetComponent<Player>();
@@ -27,6 +24,13 @@ public class SkillController : MonoBehaviour
         skillSlots[KeyCode.R] = null;
         skillSlots[KeyCode.Space] = null;
         skillSlots[KeyCode.Mouse0] = null;
+
+        foreach (var skillPrefab in availableSkillPrefabs)
+        {
+            Skill instance = Instantiate(skillPrefab, transform);
+            instance.Initialize();
+            initializedSkills[skillPrefab.data.skillID] = instance;
+        }
     }
 
     private void Update()
@@ -47,35 +51,67 @@ public class SkillController : MonoBehaviour
 
     public void AddSkill(Skill skill)
     {
-        if (!availableSkills.Contains(skill))
+        if (!availableSkillPrefabs.Contains(skill))
         {
-            availableSkills.Add(skill);
-            skill.Initialize();
+            Skill instance = Instantiate(skill, transform);
+            instance.Initialize();
+            availableSkillPrefabs.Add(instance);
+            initializedSkills[skill.data.skillID] = instance;
         }
     }
 
-    public void EquipSkill(Skill skill, KeyCode slot)
+    public bool IsSkillEquipped(Skill skillPrefab)
     {
-        if (!skillSlots.ContainsKey(slot))
-            return;
-
-        if (!availableSkills.Contains(skill))
-            return;
-
-        if (skillSlots[slot] != null)
+        foreach (var slot in skillSlots)
         {
-            activeSkills.Remove(skillSlots[slot]);
+            if (slot.Value != null && slot.Value.data.skillID == skillPrefab.data.skillID)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void EquipSkill(Skill skillPrefab, KeyCode newSlot)
+    {
+        if (!skillSlots.ContainsKey(newSlot))
+            return;
+
+        KeyCode existingSlot = KeyCode.None;
+        foreach (var slot in skillSlots)
+        {
+            if (slot.Value != null && slot.Value.data.skillID == skillPrefab.data.skillID)
+            {
+                existingSlot = slot.Key;
+                break;
+            }
         }
 
-        skillSlots[slot] = skill;
-        if (!activeSkills.Contains(skill))
+        if (existingSlot != KeyCode.None)
         {
-            activeSkills.Add(skill);
+            skillSlots[existingSlot] = null;
+            if (skillBarUI != null)
+            {
+                skillBarUI.UpdateSkillSlot(existingSlot, null);
+            }
+        }
+
+        if (skillSlots[newSlot] != null)
+        {
+            skillSlots[newSlot] = null;
+        }
+
+        Skill skillInstance = initializedSkills[skillPrefab.data.skillID];
+        skillSlots[newSlot] = skillInstance;
+
+        if (!activeSkills.Contains(skillInstance))
+        {
+            activeSkills.Add(skillInstance);
         }
 
         if (skillBarUI != null)
         {
-            skillBarUI.UpdateSkillSlot(slot, skill);
+            skillBarUI.UpdateSkillSlot(newSlot, skillInstance);
         }
     }
 
@@ -83,7 +119,8 @@ public class SkillController : MonoBehaviour
     {
         if (skillSlots.ContainsKey(slot) && skillSlots[slot] != null)
         {
-            activeSkills.Remove(skillSlots[slot]);
+            Skill skillToRemove = skillSlots[slot];
+            activeSkills.Remove(skillToRemove);
             skillSlots[slot] = null;
 
             if (skillBarUI != null)
@@ -92,4 +129,39 @@ public class SkillController : MonoBehaviour
             }
         }
     }
+
+    public Skill GetInitializedSkill(SkillID skillID)
+    {
+        if (initializedSkills.TryGetValue(skillID, out Skill skill))
+        {
+            return skill;
+        }
+        return null;
+    }
+
+    public bool TryLevelUpSkill(Skill skillPrefab)
+    {
+        if (!initializedSkills.TryGetValue(skillPrefab.data.skillID, out Skill existingSkill))
+        {
+            AddSkill(skillPrefab);
+            existingSkill = initializedSkills[skillPrefab.data.skillID];
+        }
+
+        existingSkill.SetLevel(skillPrefab.skillStat.GetStatValue<int>(SkillStatType.SkillLevel) + 1);
+
+        OnSkillLevelChanged?.Invoke(existingSkill);
+
+        return true;
+    }
+
+    public int GetSkillLevel(SkillID skillID)
+    {
+        if (initializedSkills.TryGetValue(skillID, out Skill skill))
+        {
+            return skill.skillStat.GetStatValue<int>(SkillStatType.SkillLevel);
+        }
+        return 0;
+    }
+
+    public event System.Action<Skill> OnSkillLevelChanged;
 }
