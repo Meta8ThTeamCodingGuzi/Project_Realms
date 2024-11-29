@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class SkillController : MonoBehaviour
 {
-    private const int MAX_ACTIVE_SKILLS = 6; // QWER ½½·Ô ¼ö
+    private const int MAX_ACTIVE_SKILLS = 6; // QWER ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
     [SerializeField] private Player player;
     private Dictionary<KeyCode, Skill> skillSlots = new Dictionary<KeyCode, Skill>();
@@ -11,7 +11,12 @@ public class SkillController : MonoBehaviour
     public List<Skill> activeSkills = new List<Skill>();
     [SerializeField] private SkillBarUI skillBarUI;
 
-    private void Awake()
+    private void Start()
+    {
+        Initialize();
+    }
+
+    private void Initialize()
     {
         Initialize();
     }
@@ -21,7 +26,6 @@ public class SkillController : MonoBehaviour
         if (player == null)
             player = GetComponent<Player>();
 
-        // QWER Å° ÃÊ±âÈ­
         skillSlots[KeyCode.Q] = null;
         skillSlots[KeyCode.W] = null;
         skillSlots[KeyCode.E] = null;
