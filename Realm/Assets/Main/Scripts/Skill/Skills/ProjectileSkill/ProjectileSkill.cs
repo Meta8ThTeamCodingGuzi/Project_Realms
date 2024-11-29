@@ -10,10 +10,6 @@ public class ProjectileSkill : Skill
 
     public void Start()
     {
-        if (skillStat == null)
-        {
-            Initialize();
-        }
         ValidateComponents();
     }
 
@@ -57,6 +53,17 @@ public class ProjectileSkill : Skill
 
     private IEnumerator FireSequence()
     {
+        if (projectileStats == null)
+        {
+            Debug.LogError($"{gameObject.name}: projectileStats가 null입니다!");
+            yield break;
+        }
+
+        Debug.Log($"Shot Interval: {projectileStats.GetStatValue<float>(SkillStatType.ShotInterval)}");
+        Debug.Log($"Inner Interval: {projectileStats.GetStatValue<float>(SkillStatType.InnerInterval)}");
+        Debug.Log($"Projectile Count: {projectileStats.GetStatValue<int>(SkillStatType.ProjectileCount)}");
+        Debug.Log($"Damage: {projectileStats.GetStatValue<float>(SkillStatType.Damage)}");
+
         float shotInterval = projectileStats.GetStatValue<float>(SkillStatType.ShotInterval);
         float innerInterval = projectileStats.GetStatValue<float>(SkillStatType.InnerInterval);
         int projectileCount = projectileStats.GetStatValue<int>(SkillStatType.ProjectileCount);
