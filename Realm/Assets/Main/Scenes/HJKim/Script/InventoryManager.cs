@@ -12,7 +12,7 @@ public class InventoryManager : MonoBehaviour
 
         inventoryUi.SetActive(false);
         InventoryOpen = false; //일단 기본은 닫혀있기
-
+        Debug.Log("닫힘 완료!");
     }
 
 
@@ -20,6 +20,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
+            Debug.Log("I키가 눌리긴 합니다.");
             if (InventoryOpen == false)
             {
                 ShowInven();//인벤UI를 여는 동작을 담음
@@ -28,7 +29,7 @@ public class InventoryManager : MonoBehaviour
             {
                 HideInven();//닫는 동작을 담음
             }
-
+            Debug.Log("열리거나 닫횜");
 
         }
 
@@ -39,13 +40,14 @@ public class InventoryManager : MonoBehaviour
     {
         inventoryUi.SetActive(true);
         InventoryOpen = true;
+        Debug.Log("우와 열렸어요");
     }
 
     public void HideInven()
     {
         inventoryUi.SetActive(false);
         InventoryOpen = false;
-
+        Debug.Log("우와 닫혔어요!");
     }
 
 

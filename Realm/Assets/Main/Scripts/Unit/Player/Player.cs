@@ -47,6 +47,11 @@ public class Player : Unit
         }
 
         // 테스트 스킬 추가 예시
+        //SkillTest();
+    }
+
+    private void SkillTest()
+    {
         Skill testSkill = SkillManager.Instance.GetSkill(SkillID.TestSkill);
         if (testSkill != null)
         {

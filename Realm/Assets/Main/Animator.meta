@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Realm/Assets/Main/Animator.meta
 guid: 5a8e2a203f8b4754e8059a07ac8617ba
+========
+guid: 4e762eb0fd39dd0419512386f2c9607a
+>>>>>>>> main:Realm/Assets/Main/Prefabs/UI.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

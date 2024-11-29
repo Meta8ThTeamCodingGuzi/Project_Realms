@@ -31,32 +31,53 @@ public abstract class SkillStat : MonoBehaviour
 
         foreach (var statInit in initialStats)
         {
-            object baseValue = statInit.Type == SkillStatType.SkillLevel ?
-                Mathf.RoundToInt(statInit.BaseValue) : statInit.BaseValue;
+            bool isInteger = Mathf.Approximately(statInit.BaseValue, Mathf.Round(statInit.BaseValue));
 
-            skillStats[statInit.Type] = new LevelableStat(
-                baseValue,
-                statInit.GrowthValue,
-                statInit.GrowthRate
-            );
-
-            if (statInit.Type == SkillStatType.SkillLevel)
+            if (isInteger)
             {
-                print($"현재레벨 셋팅함 : {Mathf.RoundToInt(statInit.BaseValue)}");
+                skillStats[statInit.Type] = new LevelableStat(
+                    (int)statInit.BaseValue,
+                    (int)statInit.GrowthValue,
+                    statInit.GrowthRate
+                );
+                print($"{statInit.Type} 스탯 초기화: {(int)statInit.BaseValue} (정수)");
+            }
+            else
+            {
+                skillStats[statInit.Type] = new LevelableStat(
+                    statInit.BaseValue,
+                    statInit.GrowthValue,
+                    statInit.GrowthRate
+                );
+                print($"{statInit.Type} 스탯 초기화: {statInit.BaseValue} (실수)");
             }
         }
 
-        if (skillStats.TryGetValue(SkillStatType.SkillLevel, out Stat levelStat))
-        {
-            SetSkillLevel((int)levelStat.Value);
-        }
+        SetSkillLevel(GetStatValue<int>(SkillStatType.SkillLevel));
+        
     }
 
     public virtual T GetStatValue<T>(SkillStatType skillStatType)
     {
         if (skillStats.TryGetValue(skillStatType, out Stat stat))
         {
-            return (T)stat.Value;
+            if (stat.Value is T value)
+            {
+                return value;
+            }
+
+            if (typeof(T) == typeof(int) && stat.Value is float floatValue)
+            {
+                return (T)(object)Mathf.RoundToInt(floatValue);
+            }
+
+            if (typeof(T) == typeof(float) && stat.Value is int intValue)
+            {
+                return (T)(object)((float)intValue);
+            }
+
+            Debug.LogWarning($"스탯 {skillStatType}의 값을 {typeof(T)}로 변환할 수 없습니다!");
+            return default(T);
         }
         Debug.LogWarning($"스탯 {skillStatType} 없음 !!!");
         return default(T);
@@ -118,4 +139,6 @@ public abstract class SkillStat : MonoBehaviour
             }
         }
     }
+
+
 }
