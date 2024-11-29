@@ -18,11 +18,15 @@ public class FollowState : State<Monster>
     public override void OnExit()
     {
         base.OnExit();
-        target.M_Animator.SetBool("Move", true);
+        target.M_Animator.SetBool("Move", false);
     }
 
     public override void OnUpdate()
     {
+        if (!target.IsAlive)
+        {
+            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+        }
         if (target.isTakeDamage)
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));

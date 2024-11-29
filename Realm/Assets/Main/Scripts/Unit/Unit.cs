@@ -126,6 +126,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
         StatModifier healthMod = new StatModifier(-finalDamage, StatModifierType.Flat);
         characterStats.AddModifier(StatType.Health, healthMod);
+        print($"{this} Take Damage호출");
     }
     #endregion
 

@@ -43,7 +43,6 @@ public class Monster : Unit, IPoolable
             m_StateHandler = new MonsterStateHandler(this);
         }
         m_StateHandler.Initialize();
-        M_Animator = GetComponent<Animator>();
         base.Initialize();
         targetPlayer = null;
 
@@ -78,9 +77,11 @@ public class Monster : Unit, IPoolable
         }
         return false;
     }
+
+
     public override void TakeDamage(float damage)
     {
-        base.TakeDamage(damage);
+        base.TakeDamage(500);
         isTakeDamage = true;
     }
 
@@ -125,6 +126,7 @@ public class Monster : Unit, IPoolable
     public IEnumerator DieCroutine()
     {
         M_Animator.SetTrigger("Die");
+        print("몬스터 다이 호출중");
         yield return new WaitForSeconds(3f);
         PoolManager.Instance.Despawn(this);
     }

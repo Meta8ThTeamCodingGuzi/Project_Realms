@@ -12,7 +12,7 @@ public class MonsterAttackState : State<Monster>
 
     public override void OnEnter()
     {        
-        target.M_Animator.SetTrigger("Attack");
+        
         target.Attack(target.targetPlayer);
         base.OnEnter();
     }
@@ -25,6 +25,11 @@ public class MonsterAttackState : State<Monster>
 
     public override void OnUpdate()
     {
+        target.M_Animator.SetTrigger("Attack");
+        if (!target.IsAlive)
+        {
+            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+        }
         if (target.isTakeDamage)
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));

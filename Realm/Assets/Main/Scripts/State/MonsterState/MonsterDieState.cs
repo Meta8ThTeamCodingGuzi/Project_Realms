@@ -11,7 +11,8 @@ public class MonsterDieState : State<Monster>
 
     public override void OnEnter()
     {
-        target.DieCroutine();
+        target.StopMoving();
+        target.MonsterDie();
     }
 
     public override void OnExit()

@@ -29,6 +29,10 @@ public class MonsterIdleState : State<Monster>
     public override void OnUpdate()
     {
         patrolTime += Time.deltaTime;
+        if (!target.IsAlive)
+        {
+            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+        }
         if (target.isTakeDamage)
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));

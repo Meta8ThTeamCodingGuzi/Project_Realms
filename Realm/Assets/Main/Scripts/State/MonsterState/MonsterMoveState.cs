@@ -20,12 +20,16 @@ public class MonsterMoveState : State<Monster>
     {
         MoveStateTime = 0;
         base.OnExit();
-        target.M_Animator.SetBool("Move", true);
+        target.M_Animator.SetBool("Move", false);
     }
 
     public override void OnUpdate()
     {
         MoveStateTime += Time.deltaTime;
+        if (!target.IsAlive)
+        {
+            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+        }
         if (target.isTakeDamage)
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));

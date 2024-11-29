@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class SkillController : MonoBehaviour
 {
-    private const int MAX_ACTIVE_SKILLS = 4; // QWER ½½·Ô ¼ö
+    private const int MAX_ACTIVE_SKILLS = 6; // QWER ½½·Ô ¼ö
 
     [SerializeField] private Player player;
     private Dictionary<KeyCode, Skill> skillSlots = new Dictionary<KeyCode, Skill>();
@@ -13,6 +13,11 @@ public class SkillController : MonoBehaviour
 
     private void Awake()
     {
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         if (player == null)
             player = GetComponent<Player>();
 
@@ -21,6 +26,8 @@ public class SkillController : MonoBehaviour
         skillSlots[KeyCode.W] = null;
         skillSlots[KeyCode.E] = null;
         skillSlots[KeyCode.R] = null;
+        skillSlots[KeyCode.Space] = null;
+        skillSlots[KeyCode.Mouse0] = null;
     }
 
     private void Update()
@@ -32,7 +39,7 @@ public class SkillController : MonoBehaviour
     {
         foreach (var slot in skillSlots)
         {
-            if (Input.GetKeyDown(slot.Key) && slot.Value != null)
+            if (Input.GetKey(slot.Key) && slot.Value != null)
             {
                 slot.Value.TryUseSkill();
             }

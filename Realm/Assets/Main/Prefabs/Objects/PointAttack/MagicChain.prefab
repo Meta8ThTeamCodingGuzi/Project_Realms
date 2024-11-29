@@ -29540,7 +29540,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 554316765190350492}
-  - component: {fileID: -9096626893050448287}
+  - component: {fileID: 4818918737149278404}
   m_Layer: 0
   m_Name: MagicChain
   m_TagString: Untagged
@@ -29564,7 +29564,7 @@ Transform:
   - {fileID: 5792136360159527874}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-9096626893050448287
+--- !u!114 &4818918737149278404
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29573,6 +29573,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9051341062414549135}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dcb3de1ddd78654f91a3db03ebc3cd3, type: 3}
+  m_Script: {fileID: 11500000, guid: e13bddbb387076a429088c1b13e27c4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
