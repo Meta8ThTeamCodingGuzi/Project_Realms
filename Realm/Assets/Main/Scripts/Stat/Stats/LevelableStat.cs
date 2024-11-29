@@ -1,16 +1,35 @@
 using UnityEngine;
 
-public class LevelableStat : FloatStat
+public class LevelableStat : Stat
 {
+    protected object baseValue;
+    protected object lastValue;
     protected float growthValue;  // 레벨당 증가량
     protected float growthRate;   // 레벨당 증가율 (퍼센트)
     protected int currentLevel = 1;
+    protected bool isInteger;
 
-    public LevelableStat(float baseValue, float growthValue = 0f, float growthRate = 0f)
-        : base(baseValue)
+    public LevelableStat(object baseValue, float growthValue = 0f, float growthRate = 0f)
+        : base()
     {
+        this.baseValue = baseValue;
         this.growthValue = growthValue;
         this.growthRate = growthRate;
+        this.isInteger = baseValue is int;
+        this.lastValue = baseValue;
+    }
+
+    public override object Value
+    {
+        get
+        {
+            if (isDirty)
+            {
+                CalculateFinalValue();
+                isDirty = false;
+            }
+            return lastValue;
+        }
     }
 
     public void SetLevel(int level)
@@ -20,10 +39,24 @@ public class LevelableStat : FloatStat
         isDirty = true;
     }
 
+    public override void InvestPoint(float increaseAmount)
+    {
+        investedPoints++;
+        if (isInteger)
+        {
+            baseValue = (int)baseValue + Mathf.RoundToInt(increaseAmount);
+        }
+        else
+        {
+            baseValue = (float)baseValue + increaseAmount;
+        }
+        isDirty = true;
+    }
+
     protected override void CalculateFinalValue()
     {
-        // 레벨에 따른 기본값 계산
-        float leveledBase = baseValue;
+        float baseValueFloat = isInteger ? (int)baseValue : (float)baseValue;
+        float leveledBase = baseValueFloat;
 
         // 고정 증가량
         leveledBase += growthValue * (currentLevel - 1);
@@ -62,6 +95,6 @@ public class LevelableStat : FloatStat
             }
         }
 
-        lastValue = finalValue;
+        lastValue = isInteger ? Mathf.RoundToInt(finalValue) : finalValue;
     }
 }

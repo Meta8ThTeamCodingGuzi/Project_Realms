@@ -11,68 +11,50 @@ public class ProjectileSkillStat : SkillStat
         new StatInitializer
         {
             Type = SkillStatType.SkillLevel,
-            BaseValue = 1f
+        },
+        new StatInitializer
+        {
+            Type = SkillStatType.HomingLevel,
         },
         new StatInitializer 
         {
             Type = SkillStatType.Damage,
-            BaseValue = 10f,
-            GrowthValue = 5f,      // 레벨당 고정값 증가
-            growthPercent = 10f    // 레벨당 % 증가
         },
         new StatInitializer 
         {
             Type = SkillStatType.ProjectileSpeed,
-            BaseValue = 5f,
-            GrowthValue = 0.5f    
         },
         new StatInitializer 
         {
-            Type = SkillStatType.ProjectileRange,
-            BaseValue = 5f,
-            growthPercent = 5f    
+            Type = SkillStatType.ProjectileRange,  
         },
         new StatInitializer 
         {
             Type = SkillStatType.PierceCount,
-            BaseValue = 0f,
-            GrowthValue = 1f     
         },
         new StatInitializer 
         {
             Type = SkillStatType.ExplosionRadius,
-            BaseValue = 0f,
-            GrowthValue = 0.2f   
         },
         new StatInitializer 
         {
-            Type = SkillStatType.HomingRange,
-            BaseValue = 0f,
-            GrowthValue = 0.5f   
+            Type = SkillStatType.HomingRange,  
         },
         new StatInitializer 
         {
             Type = SkillStatType.InnerInterval,
-            BaseValue = 0f,
-            GrowthValue = 0f  
         },
         new StatInitializer 
         {
-            Type = SkillStatType.ShotInterval,
-            BaseValue = 0f,
-            GrowthValue = 0f   
+            Type = SkillStatType.ShotInterval,  
         },                       
         new StatInitializer 
         {
             Type = SkillStatType.ProjectileCount,
-            BaseValue = 0f,
-            GrowthValue = 1f    
         },
         new StatInitializer 
         {
             Type = SkillStatType.IsHoming,
-            BaseValue = 0f,
-            IsBoolStat = true
         },
     };
 

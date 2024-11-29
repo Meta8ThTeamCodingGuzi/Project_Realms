@@ -11,10 +11,6 @@ public abstract class SkillStat : MonoBehaviour
         public SkillStatType Type;
         [Tooltip("기본값")]
         public float BaseValue;
-        [Tooltip("토글식 스탯인지(딸깍)")]
-        public bool IsBoolStat;
-        [Tooltip("정수형 스탯인지")]
-        public bool IsIntStat;
         [Tooltip("레벨당 증가량 (고정)")]
         public float GrowthValue = 0f;
         [Tooltip("레벨당 증가율 (%)")]
@@ -23,8 +19,6 @@ public abstract class SkillStat : MonoBehaviour
     }
 
     protected Dictionary<SkillStatType, Stat> skillStats = new Dictionary<SkillStatType, Stat>();
-
-    public int currentLevel = 0;
 
     protected abstract StatInitializer[] GetInitialStats();
 
@@ -37,30 +31,25 @@ public abstract class SkillStat : MonoBehaviour
 
         foreach (var statInit in initialStats)
         {
-            if (statInit.IsBoolStat)
+            object baseValue = statInit.Type == SkillStatType.SkillLevel ?
+                Mathf.RoundToInt(statInit.BaseValue) : statInit.BaseValue;
+
+            skillStats[statInit.Type] = new LevelableStat(
+                baseValue,
+                statInit.GrowthValue,
+                statInit.GrowthRate
+            );
+
+            if (statInit.Type == SkillStatType.SkillLevel)
             {
-                skillStats[statInit.Type] = new BoolStat(statInit.BaseValue > 0);
-            }
-            if(statInit.IsIntStat) 
-            {
-                skillStats[statInit.Type] = new IntStat(Mathf.RoundToInt(statInit.BaseValue));
-                if (statInit.Type == SkillStatType.SkillLevel)
-                {
-                    currentLevel = Mathf.RoundToInt(statInit.BaseValue);
-                    print($"현재레벨 셋팅함 : {currentLevel}");
-                }
-            }
-            else
-            {
-                skillStats[statInit.Type] = new LevelableStat(
-                    statInit.BaseValue,
-                    statInit.GrowthValue,
-                    statInit.GrowthRate
-                );
+                print($"현재레벨 셋팅함 : {Mathf.RoundToInt(statInit.BaseValue)}");
             }
         }
 
-        SetSkillLevel(currentLevel);
+        if (skillStats.TryGetValue(SkillStatType.SkillLevel, out Stat levelStat))
+        {
+            SetSkillLevel((int)levelStat.Value);
+        }
     }
 
     public virtual T GetStatValue<T>(SkillStatType skillStatType)
@@ -111,9 +100,19 @@ public abstract class SkillStat : MonoBehaviour
 
     public virtual void SetSkillLevel(int level)
     {
+        if (level < 1) level = 1;
+
+        if (skillStats.TryGetValue(SkillStatType.SkillLevel, out Stat levelStat))
+        {
+            if (levelStat is LevelableStat levelableStat)
+            {
+                levelableStat.SetLevel(level);
+            }
+        }
+
         foreach (var stat in skillStats.Values)
         {
-            if (stat is LevelableStat levelableStat)
+            if (stat is LevelableStat levelableStat && stat != levelStat)
             {
                 levelableStat.SetLevel(level);
             }

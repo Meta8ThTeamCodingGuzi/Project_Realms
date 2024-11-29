@@ -2,7 +2,7 @@ public class FloatStat : Stat
 {
     protected float baseValue;
     protected float lastValue;
-    protected float pointIncrease; // 포인트당 증가량
+    protected float pointIncrease;
 
     public FloatStat(float baseValue, float pointIncrease = 1f) : base()
     {
