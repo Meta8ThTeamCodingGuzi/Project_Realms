@@ -10,7 +10,7 @@ public class SkillBarUI : MonoBehaviour
         public SkillSlotUI slotUI;
     }
 
-    [SerializeField]private SkillController skillController;
+    [SerializeField] private SkillController skillController;
     [SerializeField] private List<SkillSlotMapping> skillSlots;
     [SerializeField] private SkillSelectUI skillSelectUI;
 
