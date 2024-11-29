@@ -18,6 +18,7 @@ public class AreaSkill : Skill
         areaSkillStat.InitializeStats();
     }
 
+
     protected override void UseSkill()
     {
         StartCoroutine(SpawnSequence());

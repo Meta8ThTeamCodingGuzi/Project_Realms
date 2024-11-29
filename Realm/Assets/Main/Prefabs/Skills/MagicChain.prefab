@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1349824556367697965}
-  - component: {fileID: 6841110674351225219}
+  - component: {fileID: 3614430637397753839}
   - component: {fileID: 6048696843086911448}
   - component: {fileID: 7250204134646321486}
   m_Layer: 0
@@ -34,7 +34,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6841110674351225219
+--- !u!114 &3614430637397753839
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,9 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dc90109cb6387e4b9b78522413358cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
-  skillStat: {fileID: 0}
-  areaPrefab: {fileID: 0}
+  data: {fileID: 6048696843086911448}
+  skillStat: {fileID: 7250204134646321486}
+  areaPrefab: {fileID: 4818918737149278404, guid: 9d0201bb4d9eb284092cab8939f8b873, type: 3}
   spawnPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &6048696843086911448
 MonoBehaviour:

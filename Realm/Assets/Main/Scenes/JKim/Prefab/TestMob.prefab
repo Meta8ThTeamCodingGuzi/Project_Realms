@@ -15124,7 +15124,7 @@ Animator:
   m_GameObject: {fileID: 5164216856533850883}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 1e94ab6c5cebd064e896c9ec8c60c2d0, type: 3}
-  m_Controller: {fileID: 9100000, guid: 874a6619612a2324eab872e5d409dd1d, type: 2}
+  m_Controller: {fileID: 9100000, guid: b4eaeb982e89b5840a2a0d54e6efb6ec, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -15176,7 +15176,9 @@ MonoBehaviour:
   - {fileID: 3355357480729495571}
   - {fileID: 8122367573940975634}
   - {fileID: 7743391890423390001}
+  isTakeDamage: 0
   nowTarget: {x: 0, y: 0, z: 0}
+  M_Animator: {fileID: 2413905508634537386}
 --- !u!114 &3996009144990521464
 MonoBehaviour:
   m_ObjectHideFlags: 0

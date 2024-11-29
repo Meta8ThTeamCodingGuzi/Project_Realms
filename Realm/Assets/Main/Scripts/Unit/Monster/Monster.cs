@@ -7,7 +7,6 @@ using UnityEngine.AI;
 public class Monster : Unit, IPoolable
 {
     private MonsterStateHandler m_StateHandler;
-    public MonsterStateHandler M_StateHandler => m_StateHandler;
 
     public Player targetPlayer;
 
@@ -16,9 +15,16 @@ public class Monster : Unit, IPoolable
 
     private List<Vector3> patrolPoint = new List<Vector3>();
 
+    public bool wasAttacked = false;
+    public bool isattacked = true;
+
 
     private int patrolKey = 0;
     public Vector3 nowTarget;
+
+    public Animator M_Animator;
+    public MonsterStateHandler M_StateHandler => m_StateHandler;
+
 
     //TODO:: 몬스터 스폰로직 생기면 지우세요
     private void Start()
@@ -61,7 +67,7 @@ public class Monster : Unit, IPoolable
     {
         Collider[] colliders = Physics.OverlapSphere(this.transform.position, Detection);
 
-        foreach (Collider collider in colliders) 
+        foreach (Collider collider in colliders)
         {
             if (collider.TryGetComponent<Player>(out Player player))
             {
@@ -71,6 +77,13 @@ public class Monster : Unit, IPoolable
 
         }
         return false;
+    }
+
+
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(500);
+        wasAttacked = true;
     }
 
     protected override IEnumerator AttackRoutine(Unit target)
@@ -106,6 +119,25 @@ public class Monster : Unit, IPoolable
         }
         nowTarget = patrolPoint[patrolKey];
     }
+    public void MonsterDie()
+    {
+        StartCoroutine(DieCroutine());
+    }
+
+    public IEnumerator DieCroutine()
+    {
+        M_Animator.SetTrigger("Die");
+        print("몬스터 다이 호출중");
+        yield return new WaitForSeconds(3f);
+        PoolManager.Instance.Despawn(this);
+    }
+
+    public override void Attack(Unit target)
+    {
+        base.Attack(target);
+        isattacked = false;
+    }
+
     public void OnReturnToPool()
     {
  

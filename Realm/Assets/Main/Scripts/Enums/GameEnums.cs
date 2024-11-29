@@ -5,6 +5,8 @@ public enum StatType
     Level,
     MaxHealth,
     Health,
+    MaxMana,
+    Mana,
     Damage,
     Defense,
     MoveSpeed,
@@ -23,6 +25,7 @@ public enum SkillStatType
     #region Common Skill Stats
 
     SkillLevel,
+    ManaCost,
     Damage,
     Duration,
     Cooldown,

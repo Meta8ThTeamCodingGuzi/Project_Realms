@@ -46,14 +46,30 @@ public abstract class Skill : MonoBehaviour
     {
         skillStat.SetSkillLevel(level);
     }
+    private StatModifier CalcManaCost(float costmana) 
+    {
+        return new StatModifier(costmana, StatModifierType.Flat,SourceType.Skill);
+    }
 
     // UseSkill을 protected에서 public으로 변경하고 쿨다운 체크 추가
     public virtual bool TryUseSkill()
     {
+        float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
         if (IsOnCooldown)
         {
             Debug.Log($"스킬이 쿨다운 중입니다. 남은 시간: {currentCooldown:F1}초");
             return false;
+        }
+        if (GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Mana)
+            < costmana)
+        {
+            Debug.Log($"마나 부족함");
+            return false;
+        }
+        else 
+        {
+            GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
+            UseSkill();
         }
 
         UseSkill();

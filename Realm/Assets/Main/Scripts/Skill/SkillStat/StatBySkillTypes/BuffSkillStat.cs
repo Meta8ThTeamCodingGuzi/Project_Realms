@@ -12,13 +12,17 @@ public class BuffSkillStat : SkillStat
         {
             Type = SkillStatType.BuffValue,
         },
+        new StatInitializer
+        {
+            Type= SkillStatType.ManaCost
+        },
         new StatInitializer() 
         {
             Type = SkillStatType.Cooldown,
         },
         new StatInitializer()
         {
-            Type= SkillStatType.Duration,
+            Type= SkillStatType.Duration, 
         }
     };
     protected override StatInitializer[] GetInitialStats()
