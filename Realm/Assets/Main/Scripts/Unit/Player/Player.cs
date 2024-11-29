@@ -25,6 +25,7 @@ public class Player : Unit
     {
         Initialize();
     }
+
     protected override void Initialize()
     {
         Debug.Log("Player Initialize 시작");
@@ -47,8 +48,7 @@ public class Player : Unit
             skillController = gameObject.AddComponent<SkillController>();
         }
 
-        // 테스트 스킬 추가 예시
-        //SkillTest();
+        skillController.Initialize();
     }
 
     private void SkillTest()

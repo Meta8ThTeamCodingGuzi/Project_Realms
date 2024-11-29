@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(ProjectileSkillStat))]
 public class ProjectileSkill : Skill
 {
     [SerializeField] private Projectile projectilePrefab;
@@ -9,14 +10,44 @@ public class ProjectileSkill : Skill
 
     public void Start()
     {
-        Initialize();
+        if (skillStat == null)
+        {
+            Initialize();
+        }
+        ValidateComponents();
+    }
+
+    private void ValidateComponents()
+    {
+        if (projectilePrefab == null)
+        {
+            Debug.LogError($"{gameObject.name}: projectilePrefab이 할당되지 않았습니다!");
+        }
+
+        if (firePoint == null)
+        {
+            // firePoint가 없으면 자동으로 생성
+            GameObject firePointObj = new GameObject("FirePoint");
+            firePoint = firePointObj.transform;
+            firePoint.SetParent(transform);
+            firePoint.localPosition = Vector3.zero;
+            Debug.Log($"{gameObject.name}: FirePoint가 자동으로 생성되었습니다.");
+        }
     }
 
     public override void Initialize()
     {
         base.Initialize();
-        projectileStats = (ProjectileSkillStat)skillStat;
-        projectileStats.InitializeStats();
+        if (skillStat != null)
+        {
+            projectileStats = (ProjectileSkillStat)skillStat;
+            projectileStats.InitializeStats();
+            Debug.Log($"{gameObject.name}: ProjectileSkill 초기화 완료");
+        }
+        else
+        {
+            Debug.LogError($"{gameObject.name}: skillStat이 null입니다!");
+        }
     }
 
     protected override void UseSkill()
@@ -54,9 +85,29 @@ public class ProjectileSkill : Skill
 
     private void FireProjectile(ProjectileData data)
     {
+        if (projectilePrefab == null)
+        {
+            Debug.LogError($"{gameObject.name}: projectilePrefab이 없습니다!");
+            return;
+        }
+
+        if (firePoint == null)
+        {
+            Debug.LogError($"{gameObject.name}: firePoint가 없습니다!");
+            return;
+        }
+
         Projectile projectile = PoolManager.Instance.Spawn<Projectile>
             (projectilePrefab.gameObject, firePoint.position, firePoint.rotation);
-        projectile.Initialize(data);
+
+        if (projectile != null)
+        {
+            projectile.Initialize(data);
+        }
+        else
+        {
+            Debug.LogError($"{gameObject.name}: 발사체 생성 실패!");
+        }
     }
 
     public override void LevelUp()

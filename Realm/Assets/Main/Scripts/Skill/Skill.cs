@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +15,6 @@ public abstract class Skill : MonoBehaviour
 
     public virtual void Initialize()
     {
-        print("½ºÅ³ ÃÊ±âÈ­ ÇÔ¼ö È£Ãâ");
         if (skillStat == null)
         {
             skillStat = GetComponent<SkillStat>();
@@ -28,7 +27,7 @@ public abstract class Skill : MonoBehaviour
 
     private void Update()
     {
-        // Äğ´Ù¿î °¨¼Ò
+        // Ù¿
         if (currentCooldown > 0)
         {
             currentCooldown = Mathf.Max(0, currentCooldown - Time.deltaTime);
@@ -46,35 +45,30 @@ public abstract class Skill : MonoBehaviour
     {
         skillStat.SetSkillLevel(level);
     }
-    private StatModifier CalcManaCost(float costmana) 
+    private StatModifier CalcManaCost(float costmana)
     {
-        return new StatModifier(costmana, StatModifierType.Flat,SourceType.Skill);
+        return new StatModifier(costmana, StatModifierType.Flat, SourceType.Skill);
     }
 
-    // UseSkillÀ» protected¿¡¼­ publicÀ¸·Î º¯°æÇÏ°í Äğ´Ù¿î Ã¼Å© Ãß°¡
     public virtual bool TryUseSkill()
     {
         float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
         if (IsOnCooldown)
         {
-            Debug.Log($"½ºÅ³ÀÌ Äğ´Ù¿î ÁßÀÔ´Ï´Ù. ³²Àº ½Ã°£: {currentCooldown:F1}ÃÊ");
+            Debug.Log($"ìŠ¤í‚¬ì´ ì¿¨ë‹¤ìš´ ì¤‘ì…ë‹ˆë‹¤. ë‚¨ì€ ì‹œê°„: {currentCooldown:F1}ì´ˆ");
             return false;
         }
-        if (GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Mana)
-            < costmana)
+
+        if (GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Mana) < costmana)
         {
-            Debug.Log($"¸¶³ª ºÎÁ·ÇÔ");
+            Debug.Log("ë§ˆë‚˜ê°€ ë¶€ì¡±í•©ë‹ˆë‹¤");
             return false;
         }
-        else 
-        {
-            GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
-            UseSkill();
-        }
 
-        UseSkill();
+        GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
+        UseSkill(); // UseSkill í•œ ë²ˆë§Œ í˜¸ì¶œ
 
-        // Äğ´Ù¿îÀÌ 0º¸´Ù Å« °æ¿ì¿¡¸¸ Äğ´Ù¿î ½ÃÀÛ
+        // ì¿¨ë‹¤ìš´ì´ 0ë³´ë‹¤ í° ê²½ìš°ì—ë§Œ ì¿¨ë‹¤ìš´ ì‹œì‘
         if (TotalCooldown > 0)
         {
             StartCooldown();
@@ -89,7 +83,7 @@ public abstract class Skill : MonoBehaviour
     {
         if (TotalCooldown <= 0)
         {
-            Debug.LogWarning($"{gameObject.name} ½ºÅ³ÀÇ Äğ´Ù¿îÀÌ 0 ÀÌÇÏ·Î ¼³Á¤µÇ¾î ÀÖ½À´Ï´Ù.");
+            Debug.LogWarning($"{gameObject.name} Å³ Ù¿ 0 Ï· Ç¾ Ö½Ï´.");
             return;
         }
         currentCooldown = TotalCooldown;
@@ -102,7 +96,7 @@ public abstract class Skill : MonoBehaviour
 
         foreach (var stat in currentStats)
         {
-            // ½ºÅÈ Å¸ÀÔ¿¡ µû¶ó ÀûÀıÇÑ Æ÷¸ËÀ¸·Î Ãâ·Â
+            //  Å¸Ô¿  
             string value = FormatStatValue(stat.Key, stat.Value);
             Debug.Log($"{stat.Key}: {value}");
         }

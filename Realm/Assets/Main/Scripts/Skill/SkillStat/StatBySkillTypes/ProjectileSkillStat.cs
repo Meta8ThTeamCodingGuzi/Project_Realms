@@ -64,11 +64,6 @@ public class ProjectileSkillStat : SkillStat
 
     protected override StatInitializer[] GetInitialStats()
     {
-        Debug.Log($"initialStats count: {initialStats.Length}");
-        foreach (var stat in initialStats)
-        {
-            Debug.Log($"Stat: {stat.Type}, BaseValue: {stat.BaseValue}");
-        }
         return initialStats;
     }
 }

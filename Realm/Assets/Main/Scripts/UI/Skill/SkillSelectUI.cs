@@ -56,10 +56,12 @@ public class SkillSelectUI : MonoBehaviour
 
     private void CreateSkillButtons()
     {
-        foreach (Skill skill in skillController.availableSkills)
+        foreach (Skill skillPrefab in skillController.availableSkillPrefabs)
         {
+            Skill initializedSkill = skillController.GetInitializedSkill(skillPrefab.data.skillID);
+
             SkillSelectButton button = Instantiate(skillButtonPrefab, skillButtonContainer);
-            button.Initialize(skill, OnSkillSelected);
+            button.Initialize(initializedSkill, OnSkillSelected);
             spawnedButtons.Add(button);
         }
     }

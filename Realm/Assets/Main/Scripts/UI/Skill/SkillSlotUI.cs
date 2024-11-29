@@ -25,7 +25,7 @@ public class SkillSlotUI : MonoBehaviour
             skillIcon.sprite = skill.data.skillIcon;
             skillIcon.enabled = true;
             skillIcon.color = Color.white;
-            hotkeyText.text = key.ToString();
+            if(hotkeyText != null) { hotkeyText.text = key.ToString(); }            
         }
         else
         {
