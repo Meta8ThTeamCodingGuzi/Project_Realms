@@ -728,8 +728,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3863555948085938574}
   - component: {fileID: 1711928645076164045}
-  - component: {fileID: 1662566578868697835}
   - component: {fileID: 3768985954723998064}
+  - component: {fileID: -974710110311922829}
   m_Layer: 0
   m_Name: Bee Blue
   m_TagString: Untagged
@@ -773,46 +773,10 @@ MonoBehaviour:
   - {fileID: 5233898387083110316}
   - {fileID: 472281722504683395}
   - {fileID: 2735596889826191578}
-  isTakeDamage: 0
+  wasAttacked: 0
+  isattacked: 1
   nowTarget: {x: 0, y: 0, z: 0}
   M_Animator: {fileID: 4813014952756739968}
---- !u!114 &1662566578868697835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1978331477252637148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 723906f99f9f88044918a7becc2ffb31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialStats:
-  - Type: 0
-    BaseValue: 1
-    PointIncrease: 0
-  - Type: 5
-    BaseValue: 5
-    PointIncrease: 0.2
-  - Type: 4
-    BaseValue: 5
-    PointIncrease: 2
-  - Type: 9
-    BaseValue: 10
-    PointIncrease: 3
-  - Type: 6
-    BaseValue: 1.8
-    PointIncrease: 0
-  - Type: 7
-    BaseValue: 2
-    PointIncrease: 0
-  - Type: 3
-    BaseValue: 30
-    PointIncrease: 20
-  - Type: 1
-    BaseValue: 150
-    PointIncrease: 20
 --- !u!195 &3768985954723998064
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -835,6 +799,43 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-974710110311922829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978331477252637148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 723906f99f9f88044918a7becc2ffb31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialStats:
+  - Type: 0
+    BaseValue: 1
+    PointIncrease: 0
+  - Type: 7
+    BaseValue: 4
+    PointIncrease: 0.2
+  - Type: 6
+    BaseValue: 10
+    PointIncrease: 2
+  - Type: 11
+    BaseValue: 20
+    PointIncrease: 3
+  - Type: 8
+    BaseValue: 1.5
+    PointIncrease: 0
+  - Type: 9
+    BaseValue: 2
+    PointIncrease: 0
+  - Type: 5
+    BaseValue: 50
+    PointIncrease: 20
+  - Type: 1
+    BaseValue: 250
+    PointIncrease: 50
 --- !u!1 &1984045260350484438
 GameObject:
   m_ObjectHideFlags: 0
