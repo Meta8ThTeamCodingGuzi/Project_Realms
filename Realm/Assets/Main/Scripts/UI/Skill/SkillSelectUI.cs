@@ -4,32 +4,41 @@ using System.Collections.Generic;
 
 public class SkillSelectUI : MonoBehaviour
 {
-    [SerializeField] private GameObject skillSelectPanel;
-    [SerializeField] private Transform skillButtonContainer;
-    [SerializeField] private SkillSelectButton skillButtonPrefab;
-    [SerializeField] private SkillController skillController;
-    [SerializeField] private Vector2 offset = new Vector2(0, 10f);
-    private RectTransform panelRectTransform;
+    public GameObject skillSelectPanel;
+    public Transform skillButtonContainer;
+    public SkillSelectButton skillButtonPrefab;
+    public Vector2 offset = new Vector2(0, 10f);
+    public RectTransform panelRectTransform;
 
     private KeyCode currentSelectedSlot;
     private List<SkillSelectButton> spawnedButtons = new List<SkillSelectButton>();
 
+
     private void Start()
     {
         Initialize();
-        panelRectTransform = skillSelectPanel.GetComponent<RectTransform>();
     }
 
     private void Initialize()
     {
-        if (skillController == null)
-            skillController = FindObjectOfType<SkillController>();
-
-        skillSelectPanel.SetActive(false);
+        if (panelRectTransform == null)
+        {
+            panelRectTransform = skillSelectPanel.GetComponent<RectTransform>();
+        }
+        if (skillSelectPanel != null)
+        {
+            skillSelectPanel.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("skillSelectPanel is not assigned!");
+        }
     }
 
     public void ShowSkillSelect(KeyCode slotKey, RectTransform slotTransform)
     {
+        if (skillSelectPanel == null) return;
+
         if (skillSelectPanel.activeSelf && currentSelectedSlot != slotKey)
         {
             ClosePanel();
@@ -47,18 +56,23 @@ public class SkillSelectUI : MonoBehaviour
 
     private void ClearSkillButtons()
     {
+        if (spawnedButtons == null) return;
+
         foreach (var button in spawnedButtons)
         {
-            Destroy(button.gameObject);
+            if (button != null)
+            {
+                Destroy(button.gameObject);
+            }
         }
         spawnedButtons.Clear();
     }
 
     private void CreateSkillButtons()
     {
-        foreach (Skill skillPrefab in skillController.availableSkillPrefabs)
+        foreach (Skill skillPrefab in GameManager.Instance.player.skillController.availableSkillPrefabs)
         {
-            Skill initializedSkill = skillController.GetInitializedSkill(skillPrefab.data.skillID);
+            Skill initializedSkill = GameManager.Instance.player.skillController.GetInitializedSkill(skillPrefab.data.skillID);
 
             SkillSelectButton button = Instantiate(skillButtonPrefab, skillButtonContainer);
             button.Initialize(initializedSkill, OnSkillSelected);
@@ -68,7 +82,7 @@ public class SkillSelectUI : MonoBehaviour
 
     private void OnSkillSelected(Skill selectedSkill)
     {
-        skillController.EquipSkill(selectedSkill, currentSelectedSlot);
+        GameManager.Instance.player.skillController.EquipSkill(selectedSkill, currentSelectedSlot);
         skillSelectPanel.SetActive(false);
     }
 
