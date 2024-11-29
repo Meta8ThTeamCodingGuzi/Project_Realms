@@ -925,8 +925,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6670815018318439900}
   - component: {fileID: 7818775067663570772}
-  - component: {fileID: 5865884950127384701}
   - component: {fileID: 7761774807598434565}
+  - component: {fileID: 6569092658945343162}
   m_Layer: 0
   m_Name: Cobra Red
   m_TagString: Untagged
@@ -970,46 +970,10 @@ MonoBehaviour:
   - {fileID: 7421824923472246987}
   - {fileID: 4734544757909582274}
   - {fileID: 3902436161447704421}
-  isTakeDamage: 0
+  wasAttacked: 0
+  isattacked: 1
   nowTarget: {x: 0, y: 0, z: 0}
   M_Animator: {fileID: 3284501336631681673}
---- !u!114 &5865884950127384701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2870003257934478144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 723906f99f9f88044918a7becc2ffb31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialStats:
-  - Type: 0
-    BaseValue: 1
-    PointIncrease: 0
-  - Type: 5
-    BaseValue: 3.5
-    PointIncrease: 0.2
-  - Type: 4
-    BaseValue: 20
-    PointIncrease: 2
-  - Type: 9
-    BaseValue: 35
-    PointIncrease: 3
-  - Type: 6
-    BaseValue: 2
-    PointIncrease: 0
-  - Type: 7
-    BaseValue: 2.5
-    PointIncrease: 0
-  - Type: 3
-    BaseValue: 50
-    PointIncrease: 20
-  - Type: 1
-    BaseValue: 400
-    PointIncrease: 100
 --- !u!195 &7761774807598434565
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1032,6 +996,43 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6569092658945343162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2870003257934478144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 723906f99f9f88044918a7becc2ffb31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialStats:
+  - Type: 0
+    BaseValue: 1
+    PointIncrease: 0
+  - Type: 7
+    BaseValue: 4
+    PointIncrease: 0.2
+  - Type: 6
+    BaseValue: 10
+    PointIncrease: 2
+  - Type: 11
+    BaseValue: 20
+    PointIncrease: 3
+  - Type: 8
+    BaseValue: 1.5
+    PointIncrease: 0
+  - Type: 9
+    BaseValue: 2
+    PointIncrease: 0
+  - Type: 5
+    BaseValue: 50
+    PointIncrease: 20
+  - Type: 1
+    BaseValue: 250
+    PointIncrease: 50
 --- !u!1 &2989398853775930061
 GameObject:
   m_ObjectHideFlags: 0
