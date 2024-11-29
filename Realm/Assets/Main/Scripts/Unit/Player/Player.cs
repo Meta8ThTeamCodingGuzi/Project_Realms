@@ -47,12 +47,12 @@ public class Player : Unit
         }
 
         // 테스트 스킬 추가 예시
-        Skill testSkill = SkillManager.Instance.GetSkill(SkillID.TestSkill);
-        if (testSkill != null)
-        {
-            skillController.AddSkill(testSkill);
-            skillController.EquipSkill(testSkill, KeyCode.Q); // Q 슬롯에 장착
-        }
+        //Skill testSkill = SkillManager.Instance.GetSkill(SkillID.TestSkill);
+        //if (testSkill != null)
+        //{
+        //    skillController.AddSkill(testSkill);
+        //    skillController.EquipSkill(testSkill, KeyCode.Q); // Q 슬롯에 장착
+        //}
     }
 
     private void Update()
