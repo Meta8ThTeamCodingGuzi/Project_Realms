@@ -9,7 +9,7 @@ public class MonsterTakeDamageState : State<Monster>
         this.target = target;
     }
 
-    private float MoveStateTime = 0;
+    //private float MoveStateTime = 0;
 
     public override void OnEnter()
     {
@@ -19,7 +19,7 @@ public class MonsterTakeDamageState : State<Monster>
 
     public override void OnExit()
     {
-        MoveStateTime = 0;
+        //MoveStateTime = 0;
         base.OnExit();
         target.wasAttacked = false;
     }
