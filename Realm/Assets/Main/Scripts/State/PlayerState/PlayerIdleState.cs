@@ -16,11 +16,12 @@ public class PlayerIdleState : State<Player>
 
     public override void OnExit()
     {
-        base.OnExit();
+        
     }
 
     public override void OnUpdate()
     {
+        target.MovetoCursor();
 
     }
 }

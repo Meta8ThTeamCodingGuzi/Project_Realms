@@ -20,6 +20,7 @@ public class Player : Unit
     internal SkillController skillController;
     private float totalExp = 0f;  // 누적 경험치
     private LayerMask groundLayerMask;
+    private PlayerHandler playerHandler;
 
     private void Start()
     {
@@ -49,6 +50,7 @@ public class Player : Unit
         }
 
         skillController.Initialize();
+        playerHandler = new PlayerHandler(this);
     }
 
     private void SkillTest()
@@ -63,11 +65,11 @@ public class Player : Unit
 
     private void Update()
     {
+        playerHandler.HandleUpdate();
         MovetoCursor();
-
     }
 
-    private void MovetoCursor()
+    public void MovetoCursor()
     {
         if (Input.GetMouseButtonDown(0))
         {
