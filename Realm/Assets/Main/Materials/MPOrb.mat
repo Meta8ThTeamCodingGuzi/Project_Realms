@@ -76,17 +76,17 @@ Material:
     - _Parallax: 0.02
     - _SrcBlend: 1
     - _UVSec: 0
-    - _Value: 0
+    - _Value: 1
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LineCol: {r: 0.55294114, g: 0.55599797, b: 0.84705883, a: 1}
     - _Params01: {r: 8, g: 7, b: 59, a: 4}
-    - _Params02: {r: 0.03, g: 0.03, b: 2, a: 0.8}
+    - _Params02: {r: 0.03, g: 0.03, b: 2, a: 0.85}
     - _Params03: {r: -0.025, g: 0.02, b: 0.04, a: 0.025}
     - _Params04: {r: -0.02, g: -0.015, b: 0, a: 0}
-    - _Tex01Col: {r: 0.08619959, g: 0.1560072, b: 0.91764706, a: 1}
-    - _Tex02Col: {r: 0.25873375, g: 0.31556696, b: 1, a: 1}
+    - _Tex01Col: {r: 0.08610702, g: 0.15589908, b: 0.91764706, a: 1}
+    - _Tex02Col: {r: 0.25861967, g: 0.31545287, b: 1, a: 1}
     - _Tex03Col: {r: 0.85882354, g: 0.87326896, b: 1, a: 1}
   m_BuildTextureStacks: []

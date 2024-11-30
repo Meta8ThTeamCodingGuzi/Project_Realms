@@ -5,13 +5,12 @@ using UnityEditor.Experimental.GraphView;
 public class SkillController : MonoBehaviour
 {
     private const int MAX_ACTIVE_SKILLS = 6;
-
-    [SerializeField] private Player player;
-    private Dictionary<KeyCode, Skill> skillSlots = new Dictionary<KeyCode, Skill>();
     public List<Skill> availableSkillPrefabs = new List<Skill>();
-    private Dictionary<SkillID, Skill> initializedSkills = new Dictionary<SkillID, Skill>();
     public List<Skill> activeSkills = new List<Skill>();
-    [SerializeField] private SkillBarUI skillBarUI;
+    private Player player;
+    private Dictionary<KeyCode, Skill> skillSlots = new Dictionary<KeyCode, Skill>();
+    private Dictionary<SkillID, Skill> initializedSkills = new Dictionary<SkillID, Skill>();
+    private SkillBarUI skillBarUI;
 
     public void Initialize()
     {
@@ -31,6 +30,11 @@ public class SkillController : MonoBehaviour
             instance.Initialize();
             initializedSkills[skillPrefab.data.skillID] = instance;
         }
+    }
+
+    public void SetSkillBarUI(SkillBarUI skillBarUI) 
+    {
+        this.skillBarUI = skillBarUI;
     }
 
     private void Update()

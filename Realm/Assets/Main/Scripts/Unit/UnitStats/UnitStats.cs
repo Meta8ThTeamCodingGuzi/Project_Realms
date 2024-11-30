@@ -1,16 +1,14 @@
-using System.Collections.Generic;
+癤퓎sing System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public abstract class UnitStats : MonoBehaviour, ICharacterStats
 {
     [System.Serializable]
     public class StatInitializer
     {
-        [Header("스탯 종류")]
         public StatType Type;
-        [Header("기본값")]
         public float BaseValue;
-        [Header("스탯포인트 하나당 얼마나 오를지") , Tooltip("만약 스탯 타입이 [레벨]일 경우 0으로 설정 부탁드립니다.")]
         public float PointIncrease = 1f;
     }
 
@@ -34,7 +32,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
             {
                 stats[StatType.Health] = new FloatStat(statInit.BaseValue, statInit.PointIncrease);
             }
-            if( statInit.Type == StatType.MaxMana)
+            if (statInit.Type == StatType.MaxMana)
             {
                 stats[StatType.Mana] = new FloatStat(statInit.BaseValue, statInit.PointIncrease);
             }
@@ -48,7 +46,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
             if (!stats.ContainsKey(statType))
             {
                 stats[statType] = new FloatStat(0f);
-                Debug.Log($"이 객체는 {statType} 스탯 안쓰는 스탯인가요?");
+                Debug.Log($" 체 {statType} 횡寬?");
             }
         }
     }
@@ -59,7 +57,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
         {
             return (float)stat.Value;
         }
-        Debug.LogWarning($"스탯 {statType} 없음 !!!");
+        Debug.LogWarning($" {statType} !!!");
         return 0f;
     }
 
@@ -115,5 +113,19 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
         }
         Debug.LogWarning($"Stat {statType} not found!");
         return null;
+    }
+
+    public virtual float GetPointIncreaseAmount(StatType statType)
+    {
+        var initialStats = GetInitialStats();
+        var statInit = initialStats.FirstOrDefault(s => s.Type == statType);
+
+        if (statInit != null)
+        {
+            return statInit.PointIncrease;
+        }
+
+        Debug.LogWarning($"No point increase amount found for stat type {statType}");
+        return 0f;
     }
 }

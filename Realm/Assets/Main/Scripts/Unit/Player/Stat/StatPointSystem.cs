@@ -1,29 +1,14 @@
 using UnityEngine;
-using System.Collections.Generic;
 
+[RequireComponent(typeof(PlayerStat))]
 public class StatPointSystem : MonoBehaviour
 {
-    [System.Serializable]
-    public class StatInvestSettings
-    {
-        public StatType StatType;
-        public float IncreaseAmount = 1f;  // 포인트당 증가량
-        public int MaxPoints = 100;         // 최대 투자 가능 포인트
-    }
-
-    [SerializeField] private UnitStats unitStats;
-    [SerializeField] private StatInvestSettings[] statSettings;
-
-    private Dictionary<StatType, StatInvestSettings> settingsMap = new Dictionary<StatType, StatInvestSettings>();
+    private PlayerStat playerStat;
     public int AvailablePoints { get; private set; }
 
-    private void Awake()
+    public void Initialize()
     {
-        unitStats = GetComponent<UnitStats>();
-        foreach (var setting in statSettings)
-        {
-            settingsMap[setting.StatType] = setting;
-        }
+        playerStat = GetComponent<PlayerStat>();
     }
 
     public void AddStatPoints(int points)
@@ -34,22 +19,15 @@ public class StatPointSystem : MonoBehaviour
     public bool TryInvestPoint(StatType statType)
     {
         if (AvailablePoints <= 0) return false;
-        if (!settingsMap.TryGetValue(statType, out StatInvestSettings settings)) return false;
 
-        Stat stat = unitStats.GetStat(statType);
+        Stat stat = playerStat.GetStat(statType);
         if (stat == null) return false;
 
-        if (stat.GetInvestedPoints() >= settings.MaxPoints) return false;
+        float increaseAmount = playerStat.GetPointIncreaseAmount(statType);
+        if (increaseAmount <= 0) return false;  // 투자 불가능한 스탯
 
-        stat.InvestPoint(settings.IncreaseAmount);
+        stat.InvestPoint(increaseAmount);
         AvailablePoints--;
         return true;
-    }
-
-    public int GetMaxInvestablePoints(StatType statType)
-    {
-        return settingsMap.TryGetValue(statType, out StatInvestSettings settings)
-            ? settings.MaxPoints
-            : 0;
     }
 }

@@ -3,11 +3,13 @@ using UnityEngine.AI;
 using System.Collections;
 using UnityEditor;
 
-public abstract class Unit : MonoBehaviour, IDamageable, IMovable
+public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializable
 {
     protected NavMeshAgent agent;
     protected ICharacterStats characterStats;
     public ICharacterStats CharacterStats => characterStats;
+
+    public bool IsInitialized { get; private set; }
 
 
     protected float lastAttackTime;
@@ -31,6 +33,8 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
         characterStats.InitializeStats();
 
         UpdateMoveSpeed();
+
+        IsInitialized = true;
     }
 
 
@@ -139,6 +143,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
 
     public virtual bool IsMoving => agent != null && agent.hasPath && agent.velocity.sqrMagnitude > 0.01f;
 
+
     public virtual void MoveTo(Vector3 destination)
     {
         if (agent != null && agent.isActiveAndEnabled && IsAlive)
@@ -214,6 +219,11 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable
                 Gizmos.DrawSphere(transform.position, attackRange);
             }
         }
+    }
+
+    void IInitializable.Initialize()
+    {
+        throw new System.NotImplementedException();
     }
 
 #endif
