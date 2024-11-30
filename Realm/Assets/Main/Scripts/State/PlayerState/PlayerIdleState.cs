@@ -21,7 +21,6 @@ public class PlayerIdleState : State<Player>
 
     public override void OnUpdate()
     {
-        target.MovetoCursor();
 
     }
 }
