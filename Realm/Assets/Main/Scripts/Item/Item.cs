@@ -1,64 +1,40 @@
-using UnityEditor.IMGUI.Controls;
+using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Item : MonoBehaviour
+public class Item : MonoBehaviour
 {
-    [SerializeField] protected string itemName = "기본 아이템";
-    [SerializeField] protected string description = "아이템 설명";
-    protected bool isEquipped;
+    [SerializeField] private ItemData itemData;
 
-    public string ItemName => itemName;
-    public string Description => description;
-    public bool IsEquipped => isEquipped;
+    public ItemID ItemID => itemData.ItemID;
+    public ItemType ItemType => itemData.ItemType;
+    public GameObject ItemPrefab => itemData.ItemPrefab;
+    public string Description => itemData.Description;
+    public Sprite Icon => itemData.Icon;
+    public IReadOnlyList<ItemData.ItemStat> Stats => itemData.Stats;
 
     protected virtual void ApplyStatModifier(ICharacterStats stats, StatType statType, float value, StatModifierType modType)
     {
         stats.AddModifier(statType, new StatModifier(value, modType, this, SourceType.Equipment));
     }
 
-    public virtual bool CanEquip(Player player)
+    public void ApplyStats(ICharacterStats characterStats)
     {
-        return !isEquipped && player != null && player.IsAlive;
-    }
-
-    public virtual void Equip(Player player)
-    {
-        if (!CanEquip(player)) return;
-
-        ICharacterStats stats = player.GetComponent<ICharacterStats>();
-        if (stats != null)
+        foreach (var stat in Stats)
         {
-            ApplyStats(stats);
-            isEquipped = true;
-            OnEquipped();
+            if (stat.flatValue != 0)
+                ApplyStatModifier(characterStats, stat.statType, stat.flatValue, StatModifierType.Flat);
+            if (stat.percentValue != 0)
+                ApplyStatModifier(characterStats, stat.statType, stat.percentValue, StatModifierType.PercentAdd);
         }
     }
 
-    public virtual void Unequip(Player player)
+    public void RemoveStats(ICharacterStats characterStats)
     {
-        if (!isEquipped || player == null) return;
-
-        ICharacterStats stats = player.GetComponent<ICharacterStats>();
-        if (stats != null)
+        foreach (StatType statType in System.Enum.GetValues(typeof(StatType)))
         {
-            foreach (StatType statType in System.Enum.GetValues(typeof(StatType)))
-            {
-                stats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
-            }
-            isEquipped = false;
-            OnUnequipped();
+            characterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
         }
     }
 
-    protected abstract void ApplyStats(ICharacterStats stats);
-
-    protected virtual void OnEquipped()
-    {
-        Debug.Log($"{itemName}을(를) 장착했습니다.");
-    }
-
-    protected virtual void OnUnequipped()
-    {
-        Debug.Log($"{itemName}을(를) 해제했습니다.");
-    }
+    public virtual string GetTooltip() => itemData.GetTooltip();
 }

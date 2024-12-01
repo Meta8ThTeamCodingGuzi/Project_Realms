@@ -16,7 +16,7 @@ public enum StatType
     DropExp
 }
 
-public enum SkillID 
+public enum SkillID
 {
     TestSkill
 }
@@ -45,11 +45,11 @@ public enum SkillStatType
     PierceCount,
     ShotInterval,
     InnerInterval,
-    
+
     #endregion
 
     #region Area Related Stats
-    
+
     SpawnRange,
     SpawnScale,
     SpawnCount,
@@ -60,10 +60,10 @@ public enum SkillStatType
     #endregion
 
     #region Buff Related Stats
-    
+
     BuffValue,
     DeBuffAreaScale,
-    
+
     #endregion
 
 }
@@ -84,4 +84,19 @@ public enum StatModifierType
     Flat,
     PercentAdd,
     PercentMult
+}
+
+public enum ItemID
+{
+    Sword,
+    Bow,
+    Arrow,
+    Ring,
+}
+
+public enum ItemType
+{
+    Weapon,
+    Armor,
+    Accessory
 }

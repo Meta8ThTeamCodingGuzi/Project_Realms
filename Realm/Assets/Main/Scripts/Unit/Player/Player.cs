@@ -26,6 +26,8 @@ public class Player : Unit
 
     private StatPointSystem statPoint;
 
+    private PlayerInventorySystem inventorySystem;
+    public PlayerInventorySystem InventorySystem => inventorySystem;
 
     private void Start()
     {
@@ -52,7 +54,7 @@ public class Player : Unit
         statPoint = GetComponent<StatPointSystem>();
 
         statPoint.Initialize();
-        
+
         GameManager.Instance.player = this;
 
         skillController = GetComponent<SkillController>();
@@ -64,7 +66,15 @@ public class Player : Unit
 
         skillController.Initialize();
 
+        inventorySystem = GetComponent<PlayerInventorySystem>();
+        
+        if (inventorySystem == null)
+        {
+            inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
+        }
+
         base.Initialize();
+
 
         Debug.Log("Player initialized successfully");
     }

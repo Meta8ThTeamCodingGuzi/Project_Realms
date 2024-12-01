@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,7 +18,7 @@ public class Monster : Unit, IPoolable
 
     public bool wasAttacked = false;
     public bool isattacked = true;
-
+    [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
     public Vector3 nowTarget;
@@ -33,7 +34,7 @@ public class Monster : Unit, IPoolable
     }
 
     protected override void Initialize()
-    { 
+    {
         foreach (Transform setPatrolTransform in setPatrolTransforms)
         {
             patrolPoint.Add(setPatrolTransform.position);
@@ -112,7 +113,7 @@ public class Monster : Unit, IPoolable
     {
         patrolKey++;
         if (patrolKey >= patrolPoint.Count)
-        { 
+        {
             patrolKey = 0;
             nowTarget = patrolPoint[patrolKey];
             return;
@@ -121,15 +122,35 @@ public class Monster : Unit, IPoolable
     }
     public void MonsterDie()
     {
-        StartCoroutine(DieCroutine());
+        StartCoroutine(DieRoutine());
     }
 
-    public IEnumerator DieCroutine()
+    public IEnumerator DieRoutine()
     {
         M_Animator.SetTrigger("Die");
         print("몬스터 다이 호출중");
         yield return new WaitForSeconds(3f);
+
+        DropExpParticle();
+
         PoolManager.Instance.Despawn(this);
+    }
+
+    private void DropExpParticle()
+    {
+        float totalExpDrop = characterStats.GetStatValue(StatType.DropExp);
+
+        int particleCount = Mathf.Max(1, Mathf.RoundToInt(totalExpDrop / 10f));
+        float expPerParticle = totalExpDrop / particleCount;
+
+        for (int i = 0; i < particleCount; i++)
+        {
+            Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * 1f;
+            Vector3 randomPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+
+            ExpParticle particle = PoolManager.Instance.Spawn<ExpParticle>(expParticle.gameObject, randomPosition, Quaternion.identity);
+            particle.SetExpAmount(expPerParticle);
+        }
     }
 
     public override void Attack(Unit target)
@@ -140,13 +161,13 @@ public class Monster : Unit, IPoolable
 
     public void OnReturnToPool()
     {
- 
+
     }
 
     public void OnSpawnFromPool()
     {
         float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
-        characterStats.AddModifier(StatType.Level, new StatModifier(playerLevel, StatModifierType.Flat,this,SourceType.BaseStats));  
+        characterStats.AddModifier(StatType.Level, new StatModifier(playerLevel, StatModifierType.Flat, this, SourceType.BaseStats));
         Initialize();
     }
 

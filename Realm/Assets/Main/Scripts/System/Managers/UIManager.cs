@@ -10,10 +10,17 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     private PlayerUI playerUI;
     private SkillBarUI skillBarUI;
     private Player player;
+    private Inventory inventory;
+
+    private bool isInventoryVisible = false;
 
     protected override void Awake()
     {
         base.Awake();
+    }
+
+    private void Start()
+    {
         Initialize();
     }
 
@@ -30,12 +37,12 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
 
         player = GameManager.instance.player;
 
-        //UI 완성뒤 지워야함
         GetReferences();
         playerUI.Initialize(player);
         skillBarUI.Initialize(player);
-        //TODO : UI 완성 뒤 생성으로 , 참조 받아오는 부분은 한꺼번에 넘기기
-        //Instantiate(playerUI.gameObject, transform);
+        inventory.Initialize(player, playerUI);
+
+        SetInitialUIState();
 
         if (player != null)
         {
@@ -48,17 +55,40 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         }
     }
 
+    private void SetInitialUIState()
+    {
+        inventory.gameObject.SetActive(false);
+        playerUI.HideStatUI();
+        isInventoryVisible = false;
+    }
+
     private void GetReferences()
     {
         playerUI = GetComponentInChildren<PlayerUI>();
         skillBarUI = GetComponentInChildren<SkillBarUI>();
+        inventory = GetComponentInChildren<Inventory>();
     }
 
     private void Update()
     {
-        if (IsInitialized)
+        if (!IsInitialized) return;
+
+        playerUI.UpdatePlayerInfo();
+
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            playerUI.UpdatePlayerInfo();
+            ToggleInventoryAndStatUI();
         }
+    }
+
+    private void ToggleInventoryAndStatUI()
+    {
+        isInventoryVisible = !isInventoryVisible;
+        inventory.gameObject.SetActive(isInventoryVisible);
+
+        if (isInventoryVisible)
+            playerUI.ShowStatUI();
+        else
+            playerUI.HideStatUI();
     }
 }

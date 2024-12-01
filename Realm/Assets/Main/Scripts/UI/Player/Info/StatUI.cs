@@ -37,7 +37,7 @@ public class StatUI : MonoBehaviour
             // 버튼에 리스너 추가
             if (display.increaseButton != null)
             {
-                StatType statType = display.statType; // 클로저를 위한 지역 변수
+                StatType statType = display.statType;
                 display.increaseButton.onClick.AddListener(() => OnStatIncreaseButton(statType));
             }
         }
@@ -45,7 +45,7 @@ public class StatUI : MonoBehaviour
         UpdateUI();
     }
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
         // 사용 가능한 포인트 표시
         if (availablePointsText != null)

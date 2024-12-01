@@ -10265,7 +10265,9 @@ MonoBehaviour:
   - {fileID: 7739036304773974953}
   - {fileID: 5718187020074116173}
   - {fileID: 3104402736867369716}
-  isTakeDamage: 0
+  wasAttacked: 0
+  isattacked: 1
+  expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
   nowTarget: {x: 0, y: 0, z: 0}
   M_Animator: {fileID: 7290002260371257442}
 --- !u!114 &3650120746976943081
@@ -10305,6 +10307,9 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
+  - Type: 11
+    BaseValue: 250
+    PointIncrease: 0
 --- !u!136 &3997802516341697484
 CapsuleCollider:
   m_ObjectHideFlags: 0
