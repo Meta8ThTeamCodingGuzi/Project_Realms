@@ -85,3 +85,9 @@ public enum StatModifierType
     PercentAdd,
     PercentMult
 }
+
+public enum Playerjob
+{
+    knight,
+    Archer
+}

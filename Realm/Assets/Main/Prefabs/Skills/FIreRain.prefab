@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 836387646958293532}
   skillStat: {fileID: 4726269856853768824}
+  animaClip: {fileID: -203655887218126122, guid: 8528d52d90ed41b45ac801957d4a899e, type: 3}
   areaPrefab: {fileID: 4677167412874306151, guid: 3d7c3dc5a96d9604f988e7349636fb89, type: 3}
   spawnPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &836387646958293532

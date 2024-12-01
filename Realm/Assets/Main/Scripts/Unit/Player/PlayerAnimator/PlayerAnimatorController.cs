@@ -4,45 +4,37 @@ using UnityEngine;
 
 public class PlayerAnimatorController : MonoBehaviour
 {
-    private Animator plainsAnimator;
-    private AnimatorOverrideController controller;
 
     [SerializeField] private RuntimeAnimatorController knightControllers;
     [SerializeField] private RuntimeAnimatorController archerControllers;
 
-    [SerializeField] private AnimationClip Testclip;
-    [SerializeField] private AnimationClip Testclip2;
 
-
-    public void Initialize()
+    private AnimatorOverrideController SetupOverrideController(Player target)
     {
-        plainsAnimator = GameManager.Instance.player.PlayerAnimator;
-        SetupOverrideController();
+        RuntimeAnimatorController Controller = target.PlayerAnimator.runtimeAnimatorController;
+        AnimatorOverrideController overrideController = new AnimatorOverrideController(Controller);
+        target.PlayerAnimator.runtimeAnimatorController = overrideController;
+        return overrideController;
     }
 
-    private void SetupOverrideController()
+    public void AnimatorChange(Player player)
     {
-        controller = new AnimatorOverrideController(plainsAnimator.runtimeAnimatorController);
-        plainsAnimator.runtimeAnimatorController = controller;
+        switch (player.playerjob)
+        {
+            case Playerjob.knight:
+                 player.PlayerAnimatorChange(knightControllers);
+                break;
+            case Playerjob.Archer:
+                player.PlayerAnimatorChange(archerControllers);
+                break;
+            default:
+                return;
+        }
     }
 
-    //enum으로 받아서 스위치로 구현해야지
-    public void PlayerAnimatorChange()
+    public void clipchange(Player player, AnimationClip animationClip)
     {
-        GameManager.Instance.player.PlayerAnimatorChange(knightControllers);
-
-
-        GameManager.Instance.player.PlayerAnimatorChange(archerControllers);
-
-        SetupOverrideController();
-    }
-
-    public void aniclip1()
-    {
-        controller["Attack"] = Testclip;
-    }
-    public void aniclip2()
-    {
-        controller["Attack"] = Testclip2;
+        AnimatorOverrideController controller = SetupOverrideController(player);
+        controller["Attack"] = animationClip;
     }
 }

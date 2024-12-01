@@ -19,13 +19,13 @@ public class PlayerIdleState : State<Player>
 
     public override void OnExit()
     {
-        
+        IdleTime = 0;
     }
 
     public override void OnUpdate()
     {
         IdleTime += Time.deltaTime;
-        if (IdleTime > 5f)
+        if (IdleTime > 10f)
         {
             target.PlayerAnimator.SetTrigger("FoldWeapon");
             IdleTime = 0;

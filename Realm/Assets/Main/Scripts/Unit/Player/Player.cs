@@ -33,7 +33,11 @@ public class Player : Unit
     private Animator playerAnimator;
     public Animator PlayerAnimator => playerAnimator;
 
-    private PlayerAnimatorController playerAnimatorController;
+    private PlayerAnimatorController animaControl;
+    public PlayerAnimatorController AnimaControl => animaControl;
+
+    public Playerjob playerjob = Playerjob.knight;
+
 
     private void Start()
     {
@@ -60,7 +64,7 @@ public class Player : Unit
         statPoint = GetComponent<StatPointSystem>();
 
         statPoint.Initialize();
-        
+
         GameManager.Instance.player = this;
 
         skillController = GetComponent<SkillController>();
@@ -82,8 +86,11 @@ public class Player : Unit
         Debug.Log("Player initialized successfully");
         playerAnimator = GetComponent<Animator>();
 
-        playerAnimatorController= GetComponent<PlayerAnimatorController>();
-        playerAnimatorController.Initialize();
+        animaControl = GetComponent<PlayerAnimatorController>();
+        if (animaControl == null)
+        {
+            animaControl = gameObject.AddComponent<PlayerAnimatorController>();
+        }
     }
 
     private void Update()
