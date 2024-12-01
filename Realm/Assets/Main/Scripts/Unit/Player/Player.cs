@@ -24,6 +24,7 @@ public class Player : Unit
     private float totalExp = 0f;  // 누적 경험치
 
     private LayerMask groundLayerMask;
+    public LayerMask GroundLayerMask => groundLayerMask;
 
     private StatPointSystem statPoint;
 
@@ -35,6 +36,12 @@ public class Player : Unit
 
     private PlayerAnimatorController animaControl;
     public PlayerAnimatorController AnimaControl => animaControl;
+
+    private Monster targetMonster;
+    public Monster TargetMonster => targetMonster;
+
+    private Vector3 targetPos;
+    public Vector3 TargetPos => targetPos;
 
     public Playerjob playerjob = Playerjob.knight;
 
@@ -92,14 +99,18 @@ public class Player : Unit
             animaControl = gameObject.AddComponent<PlayerAnimatorController>();
         }
     }
+    public override void StopMoving()
+    {
+        base.StopMoving();
+        targetPos = Vector3.zero;
+    }
 
     private void Update()
     {
         playerHandler.HandleUpdate();
-        MovetoCursor();
     }
 
-    private void MovetoCursor()
+    public void MovetoCursor()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -115,20 +126,25 @@ public class Player : Unit
 
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
             {
-                Debug.Log($"Hit object layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+                //Debug.Log($"Hit object layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
 
                 if (hit.collider.TryGetComponent<Monster>(out Monster monster))
                 {
-                    Attack(monster);
+                    targetMonster = monster;
+                    //if (targetMonster != null) Attack(targetMonster);
                     return;
+                }
+                else
+                {
+                    targetMonster = null;
                 }
             }
 
             if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
             {
                 //Debug.Log($"Ground hit at: {hit.point}");
-
-                MoveTo(hit.point);
+                targetPos = hit.point;
+                //MoveTo(hit.point);
             }
             else
             {

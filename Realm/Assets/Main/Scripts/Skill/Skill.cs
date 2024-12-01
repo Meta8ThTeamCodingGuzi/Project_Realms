@@ -67,11 +67,12 @@ public abstract class Skill : MonoBehaviour
         }
 
         GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
-        UseSkill(); // UseSkill 한 번만 호출
 
         //애니메이션 할당하고 스킬쓸때 할당되면서 사용되긴하는데 동기화 해야함 구조를 바꾸던가 해야할듯
         GameManager.Instance.player.AnimaControl.clipchange(GameManager.Instance.player, animaClip);
-        GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
+
+        UseSkill(); // UseSkill 한 번만 호출
+
         // 쿨다운이 0보다 큰 경우에만 쿨다운 시작
         if (TotalCooldown > 0)
         {

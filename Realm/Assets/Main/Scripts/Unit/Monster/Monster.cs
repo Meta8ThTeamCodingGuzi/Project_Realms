@@ -15,7 +15,6 @@ public class Monster : Unit, IPoolable
 
     private List<Vector3> patrolPoint = new List<Vector3>();
 
-    public bool wasAttacked = false;
     public bool isattacked = true;
 
 
@@ -80,11 +79,7 @@ public class Monster : Unit, IPoolable
     }
 
 
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(500);
-        wasAttacked = true;
-    }
+
 
     protected override IEnumerator AttackRoutine(Unit target)
     {

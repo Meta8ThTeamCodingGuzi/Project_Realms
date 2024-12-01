@@ -1092,6 +1092,8 @@ GameObject:
   - component: {fileID: 6430438508190595658}
   - component: {fileID: 7805041688991191290}
   - component: {fileID: 6884802449172378662}
+  - component: {fileID: 7133581021874329200}
+  - component: {fileID: 7974471904675134105}
   m_Layer: 0
   m_Name: Wolf Black
   m_TagString: Untagged
@@ -1128,6 +1130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wasAttacked: 0
   targetPlayer: {fileID: 0}
   setPatrolTransforms:
   - {fileID: 5241530313266634744}
@@ -1135,7 +1138,6 @@ MonoBehaviour:
   - {fileID: 3558064377136474465}
   - {fileID: 3580021424796292657}
   - {fileID: 979837537476820560}
-  wasAttacked: 0
   isattacked: 1
   nowTarget: {x: 0, y: 0, z: 0}
   M_Animator: {fileID: 3074471266676340477}
@@ -1198,6 +1200,56 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
+--- !u!136 &7133581021874329200
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5910400810249688014}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.24288177
+  m_Height: 1.6329403
+  m_Direction: 2
+  m_Center: {x: 0.0026550293, y: 0.5, z: 0.06745148}
+--- !u!54 &7974471904675134105
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5910400810249688014}
+  serializedVersion: 4
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5953857178862130198
 GameObject:
   m_ObjectHideFlags: 0

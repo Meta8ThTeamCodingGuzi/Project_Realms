@@ -22,7 +22,6 @@ public class SkillController : MonoBehaviour
         skillSlots[KeyCode.E] = null;
         skillSlots[KeyCode.R] = null;
         skillSlots[KeyCode.Space] = null;
-        skillSlots[KeyCode.Mouse0] = null;
 
         foreach (var skillPrefab in availableSkillPrefabs)
         {
@@ -31,6 +30,18 @@ public class SkillController : MonoBehaviour
             initializedSkills[skillPrefab.data.skillID] = instance;
         }
     }
+    //public bool IsExistSkill()
+    //{
+    //    foreach (var slot in skillSlots)
+    //    {
+    //        if (Input.GetKey(slot.Key) && slot.Value != null)
+    //        {
+    //            slot.Value.TryUseSkill();
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
 
     public void SetSkillBarUI(SkillBarUI skillBarUI) 
     {

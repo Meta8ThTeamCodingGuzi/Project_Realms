@@ -8,6 +8,7 @@ public class PlayerAnimatorController : MonoBehaviour
     [SerializeField] private RuntimeAnimatorController knightControllers;
     [SerializeField] private RuntimeAnimatorController archerControllers;
 
+    private AnimatorOverrideController currentController;
 
     private AnimatorOverrideController SetupOverrideController(Player target)
     {
@@ -32,9 +33,18 @@ public class PlayerAnimatorController : MonoBehaviour
         }
     }
 
+
     public void clipchange(Player player, AnimationClip animationClip)
     {
-        AnimatorOverrideController controller = SetupOverrideController(player);
-        controller["Attack"] = animationClip;
+        if (currentController == null)
+        {
+            currentController = SetupOverrideController(player);
+        }
+
+        if (animationClip != null)
+        {
+            currentController["Attack"] = animationClip;
+            Debug.Log($"Changed animation clip to: {animationClip.name}");
+        }
     }
 }

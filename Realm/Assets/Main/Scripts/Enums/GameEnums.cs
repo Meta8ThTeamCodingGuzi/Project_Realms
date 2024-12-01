@@ -18,7 +18,10 @@ public enum StatType
 
 public enum SkillID 
 {
-    TestSkill
+    TestSkill,
+    TestSkill2,
+    TestSkill3
+      
 }
 public enum SkillStatType
 {

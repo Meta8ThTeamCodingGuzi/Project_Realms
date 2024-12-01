@@ -10,7 +10,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
     public ICharacterStats CharacterStats => characterStats;
 
     public bool IsInitialized { get; private set; }
-
+    public bool wasAttacked = false;
 
     protected float lastAttackTime;
     protected Coroutine attackCoroutine;
@@ -130,6 +130,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
 
         StatModifier healthMod = new StatModifier(-finalDamage, StatModifierType.Flat);
         characterStats.AddModifier(StatType.Health, healthMod);
+        wasAttacked = true;
         print($"{this} Take Damage호출");
     }
     #endregion
