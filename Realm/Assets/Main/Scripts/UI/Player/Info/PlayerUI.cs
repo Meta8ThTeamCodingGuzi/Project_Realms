@@ -12,7 +12,6 @@ public class PlayerUI : MonoBehaviour
     public Slider playerExp;
     public TextMeshProUGUI playerLevelText;
     public StatUI statUI;
-    private bool isStatUIVisible = false;
 
     public void Initialize(Player player)
     {
