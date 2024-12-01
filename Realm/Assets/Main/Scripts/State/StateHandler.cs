@@ -15,7 +15,7 @@ public abstract class StateHandler<T>
         this.target = target;
     }
 
-    protected event Action<IState> OnStateChanged;
+    public event Action<IState> OnStateChanged;
 
     public virtual void Initialize()
     {

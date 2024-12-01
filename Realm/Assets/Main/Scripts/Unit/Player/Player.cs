@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -26,6 +27,13 @@ public class Player : Unit
 
     private StatPointSystem statPoint;
 
+    private PlayerHandler playerHandler;
+    public PlayerHandler PlayerHandler => playerHandler;
+
+    private Animator playerAnimator;
+    public Animator PlayerAnimator => playerAnimator;
+
+    private PlayerAnimatorController playerAnimatorController;
 
     private void Start()
     {
@@ -62,15 +70,25 @@ public class Player : Unit
             skillController = gameObject.AddComponent<SkillController>();
         }
 
+
         skillController.Initialize();
 
         base.Initialize();
-
+        if (playerHandler == null)
+        {
+            playerHandler = new PlayerHandler(this);
+            playerHandler.Initialize();
+        }
         Debug.Log("Player initialized successfully");
+        playerAnimator = GetComponent<Animator>();
+
+        playerAnimatorController= GetComponent<PlayerAnimatorController>();
+        playerAnimatorController.Initialize();
     }
 
     private void Update()
     {
+        playerHandler.HandleUpdate();
         MovetoCursor();
     }
 
@@ -110,6 +128,21 @@ public class Player : Unit
                 //Debug.Log("No ground detected");
             }
         }
+    }
+    public void PlayerDie()
+    {
+        StartCoroutine(DieCroutine());
+    }
+
+    public IEnumerator DieCroutine()
+    {
+        playerAnimator.SetTrigger("Die");
+        yield return new WaitForSeconds(3f);
+        PoolManager.Instance.Despawn(this);
+    }
+    public void PlayerAnimatorChange(RuntimeAnimatorController newController)
+    {
+        playerAnimator.runtimeAnimatorController = newController;
     }
 
     #region 레벨 시스템

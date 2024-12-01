@@ -6,6 +6,7 @@ public abstract class Skill : MonoBehaviour
 {
     [SerializeField] public SkillData data;
     [SerializeField] public SkillStat skillStat;
+    [SerializeField] private AnimationClip clip;
 
     private float currentCooldown = 0f;
 

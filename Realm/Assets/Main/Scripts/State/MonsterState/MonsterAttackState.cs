@@ -27,7 +27,7 @@ public class MonsterAttackState : State<Monster>
 
     public override void OnUpdate()
     {
-        if (target.M_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f) return;
+        if (target.M_Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return;
         if (!target.IsAlive)
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));

@@ -76,7 +76,7 @@ public class ProjectileSkill : Skill
             PierceCount = projectileStats.GetStatValue<int>(SkillStatType.PierceCount),
             IsHoming = projectileStats.GetStatValue<int>(SkillStatType.IsHoming) <=
                        projectileStats.GetStatValue<int>(SkillStatType.HomingLevel) ? false : true,
-            HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange)
+            HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange),
         };
 
         for (int i = 0; i < projectileCount; i++)

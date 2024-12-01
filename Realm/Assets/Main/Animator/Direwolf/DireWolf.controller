@@ -350,7 +350,7 @@ AnimatorStateMachine:
     m_Position: {x: 310, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2022822689568672694}
-    m_Position: {x: 1030, y: 230, z: 0}
+    m_Position: {x: 880, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7079488532206219110}
     m_Position: {x: 310, y: -50, z: 0}
@@ -403,7 +403,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Punch Attack
+  m_Name: Attack
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -438,8 +438,7 @@ AnimatorState:
   m_Transitions:
   - {fileID: 5581982978783568379}
   - {fileID: -2226986025812833151}
-  m_StateMachineBehaviours:
-  - {fileID: 8127028061300401445}
+  m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
