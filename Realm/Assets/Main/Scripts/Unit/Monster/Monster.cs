@@ -9,7 +9,9 @@ public class Monster : Unit, IPoolable
 {
     private MonsterStateHandler m_StateHandler;
 
-    public Player targetPlayer;
+    private Player player;
+
+    public Player targetPlayer => player;
 
     [SerializeField]
     private Transform[] setPatrolTransforms;
@@ -46,7 +48,7 @@ public class Monster : Unit, IPoolable
         }
         m_StateHandler.Initialize();
         base.Initialize();
-        targetPlayer = null;
+        player = null;
 
     }
     public void targetMove(Unit unit)
@@ -72,7 +74,7 @@ public class Monster : Unit, IPoolable
         {
             if (collider.TryGetComponent<Player>(out Player player))
             {
-                targetPlayer = player;
+                this.player = player;
                 return true;
             }
 
