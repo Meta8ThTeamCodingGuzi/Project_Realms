@@ -92,41 +92,61 @@ public class ProjectileSkill : Skill
 
     private void FireProjectile(ProjectileData data)
     {
-        if (projectilePrefab == null || firePoint == null)
+        if (projectilePrefab == null)
         {
-            Debug.LogError($"{gameObject.name}: projectilePrefab 또는 firePoint가 없습니다!");
+            Debug.LogError($"{gameObject.name}: projectilePrefab이 없습니다!");
             return;
         }
 
-        // 마우스 커서의 월드 좌표를 구합니다
+        if (firePoint == null)
+        {
+            Debug.LogError($"{gameObject.name}: firePoint가 없습니다!");
+            return;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
         if (groundPlane.Raycast(ray, out float distance))
         {
             Vector3 targetPoint = ray.GetPoint(distance);
-
-            // 캐릭터와 커서 사이의 방향을 계산합니다
             Vector3 direction = (targetPoint - transform.position).normalized;
-            direction.y = 0; // Y축 회전만 필요하므로 y값은 0으로 설정
+            direction.y = 0;
 
             GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(direction);
-
-            // firePoint도 같은 방향을 바라보도록 설정합니다
             firePoint.rotation = transform.rotation;
 
-            // 발사체를 생성하고 초기화합니다
-            Projectile projectile = PoolManager.Instance.Spawn<Projectile>
-                (projectilePrefab.gameObject, firePoint.position, firePoint.rotation);
-
-            if (projectile != null)
+            // 풀에서 프로젝타일을 가져오기 전에 프리팹이 유효한지 한번 더 확인
+            if (projectilePrefab != null && projectilePrefab.gameObject != null)
             {
-                projectile.Initialize(data);
-                PoolManager.Instance.Despawn<Projectile>(projectile, skillStat.GetStatValue<float>(SkillStatType.Duration));
+                try
+                {
+                    Projectile projectile = PoolManager.Instance.Spawn<Projectile>(
+                        projectilePrefab.gameObject,
+                        firePoint.position,
+                        firePoint.rotation);
+
+                    if (projectile != null)
+                    {
+                        projectile.Initialize(data);
+
+                        // Despawn 전에 projectile이 아직 유효한지 확인
+                        if (projectile != null && projectile.gameObject != null)
+                        {
+                            PoolManager.Instance.Despawn<Projectile>(
+                                projectile,
+                                skillStat.GetStatValue<float>(SkillStatType.Duration));
+                        }
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"{gameObject.name}: 프로젝타일 생성 중 오류 발생: {e.Message}");
+                }
             }
             else
             {
-                Debug.LogError($"{gameObject.name}: 발사체 생성 실패!");
+                Debug.LogError($"{gameObject.name}: 프로젝타일 프리팹이 유효하지 않습니다!");
             }
         }
     }

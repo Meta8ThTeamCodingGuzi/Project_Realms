@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class PlayerIdleState : State<Player>
@@ -28,6 +29,18 @@ public class PlayerIdleState : State<Player>
     {
         AnimatorStateInfo currentState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
+        if (target.TargetPos != Vector3.zero || target.TargetMonster != null)
+        {
+            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+            return;
+        }
+
+        if (target.skillController.CheckSkillInputs())
+        {
+            target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
+            return;
+        }
+
         if (currentState.IsName("SetWeapon"))
         {
             target.MovetoCursor();
@@ -36,32 +49,10 @@ public class PlayerIdleState : State<Player>
                 IdleTime += Time.deltaTime;
                 if (IdleTime > 20f) { target.PlayerAnimator.SetTrigger("FoldWeapon"); IdleTime = 0f; }
             }
-
-            if (target.TargetPos != Vector3.zero)
-            {
-                target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
-            }
-
-            if(target.TargetMonster != null)
-            {
-                target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
-            }
-
-            if (target.skillController.CheckSkillInputs())
-            {
-                target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
-            }
         }
         else if (currentState.IsName("Idle"))
         {
             if (Input.GetMouseButton(0)) target.PlayerAnimator.SetTrigger("SetWeapon");
         }
-
-
     }
-
-
-
-
-
 }

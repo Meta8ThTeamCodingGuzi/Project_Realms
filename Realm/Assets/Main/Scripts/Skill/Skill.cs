@@ -68,7 +68,7 @@ public abstract class Skill : MonoBehaviour
 
         GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
 
-        UseSkill(); // UseSkill 한 번만 호출
+        StartCoroutine(UseSkillWithDelay());
 
         // 쿨다운이 0보다 큰 경우에만 쿨다운 시작
         if (TotalCooldown > 0)
@@ -79,13 +79,19 @@ public abstract class Skill : MonoBehaviour
         return true;
     }
 
+    public IEnumerator UseSkillWithDelay() 
+    {
+        yield return new WaitForSeconds(0.3f);
+        UseSkill();
+    }
+
     protected abstract void UseSkill();
 
     protected virtual void StartCooldown()
     {
         if (TotalCooldown <= 0)
         {
-            Debug.LogWarning($"{gameObject.name} ų ٿ 0 Ϸ Ǿ ֽϴ.");
+            Debug.LogWarning($"{gameObject.name} 쿨 없음");
             return;
         }
         currentCooldown = TotalCooldown;
