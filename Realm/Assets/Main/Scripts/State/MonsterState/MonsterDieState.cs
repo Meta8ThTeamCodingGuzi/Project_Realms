@@ -17,7 +17,7 @@ public class MonsterDieState : State<Monster>
 
     public override void OnExit()
     {
-        base.OnExit();
+        
     }
 
     public override void OnUpdate()

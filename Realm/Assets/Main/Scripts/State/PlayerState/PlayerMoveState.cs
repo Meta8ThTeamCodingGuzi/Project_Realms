@@ -22,6 +22,10 @@ public class PlayerMoveState : State<Player>
 
     public override void OnUpdate()
     {
+        if (target.wasAttacked)
+        {
+            target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
+        }
         if (target.skillController.CheckSkillInputs())
         {
             target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
@@ -30,6 +34,14 @@ public class PlayerMoveState : State<Player>
 
         if(target.TargetPos != Vector3.zero) target.MoveTo(target.TargetPos);
 
+        if (target.TargetMonster != null)
+        {
+            target.MoveTo(target.TargetMonster.transform.position);
+            if (target.CanAttack(target.TargetMonster))
+            {
+                target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
+            }
+        }
         if (target.HasReachedDestination())
         {
             target.PlayerHandler.TransitionTo(new PlayerIdleState(target));

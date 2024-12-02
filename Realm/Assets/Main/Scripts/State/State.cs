@@ -25,17 +25,17 @@ public abstract class State<T> : IState where T : Component
 
     public virtual void OnEnter()
     {
-        Debug.Log($"{this.GetType().Name} 호출");
+        //Debug.Log($"{this.GetType().Name} 호출");
     }
 
     public virtual void OnExit()
     {
-        Debug.Log($"{this.GetType().Name} 종료"); 
+        //Debug.Log($"{this.GetType().Name} 종료"); 
     }
 
     public virtual void OnUpdate()
     {
-        Debug.Log($"{this.GetType().Name} 업데이트");
+        //Debug.Log($"{this.GetType().Name} 업데이트");
     }
 
 }

@@ -104,16 +104,50 @@ public class ProjectileSkill : Skill
             return;
         }
 
-        Projectile projectile = PoolManager.Instance.Spawn<Projectile>
-            (projectilePrefab.gameObject, firePoint.position, firePoint.rotation);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
-        if (projectile != null)
+        if (groundPlane.Raycast(ray, out float distance))
         {
-            projectile.Initialize(data);
-        }
-        else
-        {
-            Debug.LogError($"{gameObject.name}: 발사체 생성 실패!");
+            Vector3 targetPoint = ray.GetPoint(distance);
+            Vector3 direction = (targetPoint - transform.position).normalized;
+            direction.y = 0;
+
+            GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(direction);
+            firePoint.rotation = transform.rotation;
+
+            // 풀에서 프로젝타일을 가져오기 전에 프리팹이 유효한지 한번 더 확인
+            if (projectilePrefab != null && projectilePrefab.gameObject != null)
+            {
+                try
+                {
+                    Projectile projectile = PoolManager.Instance.Spawn<Projectile>(
+                        projectilePrefab.gameObject,
+                        firePoint.position,
+                        firePoint.rotation);
+
+                    if (projectile != null)
+                    {
+                        projectile.Initialize(data);
+
+                        // Despawn 전에 projectile이 아직 유효한지 확인
+                        if (projectile != null && projectile.gameObject != null)
+                        {
+                            PoolManager.Instance.Despawn<Projectile>(
+                                projectile,
+                                skillStat.GetStatValue<float>(SkillStatType.Duration));
+                        }
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"{gameObject.name}: 프로젝타일 생성 중 오류 발생: {e.Message}");
+                }
+            }
+            else
+            {
+                Debug.LogError($"{gameObject.name}: 프로젝타일 프리팹이 유효하지 않습니다!");
+            }
         }
     }
 

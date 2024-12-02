@@ -21,7 +21,7 @@ public class PlayerStat : UnitStats
             BaseValue = 1f,
             PointIncrease = 0.5f
         },
-        new StatInitializer 
+        new StatInitializer
         {
             Type = StatType.AttackSpeed,
             BaseValue = 1f,
@@ -37,13 +37,13 @@ public class PlayerStat : UnitStats
         {
             Type = StatType.MoveSpeed,
             BaseValue = 7f,
-            PointIncrease = 0.5f    
+            PointIncrease = 0.5f
         },
         new StatInitializer
         {
             Type = StatType.MaxHealth,
             BaseValue = 500f,
-            PointIncrease = 50f    
+            PointIncrease = 50f
         },
         new StatInitializer
         {
@@ -63,6 +63,16 @@ public class PlayerStat : UnitStats
             BaseValue = 3f,
             PointIncrease = 2f
         },
+        new StatInitializer
+        {
+            Type = StatType.ManaRegenRate,
+            BaseValue = 3f
+        },
+        new StatInitializer
+        {
+            Type = StatType.HealthRegenRate,
+            BaseValue = 3f
+        }
     };
 
     protected override StatInitializer[] GetInitialStats()

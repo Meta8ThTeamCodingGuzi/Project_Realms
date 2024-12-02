@@ -1,14 +1,17 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerStat))]
 public class StatPointSystem : MonoBehaviour
 {
+    private Player owner;
     private PlayerStat playerStat;
     public int AvailablePoints { get; private set; }
 
-    public void Initialize()
+    public void Initialize(Player player)
     {
-        playerStat = GetComponent<PlayerStat>();
+        owner = player;
+        playerStat = (PlayerStat)player.CharacterStats;
     }
 
     public void AddStatPoints(int points)
@@ -27,6 +30,7 @@ public class StatPointSystem : MonoBehaviour
         if (increaseAmount <= 0) return false;  // 투자 불가능한 스탯
 
         stat.InvestPoint(increaseAmount);
+        owner.UpdateMoveSpeed();
         AvailablePoints--;
         return true;
     }

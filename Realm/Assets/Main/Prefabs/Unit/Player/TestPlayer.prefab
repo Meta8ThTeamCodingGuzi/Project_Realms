@@ -698,7 +698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100392, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100394, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       propertyPath: m_IsActive
@@ -3042,15 +3042,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 401634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 96.511154
+      value: 101.93478
       objectReference: {fileID: 0}
     - target: {fileID: 401634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00001859665
+      value: 0.00001001358
       objectReference: {fileID: 0}
     - target: {fileID: 401634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 82.130806
+      value: 53.999557
       objectReference: {fileID: 0}
     - target: {fileID: 401634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3173,16 +3173,22 @@ PrefabInstance:
       addedObject: {fileID: 910243873624672143}
     - targetCorrespondingSourceObject: {fileID: 101634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 9034747457946124363}
+    - targetCorrespondingSourceObject: {fileID: 101634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 271584289236723975}
     - targetCorrespondingSourceObject: {fileID: 101634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6630487401135599257}
     - targetCorrespondingSourceObject: {fileID: 101634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9034747457946124363}
+      addedObject: {fileID: 7306195224837179048}
     - targetCorrespondingSourceObject: {fileID: 101634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7306195224837179048}
+      addedObject: {fileID: 5432998943682110511}
+    - targetCorrespondingSourceObject: {fileID: 101634, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1316956484703055391}
   m_SourcePrefab: {fileID: 100100000, guid: e82ffa7e88fde15498bd0f436b059754, type: 3}
 --- !u!1 &7219810882200320307 stripped
 GameObject:
@@ -3198,7 +3204,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 7219810882200320307}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.25
+  m_Radius: 0.3
   m_Speed: 7
   m_Acceleration: 77777
   avoidancePriority: 50
@@ -3211,6 +3217,29 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &9034747457946124363
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7219810882200320307}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25667953
+  m_Height: 1.8931415
+  m_Direction: 1
+  m_Center: {x: -0.0069465637, y: 0.91026413, z: 0}
 --- !u!114 &271584289236723975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3223,6 +3252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ebdb5cfa4ad9cc408e8f33c39011bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wasAttacked: 0
   levelData:
     baseExpRequired: 100
     growthRates:
@@ -3230,6 +3260,7 @@ MonoBehaviour:
     - 1.4
     - 1.6
     levelBreakpoints: 0a0000001e00000032000000
+  regenTickTime: 1
 --- !u!114 &6630487401135599257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3259,7 +3290,7 @@ MonoBehaviour:
     BaseValue: 20
     PointIncrease: 30
   - Type: 8
-    BaseValue: 3
+    BaseValue: 1000
     PointIncrease: 2
   - Type: 7
     BaseValue: 3
@@ -3273,29 +3304,6 @@ MonoBehaviour:
   - Type: 9
     BaseValue: 7
     PointIncrease: 0.5
---- !u!136 &9034747457946124363
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7219810882200320307}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.25667953
-  m_Height: 1.8931415
-  m_Direction: 1
-  m_Center: {x: -0.0069465637, y: 0.91026413, z: 0}
 --- !u!114 &7306195224837179048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3308,3 +3316,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2cf624b329f2ff45bd53430ac646d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5432998943682110511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7219810882200320307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f20a6c2461aee44b8bf77e7d01bb6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availableSkillPrefabs:
+  - {fileID: 6503323496141120415, guid: 453b1b889541a844480b2415593701a0, type: 3}
+  activeSkills: []
+  skillActivated: 0
+--- !u!114 &1316956484703055391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7219810882200320307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f8477250df979442980f225194ca842, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  none: {fileID: 22100000, guid: bbf7d79273d0b1743bc0459109cc36ff, type: 2}
+  knightControllers: {fileID: 9100000, guid: 65dc0dcb49bea4f419d252c3073d0265, type: 2}
+  archerControllers: {fileID: 22100000, guid: 9b6964a4de5d036488f6b9141f58de32, type: 2}
