@@ -28,7 +28,6 @@ public abstract class Skill : MonoBehaviour
 
     private void Update()
     {
-        // ٿ
         if (currentCooldown > 0)
         {
             currentCooldown = Mathf.Max(0, currentCooldown - Time.deltaTime);
@@ -53,25 +52,26 @@ public abstract class Skill : MonoBehaviour
 
     public virtual bool TryUseSkill()
     {
-        float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
-        if (IsOnCooldown)
+        if(data.skillID != SkillID.BasicSwordAttack) 
         {
-            Debug.Log($"스킬이 쿨다운 중입니다. 남은 시간: {currentCooldown:F1}초");
-            return false;
+            float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
+            if (IsOnCooldown)
+            {
+                Debug.Log($"스킬이 쿨다운 중입니다. 남은 시간: {currentCooldown:F1}초");
+                return false;
+            }
+
+            if (GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Mana) < costmana)
+            {
+                Debug.Log("마나가 부족합니다");
+                return false;
+            }
+
+            GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
+
         }
 
-        if (GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Mana) < costmana)
-        {
-            Debug.Log("마나가 부족합니다");
-            return false;
-        }
-
-        GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
-
-        //애니메이션 할당하고 스킬쓸때 할당되면서 사용되긴하는데 동기화 해야함 구조를 바꾸던가 해야할듯
-        //GameManager.Instance.player.AnimaControl.clipchange(GameManager.Instance.player, animaClip);
-
-        UseSkill(); // UseSkill 한 번만 호출
+        StartCoroutine(UseSkillWithDelay());
 
         // 쿨다운이 0보다 큰 경우에만 쿨다운 시작
         if (TotalCooldown > 0)
@@ -82,13 +82,19 @@ public abstract class Skill : MonoBehaviour
         return true;
     }
 
+    public virtual IEnumerator UseSkillWithDelay() 
+    {
+        yield return new WaitForSeconds(0.3f);
+        UseSkill();
+    }
+
     protected abstract void UseSkill();
 
     protected virtual void StartCooldown()
     {
         if (TotalCooldown <= 0)
         {
-            Debug.LogWarning($"{gameObject.name} ų ٿ 0 Ϸ Ǿ ֽϴ.");
+            Debug.LogWarning($"{gameObject.name} 쿨 없음");
             return;
         }
         currentCooldown = TotalCooldown;

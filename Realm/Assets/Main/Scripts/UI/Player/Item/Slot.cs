@@ -63,6 +63,11 @@ public class Slot : MonoBehaviour
         {
             _item.RemoveStats(_player.GetComponent<ICharacterStats>());
             statUI.UpdateUI();
+            if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
+            {
+                _player.skillController.UnequipSkill(KeyCode.Mouse0);
+                _player.PlayerAnimController.AnimatorChange(ItemType.None);
+            }
         }
 
         _item = item;
@@ -77,8 +82,29 @@ public class Slot : MonoBehaviour
             {
                 _item.ApplyStats(_player.GetComponent<ICharacterStats>());
                 statUI.UpdateUI();
-                // TODO : 아이템 착용시 플레이어 아이템 장착 위치 아래로 아이템 소환 로직
-                //Instantiate(_item.ItemPrefab,_player.transform);
+
+                if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
+                {
+                    // 먼저 무기 오브젝트 장착
+                    var weaponHolder = _player.GetComponent<WeaponHolder>();
+                    weaponHolder.EquipWeapon(_item.ItemData.ItemPrefab, _item.ItemType);
+
+                    // 스킬 등록
+                    Skill defaultSkill = item.ItemData.GetDefaultSkillForWeapon();
+                    if (defaultSkill != null)
+                    {
+                        _player.skillController.AddSkill(defaultSkill);
+                        _player.skillController.EquipSkill(defaultSkill, KeyCode.Mouse0);
+
+                        // 무기 컴포넌트 업데이트
+                        if (defaultSkill is WeaponSkill weaponSkill)
+                        {
+                            weaponSkill.UpdateWeaponComponents();
+                        }
+                    }
+
+                    _player.PlayerAnimController.AnimatorChange(_item.ItemType);
+                }
             }
         }
         else
