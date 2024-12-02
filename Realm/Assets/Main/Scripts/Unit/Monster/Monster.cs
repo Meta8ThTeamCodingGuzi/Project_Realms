@@ -80,8 +80,8 @@ public class Monster : Unit, IPoolable
                 this.player = player;
                 return true;
             }
-
         }
+        this.player = null;
         return false;
     }
 
@@ -128,6 +128,7 @@ public class Monster : Unit, IPoolable
 
     public IEnumerator DieRoutine()
     {
+
         M_Animator.SetTrigger("Die");
 
         while (!M_Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
@@ -162,12 +163,6 @@ public class Monster : Unit, IPoolable
             ExpParticle particle = PoolManager.Instance.Spawn<ExpParticle>(expParticle.gameObject, randomPosition, Quaternion.identity);
             particle.SetExpAmount(expPerParticle);
         }
-    }
-
-    public override void Attack(Unit target)
-    {
-        base.Attack(target);
-        isattacked = false;
     }
 
     public void OnReturnToPool()

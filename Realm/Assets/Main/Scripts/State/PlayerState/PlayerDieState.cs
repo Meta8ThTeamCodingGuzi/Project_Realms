@@ -11,12 +11,12 @@ public class PlayerDieState : State<Player>
 
     public override void OnEnter()
     {
+        target.PlayerDie();
     }
     public override void OnExit()
     {
         
     }
-
     public override void OnUpdate()
     {
         
