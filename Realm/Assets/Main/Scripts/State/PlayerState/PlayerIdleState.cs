@@ -33,7 +33,7 @@ public class PlayerIdleState : State<Player>
         {
             target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
         }
-        if (target.TargetPos != Vector3.zero || target.TargetMonster != null)
+        if (target.TargetPos != Vector3.zero)
         {
             target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
             return;

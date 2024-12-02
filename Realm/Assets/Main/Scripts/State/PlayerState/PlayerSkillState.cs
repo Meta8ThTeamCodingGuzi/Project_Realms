@@ -31,7 +31,7 @@ public class PlayerSkillState : State<Player>
 
         if (currentAnimatorState.normalizedTime >= 0.3f)
         {
-            if (target.TargetPos != Vector3.zero || target.TargetMonster != null)
+            if (target.TargetPos != Vector3.zero)
             {
                 target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
             }
