@@ -19,6 +19,7 @@ public class Player : Unit
     [SerializeField] private LevelData levelData;
 
     internal SkillController skillController;
+   
 
     private float totalExp = 0f;  // 누적 경험치
 
@@ -28,6 +29,21 @@ public class Player : Unit
 
     private PlayerInventorySystem inventorySystem;
     public PlayerInventorySystem InventorySystem => inventorySystem;
+
+    private Animator playerAnimator;
+    public Animator PlayerAnimator => playerAnimator;
+
+    private PlayerAnimatorController playerAniControll;
+    public PlayerAnimatorController PlayerAniControll => playerAniControll;
+
+    private PlayerHandler playerHandler;
+    public PlayerHandler PlayerHandler => playerHandler;
+
+    private Monster targetMonster = null;
+    public Monster TargetMonster => targetMonster;
+
+    private Vector3 targetPos = Vector3.zero;
+    public Vector3 TargetPos => targetPos;
 
     private void Start()
     {
@@ -73,6 +89,23 @@ public class Player : Unit
             inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
         }
 
+        playerAniControll = GetComponent<PlayerAnimatorController>();
+
+        if(playerAniControll == null)
+        {
+            playerAniControll = gameObject.AddComponent<PlayerAnimatorController>();
+        }
+
+        playerAnimator = GetComponent<Animator>();
+
+        if(playerAnimator == null)
+        {
+            playerAnimator = gameObject.AddComponent<Animator>();
+        }
+
+        playerHandler = new PlayerHandler(this);
+        playerHandler.Initialize();
+
         base.Initialize();
 
 
@@ -81,13 +114,14 @@ public class Player : Unit
 
     private void Update()
     {
-        MovetoCursor();
+        playerHandler.HandleUpdate();
     }
 
-    private void MovetoCursor()
+    public void MovetoCursor()
     {
         if (Input.GetMouseButtonDown(0))
         {
+
             // UI 요소 클릭 체크
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
@@ -96,32 +130,35 @@ public class Player : Unit
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 1f);
-
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+            //Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 1f);
+            if(Physics.Raycast(ray, out RaycastHit hit, 1000f))
             {
-                Debug.Log($"Hit object layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
-
                 if (hit.collider.TryGetComponent<Monster>(out Monster monster))
                 {
-                    Attack(monster);
+                    targetMonster = monster;
+                    targetPos= Vector3.zero;
+                    return;
+                }
+                else if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
+                {
+                    targetPos = hit.point;
+                    targetMonster = null;
                     return;
                 }
             }
-
-            if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
-            {
-                //Debug.Log($"Ground hit at: {hit.point}");
-
-                MoveTo(hit.point);
-            }
-            else
-            {
-                //Debug.Log("No ground detected");
-            }
         }
     }
+    public override void StopMoving()
+    {
+        base.StopMoving();
+        targetPos = Vector3.zero;
+    }
 
+
+    public void PlayerAnimatorChange(RuntimeAnimatorController newAnimator)
+    {
+        playerAnimator.runtimeAnimatorController = newAnimator;
+    }
     #region 레벨 시스템
     public float TotalExp => totalExp;
 

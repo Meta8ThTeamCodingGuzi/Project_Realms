@@ -30,38 +30,28 @@ public class SkillController : MonoBehaviour
             initializedSkills[skillPrefab.data.skillID] = instance;
         }
     }
-    //public bool IsExistSkill()
-    //{
-    //    foreach (var slot in skillSlots)
-    //    {
-    //        if (Input.GetKey(slot.Key) && slot.Value != null)
-    //        {
-    //            slot.Value.TryUseSkill();
-    //            return true;
-    //        }
-    //    }
-    //    return false;
-    //}
 
     public void SetSkillBarUI(SkillBarUI skillBarUI) 
     {
         this.skillBarUI = skillBarUI;
     }
 
-    private void Update()
-    {
-        CheckSkillInputs();
-    }
+    //private void Update()
+    //{
+    //    CheckSkillInputs();
+    //}
 
-    private void CheckSkillInputs()
+    public bool CheckSkillInputs()
     {
         foreach (var slot in skillSlots)
         {
             if (Input.GetKey(slot.Key) && slot.Value != null)
             {
                 slot.Value.TryUseSkill();
+                return true;
             }
         }
+        return false;
     }
 
     public void AddSkill(Skill skill)

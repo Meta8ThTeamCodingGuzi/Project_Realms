@@ -96,7 +96,8 @@ public enum ItemID
 
 public enum ItemType
 {
-    Weapon,
+    Sword,
+    Bow,
     Armor,
     Accessory
 }
