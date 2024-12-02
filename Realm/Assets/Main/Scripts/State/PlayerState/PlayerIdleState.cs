@@ -29,6 +29,10 @@ public class PlayerIdleState : State<Player>
     {
         AnimatorStateInfo currentState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
+        if (target.wasAttacked)
+        {
+            target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
+        }
         if (target.TargetPos != Vector3.zero || target.TargetMonster != null)
         {
             target.PlayerHandler.TransitionTo(new PlayerMoveState(target));

@@ -8,4 +8,29 @@ public class PlayerTakeDamageState : State<Player>
     {
         this.target = target;
     }
+
+    public override void OnEnter()
+    {
+        target.PlayerAnimator.SetTrigger("TakeDamage");
+    }
+
+    public override void OnExit()
+    {
+        target.wasAttacked = false;
+    }
+
+    public override void OnUpdate()
+    {
+        if (target.IsAlive)
+        {
+            target.PlayerHandler.TransitionTo(new PlayerIdleState(target));
+        }
+        else
+        {
+            target.PlayerHandler.TransitionTo(new PlayerDieState(target));
+        }
+    }
+
+
+
 }

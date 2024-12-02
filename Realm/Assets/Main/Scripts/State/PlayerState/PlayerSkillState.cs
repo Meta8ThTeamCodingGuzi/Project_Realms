@@ -23,6 +23,10 @@ public class PlayerSkillState : State<Player>
     }
     public override void OnUpdate()
     {
+        if (target.wasAttacked)
+        {
+            target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
+        }
         var currentAnimatorState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
         if (currentAnimatorState.normalizedTime >= 0.3f)

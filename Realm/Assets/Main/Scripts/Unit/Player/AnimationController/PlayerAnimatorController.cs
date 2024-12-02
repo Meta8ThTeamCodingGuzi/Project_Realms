@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerAnimatorController : MonoBehaviour
 {
+    [SerializeField] private RuntimeAnimatorController none;
     [SerializeField] private RuntimeAnimatorController knightControllers;
     [SerializeField] private RuntimeAnimatorController archerControllers;
 
@@ -22,6 +23,9 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         switch (itemType)
         {
+            case ItemType.None:
+                GameManager.Instance.player.PlayerAnimatorChange(none);
+                break;
             case ItemType.Sword:
                 GameManager.Instance.player.PlayerAnimatorChange(knightControllers);
                 break;
