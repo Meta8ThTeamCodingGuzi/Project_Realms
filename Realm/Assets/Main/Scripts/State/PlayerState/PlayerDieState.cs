@@ -8,4 +8,18 @@ public class PlayerDieState : State<Player>
     {
         this.target = target;
     }
+
+    public override void OnEnter()
+    {
+    }
+    public override void OnExit()
+    {
+        
+    }
+
+    public override void OnUpdate()
+    {
+        
+    }
+
 }
