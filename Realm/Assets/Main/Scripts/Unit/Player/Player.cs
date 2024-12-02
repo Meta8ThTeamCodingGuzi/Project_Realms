@@ -28,6 +28,21 @@ public class Player : Unit
 
     private StatPointSystem statPoint;
 
+    private Animator playerAnimator;
+    public Animator PlayerAnimator => playerAnimator;
+
+    private PlayerAnimatorController playerAnimCon;
+    public PlayerAnimatorController PlayerAniControll => playerAnimCon;
+
+    private PlayerHandler playerHandler;
+    public PlayerHandler PlayerHandler => playerHandler;
+
+    private Monster targetMonster = null;
+    public Monster TargetMonster => targetMonster;
+
+    private Vector3 targetPos = Vector3.zero;
+    public Vector3 TargetPos => targetPos;
+
     private PlayerInventorySystem inventorySystem;
     public PlayerInventorySystem InventorySystem => inventorySystem;
 
@@ -80,11 +95,11 @@ public class Player : Unit
             inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
         }
 
-        playerAniControll = GetComponent<PlayerAnimatorController>();
+        playerAnimCon = GetComponent<PlayerAnimatorController>();
 
-        if(playerAniControll == null)
+        if(playerAnimCon == null)
         {
-            playerAniControll = gameObject.AddComponent<PlayerAnimatorController>();
+            playerAnimCon = gameObject.AddComponent<PlayerAnimatorController>();
         }
 
         playerAnimator = GetComponent<Animator>();
@@ -122,19 +137,21 @@ public class Player : Unit
             }
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 1f);
 
-            // 먼저 몬스터 레이어 체크
-            if (Physics.Raycast(ray, out RaycastHit monsterHit, 1000f, LayerMask.GetMask("Monster")))
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
             {
-                // 몬스터를 클릭했을 경우 이동하지 않음
-                return;
-            }
-
-            // 몬스터가 아닌 경우 지면 체크
-            if (Physics.Raycast(ray, out RaycastHit groundHit, 1000f, groundLayerMask))
-            {
-                MoveTo(groundHit.point);
+                if (hit.collider.TryGetComponent<Monster>(out Monster monster))
+                {
+                    targetMonster = monster;
+                    targetPos = Vector3.zero;
+                    return;
+                }
+                else if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
+                {
+                    targetPos = hit.point;
+                    targetMonster = null;
+                    return;
+                }
             }
         }
     }
@@ -149,6 +166,7 @@ public class Player : Unit
     {
         playerAnimator.runtimeAnimatorController = newAnimator;
     }
+
     #region 레벨 시스템
     public float TotalExp => totalExp;
 

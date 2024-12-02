@@ -33,8 +33,6 @@ public class Monster : Unit, IPoolable
 
     public ParticleSystem monsterDieParticle;
 
-    private bool isDeathAnimationPlaying = false;
-
     protected override void Initialize()
     {
         foreach (Transform setPatrolTransform in setPatrolTransforms)
@@ -132,13 +130,11 @@ public class Monster : Unit, IPoolable
     {
         M_Animator.SetTrigger("Die");
 
-        // 애니메이션이 Die 스테이트로 전환될 때까지 대기
         while (!M_Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
         {
             yield return null;
         }
 
-        // Die 애니메이션이 끝날 때까지 대기
         while (M_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
         {
             yield return null;
