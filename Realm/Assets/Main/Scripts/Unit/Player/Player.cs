@@ -32,13 +32,10 @@ public class Player : Unit
     public Animator PlayerAnimator => playerAnimator;
 
     private PlayerAnimatorController playerAnimCon;
-    public PlayerAnimatorController PlayerAniControll => playerAnimCon;
+    public PlayerAnimatorController PlayerAnimController => playerAnimCon;
 
     private PlayerHandler playerHandler;
     public PlayerHandler PlayerHandler => playerHandler;
-
-    private Monster targetMonster = null;
-    public Monster TargetMonster => targetMonster;
 
     private Vector3 targetPos = Vector3.zero;
     public Vector3 TargetPos => targetPos;
@@ -138,20 +135,9 @@ public class Player : Unit
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayerMask))
             {
-                if (hit.collider.TryGetComponent<Monster>(out Monster monster))
-                {
-                    targetMonster = monster;
-                    targetPos = Vector3.zero;
-                    return;
-                }
-                else if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
-                {
-                    targetPos = hit.point;
-                    targetMonster = null;
-                    return;
-                }
+               targetPos = hit.point;
             }
         }
     }

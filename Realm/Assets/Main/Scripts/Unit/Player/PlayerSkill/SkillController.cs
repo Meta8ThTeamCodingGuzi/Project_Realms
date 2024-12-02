@@ -22,6 +22,7 @@ public class SkillController : MonoBehaviour
         skillSlots[KeyCode.W] = null;
         skillSlots[KeyCode.E] = null;
         skillSlots[KeyCode.R] = null;
+        skillSlots[KeyCode.Mouse0] = null;
         skillSlots[KeyCode.Space] = null;
 
         foreach (var skillPrefab in availableSkillPrefabs)

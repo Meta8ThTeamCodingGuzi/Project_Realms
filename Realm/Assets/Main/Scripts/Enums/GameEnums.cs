@@ -20,6 +20,8 @@ public enum StatType
 
 public enum SkillID
 {
+    BasicSwordAttack,
+    BasicBowAttack,
     TestSkill
 }
 public enum SkillStatType
@@ -99,6 +101,7 @@ public enum ItemID
 
 public enum ItemType
 {
+    None,
     Sword,
     Bow,
     Armor,

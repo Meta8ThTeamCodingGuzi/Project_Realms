@@ -25,10 +25,14 @@ public class ItemData : ScriptableObject
 
     [SerializeField] private ItemID itemID;
     [SerializeField] private ItemType itemType;
-    [SerializeField] private string description = "아이템 설명";
+    [SerializeField] private string description = "";
     [SerializeField] private Sprite icon;
     [SerializeField] private List<ItemStat> stats = new List<ItemStat>();
     [SerializeField] private GameObject itemPrefab;
+
+    [Header("Weapon Skill")]
+    [SerializeField] private Skill defaultWeaponSkill; // 무기의 기본 스킬
+    public Skill DefaultWeaponSkill => defaultWeaponSkill;
 
     public ItemID ItemID => itemID;
     public ItemType ItemType => itemType;
@@ -45,5 +49,14 @@ public class ItemData : ScriptableObject
             tooltip += stat.GetTooltipText();
         }
         return tooltip.TrimEnd('\n');
+    }
+
+    // 무기 타입별 기본 스킬 프리팹 가져오기
+    public Skill GetDefaultSkillForWeapon()
+    {
+        if (itemType != ItemType.Sword && itemType != ItemType.Bow)
+            return null;
+
+        return defaultWeaponSkill;
     }
 }

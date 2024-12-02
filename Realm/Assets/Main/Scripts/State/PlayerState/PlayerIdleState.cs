@@ -29,7 +29,7 @@ public class PlayerIdleState : State<Player>
     {
         AnimatorStateInfo currentState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
-        if (target.TargetPos != Vector3.zero || target.TargetMonster != null)
+        if (target.TargetPos != Vector3.zero)
         {
             target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
             return;
