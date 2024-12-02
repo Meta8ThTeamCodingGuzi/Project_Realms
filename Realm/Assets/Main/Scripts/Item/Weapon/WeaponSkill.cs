@@ -31,7 +31,7 @@ public abstract class WeaponSkill : Skill
     }
 
     // 무기가 교체될 때 호출
-    public void UpdateWeaponComponents()
+    public virtual void UpdateWeaponComponents()
     {
         if (weaponHolder != null)
         {
