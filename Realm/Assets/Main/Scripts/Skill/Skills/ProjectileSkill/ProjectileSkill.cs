@@ -92,28 +92,42 @@ public class ProjectileSkill : Skill
 
     private void FireProjectile(ProjectileData data)
     {
-        if (projectilePrefab == null)
+        if (projectilePrefab == null || firePoint == null)
         {
-            Debug.LogError($"{gameObject.name}: projectilePrefab이 없습니다!");
+            Debug.LogError($"{gameObject.name}: projectilePrefab 또는 firePoint가 없습니다!");
             return;
         }
 
-        if (firePoint == null)
-        {
-            Debug.LogError($"{gameObject.name}: firePoint가 없습니다!");
-            return;
-        }
+        // 마우스 커서의 월드 좌표를 구합니다
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
-        Projectile projectile = PoolManager.Instance.Spawn<Projectile>
-            (projectilePrefab.gameObject, firePoint.position, firePoint.rotation);
+        if (groundPlane.Raycast(ray, out float distance))
+        {
+            Vector3 targetPoint = ray.GetPoint(distance);
 
-        if (projectile != null)
-        {
-            projectile.Initialize(data);
-        }
-        else
-        {
-            Debug.LogError($"{gameObject.name}: 발사체 생성 실패!");
+            // 캐릭터와 커서 사이의 방향을 계산합니다
+            Vector3 direction = (targetPoint - transform.position).normalized;
+            direction.y = 0; // Y축 회전만 필요하므로 y값은 0으로 설정
+
+            GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(direction);
+
+            // firePoint도 같은 방향을 바라보도록 설정합니다
+            firePoint.rotation = transform.rotation;
+
+            // 발사체를 생성하고 초기화합니다
+            Projectile projectile = PoolManager.Instance.Spawn<Projectile>
+                (projectilePrefab.gameObject, firePoint.position, firePoint.rotation);
+
+            if (projectile != null)
+            {
+                projectile.Initialize(data);
+                PoolManager.Instance.Despawn<Projectile>(projectile, skillStat.GetStatValue<float>(SkillStatType.Duration));
+            }
+            else
+            {
+                Debug.LogError($"{gameObject.name}: 발사체 생성 실패!");
+            }
         }
     }
 

@@ -5,8 +5,10 @@ public enum StatType
     Level,
     MaxHealth,
     Health,
-    MaxMana,
     Mana,
+    MaxMana,
+    ManaRegenRate,
+    HealthRegenRate,
     Damage,
     Defense,
     MoveSpeed,
@@ -72,6 +74,7 @@ public enum SourceType
 {
     None,
     BaseStats,
+    Level,
     Equipment,
     Skill,
     Buff,
@@ -96,7 +99,8 @@ public enum ItemID
 
 public enum ItemType
 {
-    Weapon,
+    Sword,
+    Bow,
     Armor,
     Accessory
 }

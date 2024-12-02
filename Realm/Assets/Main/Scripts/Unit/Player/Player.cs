@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -29,6 +30,11 @@ public class Player : Unit
     private PlayerInventorySystem inventorySystem;
     public PlayerInventorySystem InventorySystem => inventorySystem;
 
+    [Header("Regeneration Settings")]
+    [SerializeField] private float regenTickTime = 1f;      // 리젠 틱 간격
+    private Coroutine healthRegenCoroutine;
+    private Coroutine manaRegenCoroutine;
+
     private void Start()
     {
         Initialize();
@@ -53,7 +59,7 @@ public class Player : Unit
 
         statPoint = GetComponent<StatPointSystem>();
 
-        statPoint.Initialize();
+        statPoint.Initialize(this);
 
         GameManager.Instance.player = this;
 
@@ -67,7 +73,7 @@ public class Player : Unit
         skillController.Initialize();
 
         inventorySystem = GetComponent<PlayerInventorySystem>();
-        
+
         if (inventorySystem == null)
         {
             inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
@@ -75,6 +81,8 @@ public class Player : Unit
 
         base.Initialize();
 
+        // 리젠 코루틴 시작
+        StartRegeneration();
 
         Debug.Log("Player initialized successfully");
     }
@@ -95,29 +103,19 @@ public class Player : Unit
             }
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
             Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 1f);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+            // 먼저 몬스터 레이어 체크
+            if (Physics.Raycast(ray, out RaycastHit monsterHit, 1000f, LayerMask.GetMask("Monster")))
             {
-                Debug.Log($"Hit object layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
-
-                if (hit.collider.TryGetComponent<Monster>(out Monster monster))
-                {
-                    Attack(monster);
-                    return;
-                }
+                // 몬스터를 클릭했을 경우 이동하지 않음
+                return;
             }
 
-            if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
+            // 몬스터가 아닌 경우 지면 체크
+            if (Physics.Raycast(ray, out RaycastHit groundHit, 1000f, groundLayerMask))
             {
-                //Debug.Log($"Ground hit at: {hit.point}");
-
-                MoveTo(hit.point);
-            }
-            else
-            {
-                //Debug.Log("No ground detected");
+                MoveTo(groundHit.point);
             }
         }
     }
@@ -246,5 +244,61 @@ public class Player : Unit
     public float GetDefense()
     {
         return characterStats.GetStatValue(StatType.Defense);
+    }
+
+    private void StartRegeneration()
+    {
+        // 기존 코루틴이 실행 중이라면 중지
+        if (healthRegenCoroutine != null)
+            StopCoroutine(healthRegenCoroutine);
+        if (manaRegenCoroutine != null)
+            StopCoroutine(manaRegenCoroutine);
+
+        // 새로운 코루틴 시작
+        healthRegenCoroutine = StartCoroutine(HealthRegenCoroutine());
+        manaRegenCoroutine = StartCoroutine(ManaRegenCoroutine());
+    }
+
+    private IEnumerator HealthRegenCoroutine()
+    {
+        while (IsAlive)
+        {
+            float currentHealth = characterStats.GetStatValue(StatType.Health);
+            float maxHealth = characterStats.GetStatValue(StatType.MaxHealth);
+            float regenRate = characterStats.GetStatValue(StatType.HealthRegenRate);
+
+            if (currentHealth < maxHealth)
+            {
+                characterStats.AddModifier(StatType.Health,new StatModifier(regenRate,StatModifierType.Flat,SourceType.BaseStats));
+            }
+
+            yield return new WaitForSeconds(regenTickTime);
+        }
+    }
+
+    private IEnumerator ManaRegenCoroutine()
+    {
+        while (IsAlive)
+        {
+            float currentMana = characterStats.GetStatValue(StatType.Mana);
+            float maxMana = characterStats.GetStatValue(StatType.MaxMana);
+            float regenRate = characterStats.GetStatValue(StatType.ManaRegenRate);
+
+            if (currentMana < maxMana)
+            {
+                characterStats.AddModifier(StatType.Mana,new StatModifier(regenRate,StatModifierType.Flat,SourceType.BaseStats));
+            }
+
+            yield return new WaitForSeconds(regenTickTime);
+        }
+    }
+
+    private void OnDisable()
+    {
+        // 코루틴 정리
+        if (healthRegenCoroutine != null)
+            StopCoroutine(healthRegenCoroutine);
+        if (manaRegenCoroutine != null)
+            StopCoroutine(manaRegenCoroutine);
     }
 }
