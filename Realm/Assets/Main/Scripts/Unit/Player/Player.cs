@@ -325,7 +325,26 @@ public class Player : Unit
             yield return new WaitForSeconds(regenTickTime);
         }
     }
+    public void PlayerDie()
+    {
+        StartCoroutine(DieRoutine());
+    }
 
+    public IEnumerator DieRoutine()
+    {
+        PlayerAnimator.SetTrigger("Die");
+
+        while (!PlayerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        {
+            yield return null;
+        }
+
+        while (PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            yield return null;
+        }
+        //플레이어 죽고나서 해야할거 해야할듯
+    }
     private void OnDisable()
     {
         // 코루틴 정리

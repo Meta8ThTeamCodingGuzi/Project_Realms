@@ -21,13 +21,14 @@ public class PlayerTakeDamageState : State<Player>
 
     public override void OnUpdate()
     {
-        if (target.IsAlive)
-        {
-            target.PlayerHandler.TransitionTo(new PlayerIdleState(target));
-        }
-        else
+        if(!target.IsAlive) 
         {
             target.PlayerHandler.TransitionTo(new PlayerDieState(target));
+        }
+        else if (target.IsAlive)
+        {
+            target.PlayerAnimator.SetTrigger("Idle");
+            target.PlayerHandler.TransitionTo(new PlayerIdleState(target));      
         }
     }
 
