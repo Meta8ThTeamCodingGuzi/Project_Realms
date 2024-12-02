@@ -12,7 +12,6 @@ public class PlayerUI : MonoBehaviour
     public Slider playerExp;
     public TextMeshProUGUI playerLevelText;
     public StatUI statUI;
-    private bool isStatUIVisible = false;
 
     public void Initialize(Player player)
     {
@@ -22,18 +21,16 @@ public class PlayerUI : MonoBehaviour
         statUI.gameObject.SetActive(false);
     }
 
-    private void Update()
+    public void ShowStatUI()
     {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ToggleStatUI();
-        }
+        statUI.gameObject.SetActive(true);
+        if (statUI != null)
+            statUI.UpdateUI();
     }
 
-    private void ToggleStatUI()
+    public void HideStatUI()
     {
-        isStatUIVisible = !isStatUIVisible;
-        statUI.gameObject.SetActive(isStatUIVisible);
+        statUI.gameObject.SetActive(false);
     }
 
     public void UpdatePlayerInfo()

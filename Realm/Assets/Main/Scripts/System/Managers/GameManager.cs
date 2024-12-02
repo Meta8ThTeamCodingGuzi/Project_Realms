@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameManager : SingletonManager<GameManager>, IInitializable
 {
-    public Player player;
+    private Player Player;
+    public Player player { get => Player; set => Player = value; }
     public bool IsInitialized { get; private set; }
 
     protected override void Awake()

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -24,27 +23,11 @@ public class Player : Unit
     private float totalExp = 0f;  // 누적 경험치
 
     private LayerMask groundLayerMask;
-    public LayerMask GroundLayerMask => groundLayerMask;
 
     private StatPointSystem statPoint;
 
-    private PlayerHandler playerHandler;
-    public PlayerHandler PlayerHandler => playerHandler;
-
-    private Animator playerAnimator;
-    public Animator PlayerAnimator => playerAnimator;
-
-    private PlayerAnimatorController animaControl;
-    public PlayerAnimatorController AnimaControl => animaControl;
-
-    private Monster targetMonster;
-    public Monster TargetMonster => targetMonster;
-
-    private Vector3 targetPos;
-    public Vector3 TargetPos => targetPos;
-
-    public Playerjob playerjob = Playerjob.knight;
-
+    private PlayerInventorySystem inventorySystem;
+    public PlayerInventorySystem InventorySystem => inventorySystem;
 
     private void Start()
     {
@@ -81,36 +64,27 @@ public class Player : Unit
             skillController = gameObject.AddComponent<SkillController>();
         }
 
-
         skillController.Initialize();
 
-        base.Initialize();
-        if (playerHandler == null)
+        inventorySystem = GetComponent<PlayerInventorySystem>();
+        
+        if (inventorySystem == null)
         {
-            playerHandler = new PlayerHandler(this);
-            playerHandler.Initialize();
+            inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
         }
-        Debug.Log("Player initialized successfully");
-        playerAnimator = GetComponent<Animator>();
 
-        animaControl = GetComponent<PlayerAnimatorController>();
-        if (animaControl == null)
-        {
-            animaControl = gameObject.AddComponent<PlayerAnimatorController>();
-        }
-    }
-    public override void StopMoving()
-    {
-        base.StopMoving();
-        targetPos = Vector3.zero;
+        base.Initialize();
+
+
+        Debug.Log("Player initialized successfully");
     }
 
     private void Update()
     {
-        playerHandler.HandleUpdate();
+        MovetoCursor();
     }
 
-    public void MovetoCursor()
+    private void MovetoCursor()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -126,46 +100,26 @@ public class Player : Unit
 
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
             {
-                //Debug.Log($"Hit object layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+                Debug.Log($"Hit object layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
 
                 if (hit.collider.TryGetComponent<Monster>(out Monster monster))
                 {
-                    targetMonster = monster;
-                    //if (targetMonster != null) Attack(targetMonster);
+                    Attack(monster);
                     return;
-                }
-                else
-                {
-                    targetMonster = null;
                 }
             }
 
             if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
             {
                 //Debug.Log($"Ground hit at: {hit.point}");
-                targetPos = hit.point;
-                //MoveTo(hit.point);
+
+                MoveTo(hit.point);
             }
             else
             {
                 //Debug.Log("No ground detected");
             }
         }
-    }
-    public void PlayerDie()
-    {
-        StartCoroutine(DieCroutine());
-    }
-
-    public IEnumerator DieCroutine()
-    {
-        playerAnimator.SetTrigger("Die");
-        yield return new WaitForSeconds(3f);
-        PoolManager.Instance.Despawn(this);
-    }
-    public void PlayerAnimatorChange(RuntimeAnimatorController newController)
-    {
-        playerAnimator.runtimeAnimatorController = newController;
     }
 
     #region 레벨 시스템

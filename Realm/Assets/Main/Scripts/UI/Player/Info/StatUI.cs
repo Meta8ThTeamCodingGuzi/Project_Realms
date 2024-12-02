@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
@@ -34,10 +34,9 @@ public class StatUI : MonoBehaviour
     {
         foreach (var display in statDisplays)
         {
-            // ¹öÆ°¿¡ ¸®½º³Ê Ãß°¡
             if (display.increaseButton != null)
             {
-                StatType statType = display.statType; // Å¬·ÎÀú¸¦ À§ÇÑ Áö¿ª º¯¼ö
+                StatType statType = display.statType;
                 display.increaseButton.onClick.AddListener(() => OnStatIncreaseButton(statType));
             }
         }
@@ -45,26 +44,30 @@ public class StatUI : MonoBehaviour
         UpdateUI();
     }
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
-        // »ç¿ë °¡´ÉÇÑ Æ÷ÀÎÆ® Ç¥½Ã
+        // ì‚¬ìš© ê°€ëŠ¥í•œ í¬ì¸íŠ¸ í‘œì‹œ
         if (availablePointsText != null)
         {
             availablePointsText.text = $"{statPointSystem.AvailablePoints}";
         }
 
-        // °¢ ½ºÅÈ Ç¥½Ã ¾÷µ¥ÀÌÆ®
+        bool hasAvailablePoints = statPointSystem.AvailablePoints > 0;
+
+        // ê° ìŠ¤íƒ¯ í‘œì‹œ ì—…ë°ì´íŠ¸
         foreach (var display in statDisplays)
         {
             float value = unitStats.GetStatValue(display.statType);
             display.valueText.text = value.ToString("F1");
 
-            // ¹öÆ° È°¼ºÈ­/ºñÈ°¼ºÈ­
+            // ë²„íŠ¼ í™œì„±í™”/ë¹„í™œì„±í™”
             if (display.increaseButton != null)
             {
-                bool canInvest = statPointSystem.AvailablePoints > 0 &&
+                bool canInvest = hasAvailablePoints &&
                                 unitStats.GetPointIncreaseAmount(display.statType) > 0;
-                display.increaseButton.interactable = canInvest;
+
+                // ë²„íŠ¼ì˜ GameObjectë¥¼ ì§ì ‘ í™œì„±í™”/ë¹„í™œì„±í™”
+                display.increaseButton.gameObject.SetActive(canInvest);
             }
         }
     }
