@@ -169,8 +169,8 @@ public class Monster : Unit, IPoolable
     public void OnSpawnFromPool()
     {
         float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
-        characterStats.AddModifier(StatType.Level, new StatModifier(playerLevel, StatModifierType.Flat, this, SourceType.BaseStats));
         Initialize();
+        characterStats.AddModifier(StatType.Level, new StatModifier(playerLevel, StatModifierType.Flat, this, SourceType.BaseStats));
     }
 
 }
