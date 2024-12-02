@@ -187,7 +187,6 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
                 }
             }
         }
-
         return false;
     }
 

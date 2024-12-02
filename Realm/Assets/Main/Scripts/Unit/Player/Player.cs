@@ -20,6 +20,7 @@ public class Player : Unit
     [SerializeField] private LevelData levelData;
 
     internal SkillController skillController;
+   
 
     private float totalExp = 0f;  // 누적 경험치
 
@@ -79,6 +80,23 @@ public class Player : Unit
             inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
         }
 
+        playerAniControll = GetComponent<PlayerAnimatorController>();
+
+        if(playerAniControll == null)
+        {
+            playerAniControll = gameObject.AddComponent<PlayerAnimatorController>();
+        }
+
+        playerAnimator = GetComponent<Animator>();
+
+        if(playerAnimator == null)
+        {
+            playerAnimator = gameObject.AddComponent<Animator>();
+        }
+
+        playerHandler = new PlayerHandler(this);
+        playerHandler.Initialize();
+
         base.Initialize();
 
         // 리젠 코루틴 시작
@@ -89,13 +107,14 @@ public class Player : Unit
 
     private void Update()
     {
-        MovetoCursor();
+        playerHandler.HandleUpdate();
     }
 
-    private void MovetoCursor()
+    public void MovetoCursor()
     {
         if (Input.GetMouseButtonDown(0))
         {
+
             // UI 요소 클릭 체크
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
@@ -119,7 +138,17 @@ public class Player : Unit
             }
         }
     }
+    public override void StopMoving()
+    {
+        base.StopMoving();
+        targetPos = Vector3.zero;
+    }
 
+
+    public void PlayerAnimatorChange(RuntimeAnimatorController newAnimator)
+    {
+        playerAnimator.runtimeAnimatorController = newAnimator;
+    }
     #region 레벨 시스템
     public float TotalExp => totalExp;
 

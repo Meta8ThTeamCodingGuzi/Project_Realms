@@ -37,21 +37,22 @@ public class SkillController : MonoBehaviour
         this.skillBarUI = skillBarUI;
     }
 
-    private void Update()
-    {
-        CheckSkillInputs();
-    }
+    //private void Update()
+    //{
+    //    CheckSkillInputs();
+    //}
 
-    private void CheckSkillInputs()
+    public bool CheckSkillInputs()
     {
         foreach (var slot in skillSlots)
         {
             if (Input.GetKey(slot.Key) && slot.Value != null)
             {                
                 slot.Value.TryUseSkill();
-                skillActivated = slot.Key;
+                return true;
             }
         }
+        return false;
     }
 
     public void AddSkill(Skill skill)
