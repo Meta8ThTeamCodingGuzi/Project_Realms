@@ -89,6 +89,7 @@ public class Slot : MonoBehaviour
             if (isEquipSlot && _player != null)
             {
                 _item.ApplyStats(_player.GetComponent<ICharacterStats>());
+                _player.UpdateMoveSpeed();
 
                 if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
                 {

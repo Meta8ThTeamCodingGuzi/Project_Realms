@@ -19,15 +19,11 @@ public class SwordSkill : WeaponSkill
         isAttacking = true;
 
         if (weaponCollider != null) weaponCollider.enabled = true;
-        if (weaponTrail != null) weaponTrail.enabled = true;
 
-        // 공격 속도에 따른 지속시간 계산
         float attackDuration = baseAttackDuration / GetPlayerAttackSpeed();
         yield return new WaitForSeconds(attackDuration);
 
         if (weaponCollider != null) weaponCollider.enabled = false;
-        if (weaponTrail != null) weaponTrail.enabled = false;
-        print("소드스킬 호출");
         isAttacking = false;
     }
 
@@ -37,8 +33,7 @@ public class SwordSkill : WeaponSkill
         {
             if (other.TryGetComponent<Monster>(out Monster monster))
             {
-                float totalDamage = GetPlayerDamage() *
-                    (1 + skillStat.GetStatValue<float>(SkillStatType.Damage) / 100f);
+                float totalDamage = GetPlayerDamage();
                 monster.TakeDamage(totalDamage);
             }
         }

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PlayerIdleState : State<Player>
 {
-    //private float IdleTime = 0f;
 
     public PlayerIdleState(Player target) : base(target)
     {
@@ -15,13 +14,11 @@ public class PlayerIdleState : State<Player>
     public override void OnEnter()
     {
         target.StopMoving();
-        //IdleTime = 0f;
         base.OnEnter();
     }
 
     public override void OnExit()
     {
-        //IdleTime = 0f;
         base.OnExit();
     }
 
@@ -32,6 +29,7 @@ public class PlayerIdleState : State<Player>
             target.PlayerHandler.TransitionTo(new PlayerDieState(target));
             return;
         }
+
         AnimatorStateInfo currentState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
         if (target.wasAttacked)
@@ -39,7 +37,6 @@ public class PlayerIdleState : State<Player>
             target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
             return;
         }
-
         if (target.skillController.CheckSkillInputs())
         {
             target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
@@ -47,6 +44,7 @@ public class PlayerIdleState : State<Player>
         }
 
         target.MovetoCursor();
+
         if(target.TargetMonster != null && target.CanAttack(target.TargetMonster))
         {
             target.skillController.OnMouseCilck();

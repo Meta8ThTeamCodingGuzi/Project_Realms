@@ -5,7 +5,6 @@ public abstract class WeaponSkill : Skill
 {
     protected WeaponHolder weaponHolder;
     protected Collider weaponCollider;
-    protected TrailRenderer weaponTrail;
     protected Player player;
     protected ICharacterStats playerStats;
 
@@ -23,9 +22,8 @@ public abstract class WeaponSkill : Skill
 
             if (weaponHolder != null)
             {
-                var (collider, trail) = weaponHolder.GetWeaponComponents();
+                var collider = weaponHolder.GetWeaponComponents();
                 weaponCollider = collider;
-                weaponTrail = trail;
             }
         }
     }
@@ -35,9 +33,8 @@ public abstract class WeaponSkill : Skill
     {
         if (weaponHolder != null)
         {
-            var (collider, trail) = weaponHolder.GetWeaponComponents();
+            var collider = weaponHolder.GetWeaponComponents();
             weaponCollider = collider;
-            weaponTrail = trail;
         }
     }
 

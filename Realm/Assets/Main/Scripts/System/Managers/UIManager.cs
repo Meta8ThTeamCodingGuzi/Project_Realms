@@ -11,6 +11,7 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     private SkillBarUI skillBarUI;
     private Player player;
     private Inventory inventory;
+    private PlayerStateUI playerStateUI;
 
     private bool isInventoryVisible = false;
 
@@ -41,6 +42,7 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         playerUI.Initialize(player);
         skillBarUI.Initialize(player);
         inventory.Initialize(player, playerUI);
+        playerStateUI.Initialize(player);
 
         SetInitialUIState();
 
@@ -67,6 +69,7 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         playerUI = GetComponentInChildren<PlayerUI>();
         skillBarUI = GetComponentInChildren<SkillBarUI>();
         inventory = GetComponentInChildren<Inventory>();
+        playerStateUI = GetComponentInChildren<PlayerStateUI>();
     }
 
     private void Update()

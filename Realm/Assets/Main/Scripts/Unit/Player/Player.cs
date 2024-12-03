@@ -34,8 +34,8 @@ public class Player : Unit
     private PlayerAnimatorController playerAnimCon;
     public PlayerAnimatorController PlayerAnimController => playerAnimCon;
 
-    private PlayerHandler playerHandler;
-    public PlayerHandler PlayerHandler => playerHandler;
+    private PlayerStateHandler playerHandler;
+    public PlayerStateHandler PlayerHandler => playerHandler;
 
     private Monster targetMonster;
     public Monster TargetMonster => targetMonster;
@@ -109,7 +109,7 @@ public class Player : Unit
             playerAnimator = gameObject.AddComponent<Animator>();
         }
 
-        playerHandler = new PlayerHandler(this);
+        playerHandler = new PlayerStateHandler(this);
         playerHandler.Initialize();
 
         base.Initialize();
@@ -127,7 +127,7 @@ public class Player : Unit
 
     public void MovetoCursor()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
 
             // UI 요소 클릭 체크
