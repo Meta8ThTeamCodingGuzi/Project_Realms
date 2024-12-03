@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerSkillState : State<Player>
 {
+    private bool isAttackAnimationPlaying = false;
+
     public PlayerSkillState(Player target) : base(target)
     {
         this.target = target;
@@ -12,29 +14,37 @@ public class PlayerSkillState : State<Player>
     public override void OnEnter()
     {
         target.StopMoving();
+        isAttackAnimationPlaying = true;
     }
+
     public override void OnExit()
     {
         target.ClearTarget();
+        isAttackAnimationPlaying = false;
     }
+
     public override void OnUpdate()
     {
         if (target.wasAttacked)
         {
             target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
-        }
-
-        if (target.skillController.CheckSkillInputs())
-        {
             return;
         }
 
         AnimatorStateInfo stateInfo = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
-        if (stateInfo.IsName("Attack") && stateInfo.normalizedTime < 0.97f)
+        if (stateInfo.IsName("Attack"))
         {
-            return;
+            if (stateInfo.normalizedTime < 0.97f)
+            {
+                return;
+            }
+            else
+            {
+                isAttackAnimationPlaying = false;
+            }
         }
+
 
         if (target.TargetPos != Vector3.zero)
         {
@@ -44,6 +54,6 @@ public class PlayerSkillState : State<Player>
         {
             target.PlayerHandler.TransitionTo(new PlayerIdleState(target));
         }
-    }
 
+    }
 }

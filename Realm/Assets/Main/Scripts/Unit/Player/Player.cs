@@ -20,7 +20,7 @@ public class Player : Unit
     [SerializeField] private LevelData levelData;
 
     internal SkillController skillController;
-   
+
 
     private float totalExp = 0f;  // 누적 경험치
 
@@ -50,6 +50,9 @@ public class Player : Unit
     [SerializeField] private float regenTickTime = 1f;      // 리젠 틱 간격
     private Coroutine healthRegenCoroutine;
     private Coroutine manaRegenCoroutine;
+
+    // groundLayerMask에 대한 getter 추가
+    public LayerMask GroundLayer => groundLayerMask;
 
     private void Start()
     {
@@ -97,14 +100,14 @@ public class Player : Unit
 
         playerAnimCon = GetComponent<PlayerAnimatorController>();
 
-        if(playerAnimCon == null)
+        if (playerAnimCon == null)
         {
             playerAnimCon = gameObject.AddComponent<PlayerAnimatorController>();
         }
 
         playerAnimator = GetComponent<Animator>();
 
-        if(playerAnimator == null)
+        if (playerAnimator == null)
         {
             playerAnimator = gameObject.AddComponent<Animator>();
         }
@@ -148,10 +151,10 @@ public class Player : Unit
                 }
             }
 
-            if(Physics.Raycast(ray,out hit,1000f, groundLayerMask))
+            if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
             {
-               targetPos = hit.point;
-               targetMonster = null;
+                targetPos = hit.point;
+                targetMonster = null;
             }
         }
     }
@@ -316,7 +319,7 @@ public class Player : Unit
 
             if (currentHealth < maxHealth)
             {
-                characterStats.AddModifier(StatType.Health,new StatModifier(regenRate,StatModifierType.Flat,SourceType.BaseStats));
+                characterStats.AddModifier(StatType.Health, new StatModifier(regenRate, StatModifierType.Flat, SourceType.BaseStats));
             }
 
             yield return new WaitForSeconds(regenTickTime);
@@ -333,7 +336,7 @@ public class Player : Unit
 
             if (currentMana < maxMana)
             {
-                characterStats.AddModifier(StatType.Mana,new StatModifier(regenRate,StatModifierType.Flat,SourceType.BaseStats));
+                characterStats.AddModifier(StatType.Mana, new StatModifier(regenRate, StatModifierType.Flat, SourceType.BaseStats));
             }
 
             yield return new WaitForSeconds(regenTickTime);
@@ -372,5 +375,17 @@ public class Player : Unit
             StopCoroutine(healthRegenCoroutine);
         if (manaRegenCoroutine != null)
             StopCoroutine(manaRegenCoroutine);
+    }
+
+    public void SetTarget(Monster monster)
+    {
+        targetMonster = monster;
+        targetPos = Vector3.zero;
+    }
+
+    public void SetDestination(Vector3 position)
+    {
+        targetPos = position;
+        targetMonster = null;
     }
 }

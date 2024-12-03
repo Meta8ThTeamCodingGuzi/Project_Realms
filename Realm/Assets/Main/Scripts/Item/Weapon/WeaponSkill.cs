@@ -40,16 +40,12 @@ public abstract class WeaponSkill : Skill
 
     public override bool TryUseSkill()
     {
-        if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
-        {
-            StartCoroutine(UseSkillWithDelay());
-            return true;
-        }
+        UseSkill();
 
-        return base.TryUseSkill();
+        return true;
     }
 
-    public IEnumerator UseSkillWithDelay()
+    public override IEnumerator UseSkillWithDelay()
     {
         if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
         {
@@ -76,6 +72,4 @@ public abstract class WeaponSkill : Skill
     {
         return playerStats?.GetStatValue(StatType.AttackRange) ?? 2f;
     }
-
-    protected abstract void OnWeaponHit(Collider other);
 }

@@ -75,8 +75,9 @@ public abstract class Skill : MonoBehaviour
                 StartCoroutine(SkillSequenceTimer());
             }
 
+            //TODO : 마이크로컨트롤
             GameManager.Instance.player.PlayerAnimator.SetFloat("AttackSpeed",
-                GameManager.Instance.player.CharacterStats.GetStatValue(StatType.AttackSpeed));
+                5f);
             GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
         }
 
