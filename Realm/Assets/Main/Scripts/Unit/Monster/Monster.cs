@@ -91,10 +91,14 @@ public class Monster : Unit, IPoolable
         {
             if (collider.TryGetComponent<Player>(out Player player))
             {
-                this.player = player;
-                return true;
+                if (player.IsAlive)
+                {
+                    this.player = player;
+                    return true;
+                }
             }
         }
+        StopAttack();
         this.player = null;
         return false;
     }
@@ -115,6 +119,8 @@ public class Monster : Unit, IPoolable
 
                 if (currentTime - lastAttackTime >= timeBetweenAttacks)
                 {
+                    M_Animator.SetTrigger("Attack");
+                    yield return new WaitForSeconds(0.7f);
                     PerformAttack(target);
                     lastAttackTime = currentTime;
                 }

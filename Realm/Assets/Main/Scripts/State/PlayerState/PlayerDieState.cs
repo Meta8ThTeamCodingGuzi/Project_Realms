@@ -11,6 +11,7 @@ public class PlayerDieState : State<Player>
 
     public override void OnEnter()
     {
+        target.StopMoving();
         target.PlayerDie();
     }
     public override void OnExit()

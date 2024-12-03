@@ -127,7 +127,7 @@ public class Player : Unit
 
     public void MovetoCursor()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
 
             // UI 요소 클릭 체크
