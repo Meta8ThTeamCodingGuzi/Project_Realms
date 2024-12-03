@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 
 
 public class Slot : MonoBehaviour
 {
     [SerializeField] private Image itemIcon;
-    [SerializeField] private ItemType? allowedItemType = null; // nullÀÌ¸é ¸ğµç Å¸ÀÔ Çã¿ë
+    [SerializeField] private ItemType? allowedItemType = null; // nullÌ¸  Å¸
     [SerializeField] private bool isEquipSlot = false;
 
     private Item _item;
@@ -31,10 +31,10 @@ public class Slot : MonoBehaviour
 
     private void InitializeSlotHandler(Inventory inventory)
     {
-        // Àåºñ ½½·ÔÀÎÁö ¿©ºÎ ¼³Á¤
+        //  Å¸
         slotHandler.IsInventorySlot = !isEquipSlot;
 
-        // ÀÎº¥Åä¸® ÂüÁ¶ ¼³Á¤ (¸ğµç ½½·Ô¿¡ ´ëÇØ ¼³Á¤)
+        // Îºä¸®  (Ô¿  )
         slotHandler.InitializeSlotHandler(inventory);
     }
 
@@ -44,13 +44,19 @@ public class Slot : MonoBehaviour
     {
         if (item == null) return false;
 
-        // Àåºñ ½½·ÔÀÌ¸é ¾ÆÀÌÅÛ Å¸ÀÔ Ã¼Å©
+        // ì¥ë¹„ ìŠ¬ë¡¯ì´ë©´ì„œ í—ˆìš©ëœ íƒ€ì…ì´ ìˆëŠ” ê²½ìš°
         if (isEquipSlot && allowedItemType.HasValue)
         {
+            // Weapon íƒ€ì… ìŠ¬ë¡¯ì€ Swordì™€ Bowë¥¼ ëª¨ë‘ í—ˆìš©
+            if (allowedItemType.Value == ItemType.Weapon)
+            {
+                return item.ItemType == ItemType.Sword || item.ItemType == ItemType.Bow;
+            }
+
             return item.ItemType == allowedItemType.Value;
         }
 
-        // ÀÎº¥Åä¸® ½½·ÔÀº ¸ğµç ¾ÆÀÌÅÛ Çã¿ë
+        // ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ì€ ëª¨ë“  ì•„ì´í…œ í—ˆìš©
         return true;
     }
 
@@ -58,11 +64,21 @@ public class Slot : MonoBehaviour
     {
         if (item != null && !CanAcceptItem(item)) return;
 
-        // ÀÌÀü ¾ÆÀÌÅÛÀÇ È¿°ú Á¦°Å
-        if (isEquipSlot && _item != null && _player != null)
+        Item oldItem = _item;  
+        _item = null;  
+
+        if (isEquipSlot && oldItem != null && _player != null)
         {
-            _item.RemoveStats(_player.GetComponent<ICharacterStats>());
-            statUI.UpdateUI();
+            oldItem.RemoveStats(_player.GetComponent<ICharacterStats>());
+
+            if (oldItem.ItemType == ItemType.Sword || oldItem.ItemType == ItemType.Bow)
+            {
+                _player.skillController.UnequipSkill(KeyCode.Mouse0);
+                _player.PlayerAnimController.AnimatorChange(ItemType.None);
+
+                var weaponHolder = _player.GetComponent<WeaponHolder>();
+                weaponHolder.UnequipCurrentWeapon();
+            }
         }
 
         _item = item;
@@ -72,19 +88,38 @@ public class Slot : MonoBehaviour
             itemIcon.sprite = _item.Icon;
             itemIcon.gameObject.SetActive(true);
 
-            // »õ ¾ÆÀÌÅÛ È¿°ú Àû¿ë
             if (isEquipSlot && _player != null)
             {
                 _item.ApplyStats(_player.GetComponent<ICharacterStats>());
-                statUI.UpdateUI();
-                // TODO : ¾ÆÀÌÅÛ Âø¿ë½Ã ÇÃ·¹ÀÌ¾î ¾ÆÀÌÅÛ ÀåÂø À§Ä¡ ¾Æ·¡·Î ¾ÆÀÌÅÛ ¼ÒÈ¯ ·ÎÁ÷
-                //Instantiate(_item.ItemPrefab,_player.transform);
+
+                if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
+                {
+                    var weaponHolder = _player.GetComponent<WeaponHolder>();
+                    weaponHolder.EquipWeapon(_item.ItemData.ItemPrefab, _item.ItemType);
+
+                    Skill defaultSkill = _item.ItemData.GetDefaultSkillForWeapon();
+                    if (defaultSkill != null)
+                    {
+                        _player.skillController.AddSkill(defaultSkill);
+                        _player.skillController.EquipSkill(defaultSkill, KeyCode.Mouse0);
+
+                        if (defaultSkill is WeaponSkill weaponSkill)
+                        {
+                            weaponSkill.UpdateWeaponComponents();
+                        }
+                    }
+
+                    _player.PlayerAnimController.AnimatorChange(_item.ItemType);
+                }
             }
         }
         else
         {
             itemIcon.gameObject.SetActive(false);
         }
+
+        // StatUI ì—…ë°ì´íŠ¸
+        statUI.UpdateUI();
     }
 
     public void PlaceholdItem(Item item)
@@ -114,7 +149,7 @@ public class Slot : MonoBehaviour
         isEquipSlot = true;
         allowedItemType = type;
 
-        // ½½·Ô ÇÚµé·¯ ¼³Á¤ ¾÷µ¥ÀÌÆ®
+        // Úµé·¯ Æ®
         if (slotHandler != null)
         {
             slotHandler.IsInventorySlot = false;

@@ -34,6 +34,8 @@ public class Inventory : MonoBehaviour
     private List<Slot> inventorySlots;
     private Player player;
 
+    public List<Slot> EquipmentSlots => equipmentSlotList;
+
     private PlayerInventorySystem inventorySystem;
 
     public void Initialize(Player player, PlayerUI playerUI)

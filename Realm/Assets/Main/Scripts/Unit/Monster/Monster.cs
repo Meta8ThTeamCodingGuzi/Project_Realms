@@ -27,12 +27,11 @@ public class Monster : Unit, IPoolable
     public Animator M_Animator;
     public MonsterStateHandler M_StateHandler => m_StateHandler;
 
+    private MonsterStat MonsterStat;
 
-    //TODO:: 몬스터 스폰로직 생기면 지우세요
-    private void Start()
-    {
-        Initialize();
-    }
+    public MonsterStat monsterStat { get => MonsterStat; set => MonsterStat = value; }
+
+    public ParticleSystem monsterDieParticle;
 
     protected override void Initialize()
     {
@@ -47,6 +46,11 @@ public class Monster : Unit, IPoolable
         }
         m_StateHandler.Initialize();
         base.Initialize();
+
+        if (characterStats != null)
+        {
+            monsterStat = (MonsterStat)characterStats;
+        }
         player = null;
 
     }
@@ -76,8 +80,8 @@ public class Monster : Unit, IPoolable
                 this.player = player;
                 return true;
             }
-
         }
+        this.player = null;
         return false;
     }
 
@@ -124,12 +128,23 @@ public class Monster : Unit, IPoolable
 
     public IEnumerator DieRoutine()
     {
+
         M_Animator.SetTrigger("Die");
-        print("몬스터 다이 호출중");
-        yield return new WaitForSeconds(3f);
+
+        while (!M_Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        {
+            yield return null;
+        }
+
+        while (M_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            yield return null;
+        }
 
         DropExpParticle();
-
+        ParticleSystem mdp = PoolManager.Instance.Spawn<ParticleSystem>(monsterDieParticle.gameObject, transform.position, Quaternion.identity);
+        mdp.Play();
+        PoolManager.Instance.Despawn(mdp, 1f);
         PoolManager.Instance.Despawn(this);
     }
 
@@ -150,12 +165,6 @@ public class Monster : Unit, IPoolable
         }
     }
 
-    public override void Attack(Unit target)
-    {
-        base.Attack(target);
-        isattacked = false;
-    }
-
     public void OnReturnToPool()
     {
 
@@ -163,9 +172,10 @@ public class Monster : Unit, IPoolable
 
     public void OnSpawnFromPool()
     {
-        float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
         Initialize();
-        characterStats.AddModifier(StatType.Level, new StatModifier(playerLevel, StatModifierType.Flat, this, SourceType.BaseStats));
+        float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
+        print((int)playerLevel);
+        monsterStat.SetMonsterLevel((int)playerLevel);
     }
 
 }
