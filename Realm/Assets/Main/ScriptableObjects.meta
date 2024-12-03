@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Realm/Assets/Main/Scripts/Objects/Map.meta
+guid: d4bb63d4d640daf4ab2ee42295e91c18
+========
 guid: 7cdb4f39ae16ae948a700b065742ba68
+>>>>>>>> main:Realm/Assets/Main/ScriptableObjects.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
