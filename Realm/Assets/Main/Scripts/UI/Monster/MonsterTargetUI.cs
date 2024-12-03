@@ -46,7 +46,6 @@ public class MonsterTargetUI : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, LayerMask.GetMask("Monster")))
         {
-            Debug.Log($"Hit object: {hit.collider.gameObject.name}");
 
             targetMonster = hit.collider.GetComponent<Monster>();
 

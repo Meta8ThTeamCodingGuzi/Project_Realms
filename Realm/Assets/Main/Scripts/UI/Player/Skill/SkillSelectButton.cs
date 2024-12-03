@@ -19,7 +19,7 @@ public class SkillSelectButton : MonoBehaviour
         this.onSkillSelected = callback;
 
         skillIcon.sprite = skill.data.skillIcon;
-        skillLevelText.text = $"{skill.skillStat.GetStatValue<int>(SkillStatType.SkillLevel)}";
+        skillLevelText.text = $"{skill.skillStat?.GetStatValue<int>(SkillStatType.SkillLevel)}";
 
         button.onClick.AddListener(() => onSkillSelected?.Invoke(skill));
     }

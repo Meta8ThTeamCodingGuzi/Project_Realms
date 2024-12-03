@@ -152,16 +152,13 @@ public class Inventory : MonoBehaviour
 
     public void LoadData(InventoryData data)
     {
-        // 모든 슬롯 초기화
         foreach (var slot in inventorySlots.Concat(equipmentSlotList))
         {
             slot.ClearSlot();
         }
 
-        // 데이터 로드
         inventorySystem.LoadFromSaveData(data.inventoryData);
 
-        // UI 업데이트
         var items = inventorySystem.GetAllItems();
         for (int i = 0; i < items.Count && i < inventorySlots.Count; i++)
         {

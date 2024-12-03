@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
@@ -14,7 +14,7 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (slot == null)
             slot = GetComponent<Slot>();
 
-        inventory = inventoryRef;  // ÀÎº¥Åä¸® ÂüÁ¶ ¼³Á¤
+        inventory = inventoryRef;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -25,7 +25,6 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
-        // µå·¡±× Áß¿¡´Â Æ¯º°ÇÑ Ã³¸®°¡ ÇÊ¿ä ¾øÀ½
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -40,60 +39,53 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         var dragHolder = inventory.DragHolder;
         if (!dragHolder.IsDragging) return;
 
-        // ÇöÀç ½½·ÔÀÌ µå·¡±×µÈ ¾ÆÀÌÅÛÀ» ¹ŞÀ» ¼ö ÀÖ´ÂÁö È®ÀÎ
+        // í˜„ì¬ ìŠ¬ë¡¯ì´ ë“œë˜ê·¸ëœ ì•„ì´í…œì„ ë°›ì„ ìˆ˜ ìˆëŠ”ì§€ í™•ì¸
         if (slot.CanAcceptItem(dragHolder.DraggedItem))
         {
             if (slot.IsEmpty())
             {
-                // ºó ½½·ÔÀÎ °æ¿ì ±×³É ¾ÆÀÌÅÛ ¹èÄ¡
+                // ë¹ˆ ìŠ¬ë¡¯ì¸ ê²½ìš° ê·¸ëƒ¥ ì•„ì´í…œ ë°°ì¹˜
                 dragHolder.SetTargetSlot(slot);
             }
             else
             {
-                // ¾ÆÀÌÅÛÀÌ ÀÖ´Â °æ¿ì, µÎ ½½·ÔÀÇ ¾ÆÀÌÅÛÀ» ±³Ã¼
+                // ì•„ì´í…œì´ ìˆëŠ” ê²½ìš°, ë‘ ìŠ¬ë¡¯ì˜ ì•„ì´í…œì„ êµí™˜
                 Slot sourceSlot = dragHolder.SourceSlot;
 
-                // ÇöÀç ½½·ÔÀÇ ¾ÆÀÌÅÛÀÌ ¿øº» ½½·Ô¿¡ µé¾î°¥ ¼ö ÀÖ´ÂÁö È®ÀÎ
+                // ì›ë³¸ ìŠ¬ë¡¯ì´ ëŒ€ìƒ ì•„ì´í…œì„ ë°›ì„ ìˆ˜ ìˆëŠ”ì§€ í™•ì¸
                 if (sourceSlot.CanAcceptItem(slot.Item))
                 {
-                    // ¾ÆÀÌÅÛ ±³Ã¼
+                    // í˜„ì¬ ìŠ¬ë¡¯ì˜ ì•„ì´í…œ ì„ì‹œ ì €ì¥
                     Item tempItem = slot.Item;
 
-                    // ÇöÀç ½½·ÔÀÇ ¾ÆÀÌÅÛÀ» ºñ¿ì°í µå·¡±×µÈ ¾ÆÀÌÅÛ ¹èÄ¡
+                    // í˜„ì¬ ìŠ¬ë¡¯ì„ ë¹„ìš°ê³  ë“œë˜ê·¸ëœ ì•„ì´í…œ ë°°ì¹˜
                     slot.ClearSlot();
                     dragHolder.SetTargetSlot(slot);
 
-                    // ¿øº» ½½·Ô¿¡ ÀÌÀü ¾ÆÀÌÅÛ ¹èÄ¡
+                    // ì›ë³¸ ìŠ¬ë¡¯ì— ì„ì‹œ ì €ì¥ëœ ì•„ì´í…œ ë°°ì¹˜
                     sourceSlot.PlaceItem(tempItem);
                 }
             }
         }
 
-        if (IsInventorySlot)
-            inventory.CompactInventory();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // ÀÎº¥Åä¸® ½½·ÔÀÌ ¾Æ´Ï°Å³ª ºó ½½·ÔÀÌ¸é ¹«½Ã
         if (!IsInventorySlot || slot.IsEmpty()) return;
 
-        // Àåºñ ½½·ÔµéÀ» Ã£¾Æ¼­ ÀûÀıÇÑ ½½·Ô¿¡ ¾ÆÀÌÅÛ ÀåÂø ½Ãµµ
         foreach (Slot equipSlot in inventory.EquipmentSlots)
         {
-            // ÇØ´ç ¾ÆÀÌÅÛ Å¸ÀÔÀ» ¹ŞÀ» ¼ö ÀÖ´Â ½½·ÔÀÎÁö È®ÀÎ
             if (equipSlot.CanAcceptItem(slot.Item))
             {
                 if (equipSlot.IsEmpty())
                 {
-                    // ºó Àåºñ ½½·Ô¿¡ ÀåÂø
                     Item itemToEquip = slot.Item;
                     slot.ClearSlot();
                     equipSlot.PlaceItem(itemToEquip);
                 }
                 else
                 {
-                    // ÀÌ¹Ì ÀåÂøµÈ ¾ÆÀÌÅÛ°ú ±³Ã¼
                     Item equippedItem = equipSlot.Item;
                     Item inventoryItem = slot.Item;
 
@@ -104,7 +96,6 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     slot.PlaceItem(equippedItem);
                 }
 
-                // ÀÎº¥Åä¸® Á¤¸®
                 if (IsInventorySlot)
                     inventory.CompactInventory();
 

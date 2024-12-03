@@ -34,7 +34,6 @@ public class PlayerInventorySystem : MonoBehaviour
             itemCounts[item.ItemID] = 0;
         itemCounts[item.ItemID]++;
 
-        // UI에 아이템 추가
         if (inventoryUI != null)
             inventoryUI.TryAddItem(item);
 

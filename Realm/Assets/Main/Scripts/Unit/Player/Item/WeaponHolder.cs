@@ -18,14 +18,14 @@ public class WeaponHolder : MonoBehaviour
     [SerializeField] private WeaponIKSetup[] weaponIKSetups;
     [SerializeField] private RigBuilder rigBuilder;  // Inspector에서 할당
 
-    [Header("Weapon Settings")]
-    [SerializeField] private float weaponScale = 1f;
-    [SerializeField] private float ikWeightSpeed = 10f;
-
     [Header("Debug Settings")]
     [SerializeField] private bool showDebugControls = false;
     [SerializeField] private bool showGizmos = false;
     [SerializeField] private Color gizmoColor = Color.yellow;
+
+    [Header("Weapon Settings")]
+    [SerializeField] private float weaponScale = 1f;
+    [SerializeField] private float ikWeightSpeed = 10f;
 
     // 런타임 조정을 위한 오프셋 값들
     private Vector3 mainHandPositionOffset;
@@ -111,7 +111,6 @@ public class WeaponHolder : MonoBehaviour
                 StartCoroutine(LerpRigWeight(0f));
             }
 
-            // 현재 무기의 IK 설정 비활성화
             if (currentIKSetup != null)
             {
                 if (currentIKSetup.mainHandIK != null) currentIKSetup.mainHandIK.weight = 0f;
@@ -130,14 +129,11 @@ public class WeaponHolder : MonoBehaviour
     private System.Collections.IEnumerator LerpRigWeight(float targetWeight)
     {
         float startWeight = weaponRig.weight;
-        float elapsedTime = 0f;
-        float duration = 0.2f;
 
-        while (elapsedTime < duration)
+        while (Mathf.Abs(weaponRig.weight - targetWeight) > 0.01f)
         {
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / duration;
-            weaponRig.weight = Mathf.Lerp(startWeight, targetWeight, t);
+            weaponRig.weight = Mathf.MoveTowards(weaponRig.weight, targetWeight,
+                ikWeightSpeed * Time.deltaTime);
             yield return null;
         }
 

@@ -25,10 +25,14 @@ public class ItemData : ScriptableObject
 
     [SerializeField] private ItemID itemID;
     [SerializeField] private ItemType itemType;
+    [SerializeField] private ItemRarity rarity;
+    [SerializeField] private string itemName;
     [SerializeField] private string description = "";
     [SerializeField] private Sprite icon;
     [SerializeField] private List<ItemStat> stats = new List<ItemStat>();
     [SerializeField] private GameObject itemPrefab;
+    [SerializeField] private GameObject worldDropPrefab;
+    [SerializeField] private Color nameColor = Color.white;
 
     [Header("Weapon Skill")]
     [SerializeField] private Skill defaultWeaponSkill; // 무기의 기본 스킬
@@ -40,14 +44,32 @@ public class ItemData : ScriptableObject
     public Sprite Icon => icon;
     public IReadOnlyList<ItemStat> Stats => stats;
     public GameObject ItemPrefab => itemPrefab;
+    public GameObject WorldDropPrefab => worldDropPrefab;
+    public ItemRarity Rarity => rarity;
+    public string ItemName => itemName;
+    public Color NameColor => nameColor;
 
     public string GetTooltip()
     {
-        string tooltip = $"[{itemType}] {itemID}\n{description}\n\n";
+        string tooltip = $"<color=#{ColorUtility.ToHtmlStringRGB(nameColor)}>[{rarity}] {itemID}</color>\n";
+        tooltip += $"{description}\n\n";
+
+        // 레어도에 따른 스탯 표시 색상 설정
+        string statColor = rarity switch
+        {
+            ItemRarity.Common => "#FFFFFF",    // 흰색
+            ItemRarity.Uncommon => "#1EFF00",  // 초록색
+            ItemRarity.Rare => "#0070DD",      // 파란색
+            ItemRarity.Epic => "#A335EE",      // 보라색
+            ItemRarity.Legendary => "#FF8000", // 주황색
+            _ => "#FFFFFF"
+        };
+
         foreach (var stat in stats)
         {
-            tooltip += stat.GetTooltipText();
+            tooltip += $"<color={statColor}>{stat.GetTooltipText()}</color>";
         }
+
         return tooltip.TrimEnd('\n');
     }
 
@@ -58,5 +80,21 @@ public class ItemData : ScriptableObject
             return null;
 
         return defaultWeaponSkill;
+    }
+
+    public void SetRarity(ItemRarity newRarity, Color color)
+    {
+        rarity = newRarity;
+        nameColor = color;
+    }
+
+    public void AddStat(StatType type, float flat, float percent)
+    {
+        stats.Add(new ItemStat
+        {
+            statType = type,
+            flatValue = flat,
+            percentValue = percent
+        });
     }
 }

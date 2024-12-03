@@ -111,7 +111,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
         {
             return stat;
         }
-        Debug.LogWarning($"Stat {statType} not found!");
+        Debug.Log($"Stat {statType} not found!");
         return null;
     }
 

@@ -3,15 +3,22 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] private ItemData itemData;
+    private ItemData itemData;
+    private ItemInstanceData instanceData;
 
     public ItemID ItemID => itemData.ItemID;
     public ItemType ItemType => itemData.ItemType;
     public GameObject ItemPrefab => itemData.ItemPrefab;
     public string Description => itemData.Description;
     public Sprite Icon => itemData.Icon;
-    public IReadOnlyList<ItemData.ItemStat> Stats => itemData.Stats;
+    public IReadOnlyList<ItemData.ItemStat> Stats => instanceData.Stats;
     public ItemData ItemData => itemData;
+
+    public void Initialize(ItemData template, ItemInstanceData instance)
+    {
+        itemData = template;
+        instanceData = instance;
+    }
 
     protected virtual void ApplyStatModifier(ICharacterStats stats, StatType statType, float value, StatModifierType modType)
     {
@@ -37,5 +44,5 @@ public class Item : MonoBehaviour
         }
     }
 
-    public virtual string GetTooltip() => itemData.GetTooltip();
+    public virtual string GetTooltip() => instanceData.GetTooltip();
 }

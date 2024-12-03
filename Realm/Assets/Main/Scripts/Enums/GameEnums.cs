@@ -108,3 +108,21 @@ public enum ItemType
     Armor,
     Accessory
 }
+
+public enum ItemRarity
+{
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Legendary
+}
+
+public enum MonsterType
+{
+    Normal,
+    Elite,
+    Boss,
+    MiniBoss,
+    Unique
+}

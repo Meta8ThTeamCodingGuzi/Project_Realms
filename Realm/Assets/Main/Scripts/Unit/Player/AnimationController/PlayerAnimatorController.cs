@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAnimatorController : MonoBehaviour
 {
-    private RuntimeAnimatorController none;
+    [SerializeField] private RuntimeAnimatorController none;
     [SerializeField] private RuntimeAnimatorController knightControllers;
     [SerializeField] private RuntimeAnimatorController archerControllers;
 

@@ -12,6 +12,7 @@ public class Slot : MonoBehaviour
     private Player _player;
     private ItemSlotHandler slotHandler;
     private StatUI statUI;
+    private WeaponHolder weaponHolder;
 
     public Item Item => _item;
     public ItemType? AllowedItemType => allowedItemType;
@@ -21,7 +22,7 @@ public class Slot : MonoBehaviour
         _player = player;
         itemIcon.gameObject.SetActive(false);
         this.statUI = statUI;
-
+        weaponHolder = player.GetComponent<WeaponHolder>();
         slotHandler = GetComponent<ItemSlotHandler>();
         if (slotHandler != null)
         {
@@ -31,10 +32,8 @@ public class Slot : MonoBehaviour
 
     private void InitializeSlotHandler(Inventory inventory)
     {
-        //  Ÿ
         slotHandler.IsInventorySlot = !isEquipSlot;
 
-        // κ丮  (Կ  )
         slotHandler.InitializeSlotHandler(inventory);
     }
 
@@ -64,8 +63,8 @@ public class Slot : MonoBehaviour
     {
         if (item != null && !CanAcceptItem(item)) return;
 
-        Item oldItem = _item;  
-        _item = null;  
+        Item oldItem = _item;
+        _item = null;
 
         if (isEquipSlot && oldItem != null && _player != null)
         {
@@ -76,7 +75,6 @@ public class Slot : MonoBehaviour
                 _player.skillController.UnequipSkill(KeyCode.Mouse0);
                 _player.PlayerAnimController.AnimatorChange(ItemType.None);
 
-                var weaponHolder = _player.GetComponent<WeaponHolder>();
                 weaponHolder.UnequipCurrentWeapon();
             }
         }
@@ -94,14 +92,12 @@ public class Slot : MonoBehaviour
 
                 if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
                 {
-                    var weaponHolder = _player.GetComponent<WeaponHolder>();
                     weaponHolder.EquipWeapon(_item.ItemData.ItemPrefab, _item.ItemType);
 
                     Skill defaultSkill = _item.ItemData.GetDefaultSkillForWeapon();
                     if (defaultSkill != null)
                     {
-                        _player.skillController.AddSkill(defaultSkill);
-                        _player.skillController.EquipSkill(defaultSkill, KeyCode.Mouse0);
+                        _player.skillController.DirectEquipSkill(defaultSkill, KeyCode.Mouse0);
 
                         if (defaultSkill is WeaponSkill weaponSkill)
                         {
@@ -118,7 +114,6 @@ public class Slot : MonoBehaviour
             itemIcon.gameObject.SetActive(false);
         }
 
-        // StatUI 업데이트
         statUI.UpdateUI();
     }
 
@@ -136,9 +131,17 @@ public class Slot : MonoBehaviour
         if (isEquipSlot && _item != null && _player != null)
         {
             _item.RemoveStats(_player.GetComponent<ICharacterStats>());
+
+            // 무기 타입인 경우 추가적인 처리
+            if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
+            {
+                _player.skillController.UnequipSkill(KeyCode.Mouse0);
+                _player.PlayerAnimController.AnimatorChange(ItemType.None);
+                weaponHolder.UnequipCurrentWeapon();
+            }
+
             statUI.UpdateUI();
         }
-
         _item = null;
         itemIcon.gameObject.SetActive(false);
         itemIcon.color = Color.white;
@@ -149,7 +152,6 @@ public class Slot : MonoBehaviour
         isEquipSlot = true;
         allowedItemType = type;
 
-        // ڵ鷯 Ʈ
         if (slotHandler != null)
         {
             slotHandler.IsInventorySlot = false;

@@ -33,6 +33,9 @@ public class Monster : Unit, IPoolable
 
     public ParticleSystem monsterDieParticle;
 
+    [SerializeField] private MonsterType monsterType = MonsterType.Normal;
+    public MonsterType MonsterType => monsterType;
+
     protected override void Initialize()
     {
         foreach (Transform setPatrolTransform in setPatrolTransforms)
@@ -53,6 +56,17 @@ public class Monster : Unit, IPoolable
         }
         player = null;
 
+        // 몬스터 타입에 따른 크기 조정
+        float sizeMultiplier = monsterType switch
+        {
+            MonsterType.Elite => 1.2f,
+            MonsterType.MiniBoss => 1.5f,
+            MonsterType.Boss => 2f,
+            MonsterType.Unique => 1.8f,
+            _ => 1f // Normal
+        };
+
+        transform.localScale *= sizeMultiplier;
     }
     public void targetMove(Unit unit)
     {
@@ -128,7 +142,6 @@ public class Monster : Unit, IPoolable
 
     public IEnumerator DieRoutine()
     {
-
         M_Animator.SetTrigger("Die");
 
         while (!M_Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
@@ -142,6 +155,7 @@ public class Monster : Unit, IPoolable
         }
 
         DropExpParticle();
+        ItemManager.Instance.GenerateRandomItem(monsterType, transform.position);
         ParticleSystem mdp = PoolManager.Instance.Spawn<ParticleSystem>(monsterDieParticle.gameObject, transform.position, Quaternion.identity);
         mdp.Play();
         PoolManager.Instance.Despawn(mdp, 1f);
@@ -150,7 +164,19 @@ public class Monster : Unit, IPoolable
 
     private void DropExpParticle()
     {
-        float totalExpDrop = characterStats.GetStatValue(StatType.DropExp);
+        float baseExpDrop = characterStats.GetStatValue(StatType.DropExp);
+
+        // 몬스터 타입에 따른 경험치 보정
+        float expMultiplier = monsterType switch
+        {
+            MonsterType.Elite => 2f,
+            MonsterType.MiniBoss => 3f,
+            MonsterType.Boss => 5f,
+            MonsterType.Unique => 4f,
+            _ => 1f // Normal
+        };
+
+        float totalExpDrop = baseExpDrop * expMultiplier;
 
         int particleCount = Mathf.Max(1, Mathf.RoundToInt(totalExpDrop / 10f));
         float expPerParticle = totalExpDrop / particleCount;
@@ -174,8 +200,19 @@ public class Monster : Unit, IPoolable
     {
         Initialize();
         float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
-        print((int)playerLevel);
-        monsterStat.SetMonsterLevel((int)playerLevel);
+
+        // 몬스터 타입에 따른 레벨 보정
+        float levelMultiplier = monsterType switch
+        {
+            MonsterType.Elite => 1.5f,
+            MonsterType.MiniBoss => 2f,
+            MonsterType.Boss => 3f,
+            MonsterType.Unique => 2.5f,
+            _ => 1f // Normal
+        };
+
+        int adjustedLevel = Mathf.RoundToInt(playerLevel * levelMultiplier);
+        monsterStat.SetMonsterLevel(adjustedLevel);
     }
 
 }

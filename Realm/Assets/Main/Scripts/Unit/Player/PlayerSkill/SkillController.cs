@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 
@@ -33,7 +34,7 @@ public class SkillController : MonoBehaviour
         }
     }
 
-    public void SetSkillBarUI(SkillBarUI skillBarUI) 
+    public void SetSkillBarUI(SkillBarUI skillBarUI)
     {
         this.skillBarUI = skillBarUI;
     }
@@ -48,7 +49,7 @@ public class SkillController : MonoBehaviour
         foreach (var slot in skillSlots)
         {
             if (Input.GetKey(slot.Key) && slot.Value != null)
-            {                
+            {
                 slot.Value.TryUseSkill();
                 return true;
             }
@@ -170,5 +171,28 @@ public class SkillController : MonoBehaviour
         return 0;
     }
 
-    public event System.Action<Skill> OnSkillLevelChanged;
+    public event Action<Skill> OnSkillLevelChanged;
+
+    public void DirectEquipSkill(Skill skillPrefab, KeyCode slot)
+    {
+        if (!skillSlots.ContainsKey(slot))
+            return;
+
+        if (skillSlots[slot] != null)
+        {
+            UnequipSkill(slot);
+        }
+
+        Skill instance = Instantiate(skillPrefab, transform);
+        instance.Initialize();
+
+        activeSkills.Add(instance);
+        initializedSkills[skillPrefab.data.skillID] = instance;
+        skillSlots[slot] = instance;
+
+        if (skillBarUI != null)
+        {
+            skillBarUI.UpdateSkillSlot(slot, instance);
+        }
+    }
 }
