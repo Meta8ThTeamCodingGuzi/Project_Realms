@@ -58,6 +58,7 @@ public class BowSkill : WeaponSkill
 
         if (weaponHolder.CurrentIKSetup?.offHandIK != null)
         {
+            print("보우스킬 호출");
             // 활 당기기 - offHandIK weight를 서서히 0.5까지 증가
             float elapsedTime = 0f;
             float startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;

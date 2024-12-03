@@ -37,6 +37,9 @@ public class Player : Unit
     private PlayerHandler playerHandler;
     public PlayerHandler PlayerHandler => playerHandler;
 
+    private Monster targetMonster;
+    public Monster TargetMonster => targetMonster;
+
     private Vector3 targetPos = Vector3.zero;
     public Vector3 TargetPos => targetPos;
 
@@ -135,9 +138,20 @@ public class Player : Unit
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayerMask))
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+            {
+                if (hit.collider.TryGetComponent<Monster>(out Monster monster))
+                {
+                    targetMonster = monster;
+                    targetPos = Vector3.zero;
+                    return;
+                }
+            }
+
+            if(Physics.Raycast(ray,out hit,1000f, groundLayerMask))
             {
                targetPos = hit.point;
+               targetMonster = null;
             }
         }
     }
@@ -345,6 +359,12 @@ public class Player : Unit
         }
         //플레이어 죽고나서 해야할거 해야할듯
     }
+    public void ClearTarget()
+    {
+        targetMonster = null;
+    }
+
+
     private void OnDisable()
     {
         // 코루틴 정리

@@ -27,7 +27,7 @@ public class SwordSkill : WeaponSkill
 
         if (weaponCollider != null) weaponCollider.enabled = false;
         if (weaponTrail != null) weaponTrail.enabled = false;
-
+        print("소드스킬 호출");
         isAttacking = false;
     }
 

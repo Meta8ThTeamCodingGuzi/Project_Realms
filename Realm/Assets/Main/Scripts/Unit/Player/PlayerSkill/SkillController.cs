@@ -33,7 +33,7 @@ public class SkillController : MonoBehaviour
         }
     }
 
-    public void SetSkillBarUI(SkillBarUI skillBarUI) 
+    public void SetSkillBarUI(SkillBarUI skillBarUI)
     {
         this.skillBarUI = skillBarUI;
     }
@@ -48,13 +48,31 @@ public class SkillController : MonoBehaviour
         foreach (var slot in skillSlots)
         {
             if (Input.GetKey(slot.Key) && slot.Value != null)
-            {                
+            {
+                if (slot.Key == KeyCode.Mouse0)
+                {
+                    return false;
+                }
                 slot.Value.TryUseSkill();
                 return true;
             }
         }
         return false;
     }
+
+    public void OnMouseCilck()
+    {
+        if (Input.GetMouseButton(0)&& skillSlots.ContainsKey(KeyCode.Mouse0) )
+        {
+            if (skillSlots[KeyCode.Mouse0] != null)
+            {
+                skillSlots[KeyCode.Mouse0].TryUseSkill();
+
+            }
+        }
+
+    }
+
 
     public void AddSkill(Skill skill)
     {
@@ -171,4 +189,5 @@ public class SkillController : MonoBehaviour
     }
 
     public event System.Action<Skill> OnSkillLevelChanged;
+
 }
