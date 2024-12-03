@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5098920143269789269}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArmPalm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1210940748395570028}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArm1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6584145249299243949}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArmIndex2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1117886180857651068}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArmIndex1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7406510659912500475}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7440280547337547641}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArmPalmGizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7042621549106486065}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArmPalmGizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1126757528941348242}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArmPinky1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1313516811585735676}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArm2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -296,7 +296,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2385225596562071522}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: patrolPoint (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 7124537663602217328}
   - component: {fileID: 7507127374332290399}
   - component: {fileID: 1685428948119053951}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Magma (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5170,7 +5170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7780480710721905334}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: patrolPoint (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5201,7 +5201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 498354941917673107}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArmThumb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5233,7 +5233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3729826966336394754}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5268,7 +5268,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6881074645839985573}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: patrolPoint (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5299,7 +5299,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5669680507546679482}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArmPinky1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5331,7 +5331,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 635650119155861089}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArm1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5363,7 +5363,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 626256609410278429}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLowerJaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5394,7 +5394,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6082688212510889390}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArmPalm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5429,7 +5429,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6885466156930455181}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArmThumb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5460,7 +5460,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3983401017033228951}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigHeadGizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5491,7 +5491,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2761814417703549504}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLowerJawGizmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5522,7 +5522,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5923700182857940395}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArmIndex2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5553,7 +5553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5108055483346734711}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArmThumb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5585,7 +5585,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2549747926808553860}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigRArmPinky2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5618,7 +5618,7 @@ GameObject:
   - component: {fileID: 3448189438919717198}
   - component: {fileID: 6027508528045311155}
   - component: {fileID: 5373276163979048046}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Magma
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10459,7 +10459,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 808240530596843799}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArmIndex1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10491,7 +10491,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9009498487411545453}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArm2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10523,7 +10523,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1664996062669789638}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArmThumb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10556,7 +10556,7 @@ GameObject:
   - component: {fileID: 3031044307301439312}
   - component: {fileID: 3874090547058298430}
   - component: {fileID: 925271635439794683}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Magma (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15400,10 +15400,10 @@ GameObject:
   - component: {fileID: 830811496929338146}
   - component: {fileID: 5687592963059529555}
   - component: {fileID: 6343516522795354939}
-  - component: {fileID: 3839048905754584439}
+  - component: {fileID: 4059346215995867526}
   - component: {fileID: 2583594959656223422}
   - component: {fileID: 7517509117557702614}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TestMob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15488,18 +15488,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wasAttacked: 0
   setPatrolTransforms:
   - {fileID: 3722308100945338309}
   - {fileID: 7780480710721905334}
   - {fileID: 6881074645839985573}
   - {fileID: 5583351435458246293}
   - {fileID: 2385225596562071522}
-  wasAttacked: 0
   isattacked: 1
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
   nowTarget: {x: 0, y: 0, z: 0}
   M_Animator: {fileID: 830811496929338146}
---- !u!114 &3839048905754584439
+  monsterDieParticle: {fileID: 198475560534896312, guid: d61b742e329cf58468e2c16c35be0ce4, type: 3}
+--- !u!114 &4059346215995867526
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15515,29 +15516,26 @@ MonoBehaviour:
   - Type: 0
     BaseValue: 1
     PointIncrease: 0
-  - Type: 5
-    BaseValue: 5
+  - Type: 9
+    BaseValue: 7
     PointIncrease: 0.2
-  - Type: 4
+  - Type: 8
     BaseValue: 10
     PointIncrease: 2
-  - Type: 9
+  - Type: 13
     BaseValue: 20
     PointIncrease: 3
-  - Type: 6
+  - Type: 10
     BaseValue: 1.5
     PointIncrease: 0
-  - Type: 7
+  - Type: 11
     BaseValue: 2
     PointIncrease: 0
-  - Type: 3
+  - Type: 7
     BaseValue: 50
     PointIncrease: 20
   - Type: 1
     BaseValue: 250
-    PointIncrease: 50
-  - Type: 11
-    BaseValue: 300
     PointIncrease: 50
 --- !u!136 &2583594959656223422
 CapsuleCollider:
@@ -15558,8 +15556,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1.521693
+  m_Radius: 1.07
+  m_Height: 1.81
   m_Direction: 1
   m_Center: {x: 0, y: 0.2608465, z: 0}
 --- !u!54 &7517509117557702614
@@ -15598,7 +15596,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8662056304340130612}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: patrolPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15634,7 +15632,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5583351435458246293}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: patrolPoint (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15666,7 +15664,7 @@ GameObject:
   m_Component:
   - component: {fileID: 235177362981682401}
   - component: {fileID: 8427743664952346128}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Polygonal Magma
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15770,7 +15768,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3722308100945338309}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: patrolPoint (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15801,7 +15799,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6338319937538081887}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigLArmPinky2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

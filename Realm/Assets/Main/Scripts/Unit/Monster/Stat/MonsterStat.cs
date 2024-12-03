@@ -1,10 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterStat : UnitStats
 {
-    [Header("�̰Թ��κ��� ���� �������ݾ�")]
+    [Header("Monster Stats")]
     [SerializeField]
     private StatInitializer[] initialStats = new StatInitializer[]
     {
@@ -36,7 +36,7 @@ public class MonsterStat : UnitStats
         {
             Type = StatType.AttackSpeed,
             BaseValue = 1.5f,
-            PointIncrease =0f,
+            PointIncrease=0f,
         },
         new StatInitializer()
         {
@@ -62,5 +62,40 @@ public class MonsterStat : UnitStats
     protected override StatInitializer[] GetInitialStats()
     {
         return initialStats;
+    }
+
+    public void SetMonsterLevel(int level)
+    {
+        // 기본 레벨 설정
+        stats[StatType.Level] = new LevelableStat(level);
+
+        foreach (var statInit in initialStats)
+        {
+            if (statInit.Type == StatType.Level) continue;
+
+            // 기존 스탯 가져오기
+            if (stats.TryGetValue(statInit.Type, out Stat currentStat))
+            {
+                // 레벨에 따른 증가량 계산
+                float increase = statInit.PointIncrease * (level - 1);
+
+                // 레벨 보정치 추가
+                AddModifier(statInit.Type,
+                    new StatModifier(
+                        increase,
+                        StatModifierType.Flat,
+                        this,
+                        SourceType.Level
+                    )
+                );
+            }
+        }
+
+        // Health를 MaxHealth와 동일하게 설정
+        if (stats.ContainsKey(StatType.MaxHealth))
+        {
+            float maxHealth = GetStatValue(StatType.MaxHealth);
+            stats[StatType.Health] = new FloatStat(maxHealth);
+        }
     }
 }

@@ -14,6 +14,8 @@ public class DragItemHolder : MonoBehaviour
     private Slot targetSlot;
     private Slot sourceSlot;
 
+    public Slot SourceSlot => sourceSlot;
+
     private void Awake()
     {
         if (canvasGroup == null)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -19,6 +20,7 @@ public class Player : Unit
     [SerializeField] private LevelData levelData;
 
     internal SkillController skillController;
+   
 
     private float totalExp = 0f;  // 누적 경험치
 
@@ -26,8 +28,25 @@ public class Player : Unit
 
     private StatPointSystem statPoint;
 
+    private Animator playerAnimator;
+    public Animator PlayerAnimator => playerAnimator;
+
+    private PlayerAnimatorController playerAnimCon;
+    public PlayerAnimatorController PlayerAnimController => playerAnimCon;
+
+    private PlayerHandler playerHandler;
+    public PlayerHandler PlayerHandler => playerHandler;
+
+    private Vector3 targetPos = Vector3.zero;
+    public Vector3 TargetPos => targetPos;
+
     private PlayerInventorySystem inventorySystem;
     public PlayerInventorySystem InventorySystem => inventorySystem;
+
+    [Header("Regeneration Settings")]
+    [SerializeField] private float regenTickTime = 1f;      // 리젠 틱 간격
+    private Coroutine healthRegenCoroutine;
+    private Coroutine manaRegenCoroutine;
 
     private void Start()
     {
@@ -53,7 +72,7 @@ public class Player : Unit
 
         statPoint = GetComponent<StatPointSystem>();
 
-        statPoint.Initialize();
+        statPoint.Initialize(this);
 
         GameManager.Instance.player = this;
 
@@ -67,27 +86,47 @@ public class Player : Unit
         skillController.Initialize();
 
         inventorySystem = GetComponent<PlayerInventorySystem>();
-        
+
         if (inventorySystem == null)
         {
             inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
         }
 
+        playerAnimCon = GetComponent<PlayerAnimatorController>();
+
+        if(playerAnimCon == null)
+        {
+            playerAnimCon = gameObject.AddComponent<PlayerAnimatorController>();
+        }
+
+        playerAnimator = GetComponent<Animator>();
+
+        if(playerAnimator == null)
+        {
+            playerAnimator = gameObject.AddComponent<Animator>();
+        }
+
+        playerHandler = new PlayerHandler(this);
+        playerHandler.Initialize();
+
         base.Initialize();
 
+        // 리젠 코루틴 시작
+        StartRegeneration();
 
         Debug.Log("Player initialized successfully");
     }
 
     private void Update()
     {
-        MovetoCursor();
+        playerHandler.HandleUpdate();
     }
 
-    private void MovetoCursor()
+    public void MovetoCursor()
     {
         if (Input.GetMouseButtonDown(0))
         {
+
             // UI 요소 클릭 체크
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
@@ -96,30 +135,22 @@ public class Player : Unit
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 1f);
-
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayerMask))
             {
-                Debug.Log($"Hit object layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
-
-                if (hit.collider.TryGetComponent<Monster>(out Monster monster))
-                {
-                    Attack(monster);
-                    return;
-                }
-            }
-
-            if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
-            {
-                //Debug.Log($"Ground hit at: {hit.point}");
-
-                MoveTo(hit.point);
-            }
-            else
-            {
-                //Debug.Log("No ground detected");
+               targetPos = hit.point;
             }
         }
+    }
+    public override void StopMoving()
+    {
+        base.StopMoving();
+        targetPos = Vector3.zero;
+    }
+
+
+    public void PlayerAnimatorChange(RuntimeAnimatorController newAnimator)
+    {
+        playerAnimator.runtimeAnimatorController = newAnimator;
     }
 
     #region 레벨 시스템
@@ -246,5 +277,80 @@ public class Player : Unit
     public float GetDefense()
     {
         return characterStats.GetStatValue(StatType.Defense);
+    }
+
+    private void StartRegeneration()
+    {
+        // 기존 코루틴이 실행 중이라면 중지
+        if (healthRegenCoroutine != null)
+            StopCoroutine(healthRegenCoroutine);
+        if (manaRegenCoroutine != null)
+            StopCoroutine(manaRegenCoroutine);
+
+        // 새로운 코루틴 시작
+        healthRegenCoroutine = StartCoroutine(HealthRegenCoroutine());
+        manaRegenCoroutine = StartCoroutine(ManaRegenCoroutine());
+    }
+
+    private IEnumerator HealthRegenCoroutine()
+    {
+        while (IsAlive)
+        {
+            float currentHealth = characterStats.GetStatValue(StatType.Health);
+            float maxHealth = characterStats.GetStatValue(StatType.MaxHealth);
+            float regenRate = characterStats.GetStatValue(StatType.HealthRegenRate);
+
+            if (currentHealth < maxHealth)
+            {
+                characterStats.AddModifier(StatType.Health,new StatModifier(regenRate,StatModifierType.Flat,SourceType.BaseStats));
+            }
+
+            yield return new WaitForSeconds(regenTickTime);
+        }
+    }
+
+    private IEnumerator ManaRegenCoroutine()
+    {
+        while (IsAlive)
+        {
+            float currentMana = characterStats.GetStatValue(StatType.Mana);
+            float maxMana = characterStats.GetStatValue(StatType.MaxMana);
+            float regenRate = characterStats.GetStatValue(StatType.ManaRegenRate);
+
+            if (currentMana < maxMana)
+            {
+                characterStats.AddModifier(StatType.Mana,new StatModifier(regenRate,StatModifierType.Flat,SourceType.BaseStats));
+            }
+
+            yield return new WaitForSeconds(regenTickTime);
+        }
+    }
+    public void PlayerDie()
+    {
+        StartCoroutine(DieRoutine());
+    }
+
+    public IEnumerator DieRoutine()
+    {
+        PlayerAnimator.SetTrigger("Die");
+
+        while (!PlayerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        {
+            yield return null;
+        }
+
+        while (PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            yield return null;
+        }
+        //플레이어 죽고나서 해야할거 해야할듯
+    }
+    private void OnDisable()
+    {
+        // 코루틴 정리
+        if (healthRegenCoroutine != null)
+            StopCoroutine(healthRegenCoroutine);
+        if (manaRegenCoroutine != null)
+            StopCoroutine(manaRegenCoroutine);
     }
 }

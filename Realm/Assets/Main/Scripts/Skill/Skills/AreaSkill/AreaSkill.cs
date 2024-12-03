@@ -66,15 +66,28 @@ public class AreaSkill : Skill
     private void SpawnAtMouseCursor()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
-        Physics.Raycast(ray, out RaycastHit hit, 1000f);
-
-        spawnPoint = hit.point;
-
-        if (Vector3.Distance(transform.position, hit.point) > areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange))
+        if (groundPlane.Raycast(ray, out float distance))
         {
-            Vector3 dir = (hit.point - transform.position).normalized;
-            spawnPoint = dir * areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange);
+            Vector3 targetPoint = ray.GetPoint(distance);
+
+            // 캐릭터와 커서 사이의 방향을 계산합니다
+            Vector3 direction = (targetPoint - transform.position).normalized;
+            direction.y = 0; // Y축 회전만 필요하므로 y값은 0으로 설정
+
+            // 캐릭터를 커서 방향으로 회전시킵니다
+            GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(direction);
+
+            // 스킬 범위 제한 확인
+            if (Vector3.Distance(transform.position, targetPoint) > areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange))
+            {
+                spawnPoint = transform.position + direction * areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange);
+            }
+            else
+            {
+                spawnPoint = targetPoint;
+            }
         }
     }
 
@@ -96,8 +109,13 @@ public class AreaSkill : Skill
                 }
             }
         }
+
         if (nearestMonster != null)
         {
+            // 가장 가까운 몬스터 방향으로 캐릭터를 회전
+            Vector3 direction = (nearestMonster.position - transform.position).normalized;
+            direction.y = 0;
+            transform.rotation = Quaternion.LookRotation(direction);
             spawnPoint = nearestMonster.position;
         }
         else

@@ -11,6 +11,7 @@ public class Item : MonoBehaviour
     public string Description => itemData.Description;
     public Sprite Icon => itemData.Icon;
     public IReadOnlyList<ItemData.ItemStat> Stats => itemData.Stats;
+    public ItemData ItemData => itemData;
 
     protected virtual void ApplyStatModifier(ICharacterStats stats, StatType statType, float value, StatModifierType modType)
     {

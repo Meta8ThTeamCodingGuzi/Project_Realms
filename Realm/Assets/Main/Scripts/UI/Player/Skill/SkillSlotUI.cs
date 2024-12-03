@@ -48,7 +48,10 @@ public class SkillSlotUI : MonoBehaviour
 
     private void OnSlotClicked()
     {
-        skillSelectUI.ShowSkillSelect(hotkey, rectTransform);
+        if(hotkey != KeyCode.Mouse0) 
+        {
+            skillSelectUI.ShowSkillSelect(hotkey, rectTransform);
+        }
     }
 
     private void Update()
