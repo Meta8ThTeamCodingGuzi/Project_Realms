@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class BowSkill : WeaponSkill
 {
@@ -6,33 +7,92 @@ public class BowSkill : WeaponSkill
     [SerializeField] private Projectile arrowPrefab;
     private float lastFireTime;
 
+    [Header("Bow Animation")]
+    [SerializeField] private float drawDuration = 0.3f;  // 활 당기는 시간
+    [SerializeField] private float resetDuration = 0.2f;  // 원래 자세로 돌아가는 시간
+
+    private bool isDrawing = false;
+    private Coroutine drawRoutine;
+
     public override void Initialize()
     {
-        if (arrowSpawnPoint == null)
+        base.Initialize();
+        UpdateArrowSpawnPoint();
+    }
+
+    public override void UpdateWeaponComponents()
+    {
+        base.UpdateWeaponComponents();
+        UpdateArrowSpawnPoint();
+    }
+
+    private void UpdateArrowSpawnPoint()
+    {
+        if (weaponHolder?.CurrentWeaponObject != null)
         {
-            arrowSpawnPoint = transform.Find("ArrowSpawnPoint");
-            if (arrowSpawnPoint == null)
+            Transform weaponSpawnPoint = weaponHolder.CurrentWeaponObject.transform.Find("ArrowSpawnPoint");
+            if (weaponSpawnPoint != null)
             {
-                arrowSpawnPoint = new GameObject("ArrowSpawnPoint").transform;
-                arrowSpawnPoint.SetParent(transform);
-                arrowSpawnPoint.localPosition = Vector3.forward;
+                arrowSpawnPoint = weaponSpawnPoint;
+            }
+            else
+            {
+                Debug.LogWarning("ArrowSpawnPoint not found on weapon prefab");
             }
         }
     }
 
     protected override void UseSkill()
     {
-        // 공격 속도에 따른 발사 간격 체크
-        if (Time.time - lastFireTime >= 1f / GetPlayerAttackSpeed())
+        if (Time.time - lastFireTime >= 1f / GetPlayerAttackSpeed() && !isDrawing)
         {
+            if (drawRoutine != null)
+                StopCoroutine(drawRoutine);
+            drawRoutine = StartCoroutine(DrawAndFireRoutine());
+        }
+    }
+
+    private IEnumerator DrawAndFireRoutine()
+    {
+        isDrawing = true;
+
+        if (weaponHolder.CurrentIKSetup?.offHandIK != null)
+        {
+            // 활 당기기 - offHandIK weight를 서서히 0.5까지 증가
+            float elapsedTime = 0f;
+            float startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
+
+            while (elapsedTime < drawDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / drawDuration;
+                weaponHolder.CurrentIKSetup.offHandIK.weight = Mathf.Lerp(startWeight, 0.3f, t);
+                yield return null;
+            }
+
             FireArrow();
             lastFireTime = Time.time;
+
+            // 활 놓기 - offHandIK weight를 서서히 0으로 감소
+            elapsedTime = 0f;
+            startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
+
+            while (elapsedTime < resetDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / resetDuration;
+                weaponHolder.CurrentIKSetup.offHandIK.weight = Mathf.Lerp(startWeight, 0f, t);
+                yield return null;
+            }
         }
+
+        isDrawing = false;
+        yield break;
     }
 
     private void FireArrow()
     {
-        if (arrowPrefab != null)
+        if (arrowPrefab != null && arrowSpawnPoint != null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
@@ -41,30 +101,33 @@ public class BowSkill : WeaponSkill
             {
                 Vector3 targetPoint = ray.GetPoint(distance);
 
+                // 캐릭터를 타겟 방향으로 회전
+                Vector3 directionToTarget = (targetPoint - transform.position).normalized;
+                directionToTarget.y = 0; // Y축 회전만 적용
+                player.transform.rotation = Quaternion.LookRotation(directionToTarget);
+
+                // 사거리 제한
                 float distanceToTarget = Vector3.Distance(transform.position, targetPoint);
                 if (distanceToTarget > GetAttackRange())
                 {
-                    targetPoint = transform.position + (targetPoint - transform.position).normalized * GetAttackRange();
+                    targetPoint = transform.position + directionToTarget * GetAttackRange();
                 }
 
-                Vector3 direction = (targetPoint - arrowSpawnPoint.position).normalized;
-
+                // 화레이어의 forward 방향으로 화살 발사
                 Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
                     arrowPrefab.gameObject,
                     arrowSpawnPoint.position,
-                    Quaternion.LookRotation(direction));
+                    Quaternion.LookRotation(player.transform.forward));
 
                 if (arrow != null)
                 {
-                    // 플레이어의 기본 공격력 + 스킬의 추가 데미지 계산
-                    float totalDamage = GetPlayerDamage() *
-                        (1 + skillStat.GetStatValue<float>(SkillStatType.Damage) / 100f);
+                    float totalDamage = GetPlayerDamage();
 
                     ProjectileData data = new ProjectileData
                     {
                         Damage = totalDamage,
-                        Speed = skillStat.GetStatValue<float>(SkillStatType.ProjectileSpeed),
-                        Range = skillStat.GetStatValue<float>(SkillStatType.ProjectileRange)
+                        Speed = 15f,
+                        Range = 15f
                     };
 
                     arrow.Initialize(data);
@@ -75,6 +138,6 @@ public class BowSkill : WeaponSkill
 
     protected override void OnWeaponHit(Collider other)
     {
-        // 활은 발사체가 데미지를 처리
+        // 활은 발사체로 처리
     }
 }
