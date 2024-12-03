@@ -69,6 +69,7 @@ public class PlayerIdleState : State<Player>
                     {
                         target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
                     }
+                    return;
                 }
             }
 
