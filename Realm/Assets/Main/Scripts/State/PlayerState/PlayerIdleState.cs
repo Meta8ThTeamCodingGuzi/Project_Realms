@@ -27,6 +27,10 @@ public class PlayerIdleState : State<Player>
 
     public override void OnUpdate()
     {
+        if (!target.IsAlive)
+        {
+            target.PlayerHandler.TransitionTo(new PlayerDieState(target));
+        }
         AnimatorStateInfo currentState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
         if (target.wasAttacked)

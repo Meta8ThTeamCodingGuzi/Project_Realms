@@ -11,34 +11,31 @@ public class MonsterAttackState : State<Monster>
     }
 
     public override void OnEnter()
-    {                
+    {
         target.Attack(target.targetPlayer);
         target.StopMoving();
         target.M_Animator.SetTrigger("Attack");
-        base.OnEnter();
     }
 
     public override void OnExit()
     {
         target.StopAttack();
-        target.wasAttacked = true;
-        base.OnExit();
     }
 
     public override void OnUpdate()
     {
-        if (target.M_Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return;
-        if (!target.IsAlive)
+        var currentAnimatorState = target.M_Animator.GetCurrentAnimatorStateInfo(0);
+        if (currentAnimatorState.normalizedTime >= 1f)
         {
-            target.M_StateHandler.TransitionTo(new MonsterDieState(target));
-        }
-        if (target.wasAttacked)
-        {
-            target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
-        }
-        if (!target.wasAttacked || !target.CanAttack(target.targetPlayer))
-        {
-            target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+            if (target.wasAttacked)
+            {
+                target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+            }
+            if (!target.wasAttacked || !target.CanAttack(target.targetPlayer))
+            {
+                target.M_Animator.SetTrigger("Idle");
+                target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+            }
         }
     }
 
