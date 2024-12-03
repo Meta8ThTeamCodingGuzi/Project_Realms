@@ -47,7 +47,7 @@ public class PlayerIdleState : State<Player>
 
         if(target.TargetMonster != null && target.CanAttack(target.TargetMonster))
         {
-            target.skillController.OnMouseCilck();
+            target.skillController.OnMouseClick();
             target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
         }
         if (target.TargetPos != Vector3.zero)

@@ -46,34 +46,36 @@ public class SkillController : MonoBehaviour
 
     public bool CheckSkillInputs()
     {
+        bool anySkillUsed = false;
+
         foreach (var slot in skillSlots)
         {
-            if (Input.GetKey(slot.Key) && slot.Value != null)
+            if (Input.GetKeyDown(slot.Key) && slot.Value != null)
             {
                 if (slot.Key == KeyCode.Mouse0)
                 {
-                    return false;
+                    continue;
                 }
-                slot.Value.TryUseSkill();
-                return true;
+
+                if (slot.Value.TryUseSkill())
+                {
+                    anySkillUsed = true;
+                }
             }
         }
-        return false;
+        return anySkillUsed;
     }
 
-    public void OnMouseCilck()
+    public void OnMouseClick()
     {
-        if (Input.GetMouseButton(0)&& skillSlots.ContainsKey(KeyCode.Mouse0) )
+        if (Input.GetMouseButtonDown(0) && skillSlots.ContainsKey(KeyCode.Mouse0))
         {
             if (skillSlots[KeyCode.Mouse0] != null)
             {
                 skillSlots[KeyCode.Mouse0].TryUseSkill();
-
             }
         }
-
     }
-
 
     public void AddSkill(Skill skill)
     {
@@ -212,5 +214,21 @@ public class SkillController : MonoBehaviour
         {
             skillBarUI.UpdateSkillSlot(slot, instance);
         }
+    }
+
+    // 현재 활성화된 스킬들을 반환하는 메서드
+    public IEnumerable<Skill> GetCurrentSkills()
+    {
+        return activeSkills;
+    }
+
+    // 특정 슬롯의 스킬을 가져오는 메서드 (필요한 경우)
+    public Skill GetSkillInSlot(KeyCode slot)
+    {
+        if (skillSlots.TryGetValue(slot, out Skill skill))
+        {
+            return skill;
+        }
+        return null;
     }
 }

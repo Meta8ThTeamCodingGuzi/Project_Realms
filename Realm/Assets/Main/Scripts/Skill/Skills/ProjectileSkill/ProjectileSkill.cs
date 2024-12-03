@@ -59,10 +59,11 @@ public class ProjectileSkill : Skill
             yield break;
         }
 
-        Debug.Log($"Shot Interval: {projectileStats.GetStatValue<float>(SkillStatType.ShotInterval)}");
-        Debug.Log($"Inner Interval: {projectileStats.GetStatValue<float>(SkillStatType.InnerInterval)}");
-        Debug.Log($"Projectile Count: {projectileStats.GetStatValue<int>(SkillStatType.ProjectileCount)}");
-        Debug.Log($"Damage: {projectileStats.GetStatValue<float>(SkillStatType.Damage)}");
+        Vector3? targetDirection = GetTargetDirection();
+        if (!targetDirection.HasValue)
+        {
+            yield break;
+        }
 
         float shotInterval = projectileStats.GetStatValue<float>(SkillStatType.ShotInterval);
         float innerInterval = projectileStats.GetStatValue<float>(SkillStatType.InnerInterval);
@@ -79,15 +80,33 @@ public class ProjectileSkill : Skill
             HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange),
         };
 
+        GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
+        firePoint.rotation = transform.rotation;
+
         for (int i = 0; i < projectileCount; i++)
         {
+            GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
             FireProjectile(projectileData);
-
             if (innerInterval > 0 && i < projectileCount - 1)
             {
                 yield return new WaitForSeconds(innerInterval);
             }
         }
+    }
+
+    private Vector3? GetTargetDirection()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+
+        if (groundPlane.Raycast(ray, out float distance))
+        {
+            Vector3 targetPoint = ray.GetPoint(distance);
+            Vector3 direction = (targetPoint - transform.position).normalized;
+            direction.y = 0;
+            return direction;
+        }
+        return null;
     }
 
     private void FireProjectile(ProjectileData data)
@@ -104,50 +123,28 @@ public class ProjectileSkill : Skill
             return;
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
-        if (groundPlane.Raycast(ray, out float distance))
+        if (projectilePrefab != null && projectilePrefab.gameObject != null)
         {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = (targetPoint - transform.position).normalized;
-            direction.y = 0;
-
-            GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(direction);
-            firePoint.rotation = transform.rotation;
-
-            // 풀에서 프로젝타일을 가져오기 전에 프리팹이 유효한지 한번 더 확인
-            if (projectilePrefab != null && projectilePrefab.gameObject != null)
+            try
             {
-                try
-                {
-                    Projectile projectile = PoolManager.Instance.Spawn<Projectile>(
-                        projectilePrefab.gameObject,
-                        firePoint.position,
-                        firePoint.rotation);
+                Projectile projectile = PoolManager.Instance.Spawn<Projectile>(
+                    projectilePrefab.gameObject,
+                    firePoint.position,
+                    firePoint.rotation);
 
-                    if (projectile != null)
-                    {
-                        projectile.Initialize(data);
-
-                        // Despawn 전에 projectile이 아직 유효한지 확인
-                        if (projectile != null && projectile.gameObject != null)
-                        {
-                            PoolManager.Instance.Despawn<Projectile>(
-                                projectile,
-                                skillStat.GetStatValue<float>(SkillStatType.Duration));
-                        }
-                    }
-                }
-                catch (System.Exception e)
+                if (projectile != null)
                 {
-                    Debug.LogError($"{gameObject.name}: 프로젝타일 생성 중 오류 발생: {e.Message}");
+                    projectile.Initialize(data);
                 }
             }
-            else
+            catch (System.Exception e)
             {
-                Debug.LogError($"{gameObject.name}: 프로젝타일 프리팹이 유효하지 않습니다!");
+                Debug.LogError($"{gameObject.name}: 프로젝타일 생성 중 오류 발생: {e.Message}");
             }
+        }
+        else
+        {
+            Debug.LogError($"{gameObject.name}: 프로젝타일 프리팹이 유효하지 않습니다!");
         }
     }
 

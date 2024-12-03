@@ -15,7 +15,7 @@ public class PlayerSkillState : State<Player>
     }
     public override void OnExit()
     {
-            target.ClearTarget();
+        target.ClearTarget();
     }
     public override void OnUpdate()
     {
@@ -23,22 +23,26 @@ public class PlayerSkillState : State<Player>
         {
             target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
         }
-        var currentAnimatorState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
-        if (currentAnimatorState.normalizedTime >= 0.9f)
+        if (target.skillController.CheckSkillInputs())
         {
-            if (target.skillController.CheckSkillInputs())
-            {
-                return;
-            }
-            if (target.TargetPos != Vector3.zero)
-            {
-                target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
-            }
-            else
-            {
-                target.PlayerHandler.TransitionTo(new PlayerIdleState(target));
-            }
+            return;
+        }
+
+        AnimatorStateInfo stateInfo = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
+
+        if (stateInfo.IsName("Attack") && stateInfo.normalizedTime < 0.97f)
+        {
+            return;
+        }
+
+        if (target.TargetPos != Vector3.zero)
+        {
+            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+        }
+        else
+        {
+            target.PlayerHandler.TransitionTo(new PlayerIdleState(target));
         }
     }
 

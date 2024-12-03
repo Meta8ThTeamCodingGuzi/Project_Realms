@@ -49,7 +49,7 @@ public abstract class WeaponSkill : Skill
         return base.TryUseSkill();
     }
 
-    public override IEnumerator UseSkillWithDelay()
+    public IEnumerator UseSkillWithDelay()
     {
         if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
         {

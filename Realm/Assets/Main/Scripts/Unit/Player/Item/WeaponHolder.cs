@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -142,140 +143,142 @@ public class WeaponHolder : MonoBehaviour
         return (weaponCollider);
     }
 
-    //private void OnGUI()
-    //{
-    //    if (!showDebugControls || currentIKSetup == null) return;
+#if UNITY_EDITOR
+    private void OnGUI()
+    {
+        if (!showDebugControls || currentIKSetup == null) return;
 
-    //    GUILayout.BeginArea(new Rect(10, 10, 300, 400));
-    //    GUILayout.BeginVertical("box");
+        GUILayout.BeginArea(new Rect(10, 10, 300, 400));
+        GUILayout.BeginVertical("box");
 
-    //    GUILayout.Label($"Current Weapon: {currentWeaponType}");
+        GUILayout.Label($"Current Weapon: {currentWeaponType}");
 
-    //    if (currentIKSetup.mainHandIK != null)
-    //    {
-    //        GUILayout.Label("Main Hand IK Weight");
-    //        currentIKSetup.mainHandIK.weight = GUILayout.HorizontalSlider(
-    //            currentIKSetup.mainHandIK.weight, 0f, 1f);
+        if (currentIKSetup.mainHandIK != null)
+        {
+            GUILayout.Label("Main Hand IK Weight");
+            currentIKSetup.mainHandIK.weight = GUILayout.HorizontalSlider(
+                currentIKSetup.mainHandIK.weight, 0f, 1f);
 
-    //        GUILayout.Label("Main Hand Position Offset");
-    //        mainHandPositionOffset = Vector3Field(mainHandPositionOffset, 0.01f);
+            GUILayout.Label("Main Hand Position Offset");
+            mainHandPositionOffset = Vector3Field(mainHandPositionOffset, 0.01f);
 
-    //        GUILayout.Label("Main Hand Rotation Offset");
-    //        mainHandRotationOffset = Vector3Field(mainHandRotationOffset, 1f);
+            GUILayout.Label("Main Hand Rotation Offset");
+            mainHandRotationOffset = Vector3Field(mainHandRotationOffset, 1f);
 
-    //        if (GUILayout.Button("Apply Main Hand Offset"))
-    //        {
-    //            ApplyMainHandOffset();
-    //        }
-    //    }
+            if (GUILayout.Button("Apply Main Hand Offset"))
+            {
+                ApplyMainHandOffset();
+            }
+        }
 
-    //    if (currentIKSetup.offHandIK != null)
-    //    {
-    //        GUILayout.Label("Off Hand IK Weight");
-    //        currentIKSetup.offHandIK.weight = GUILayout.HorizontalSlider(
-    //            currentIKSetup.offHandIK.weight, 0f, 1f);
+        if (currentIKSetup.offHandIK != null)
+        {
+            GUILayout.Label("Off Hand IK Weight");
+            currentIKSetup.offHandIK.weight = GUILayout.HorizontalSlider(
+                currentIKSetup.offHandIK.weight, 0f, 1f);
 
-    //        GUILayout.Label("Off Hand Position Offset");
-    //        offHandPositionOffset = Vector3Field(offHandPositionOffset, 0.01f);
+            GUILayout.Label("Off Hand Position Offset");
+            offHandPositionOffset = Vector3Field(offHandPositionOffset, 0.01f);
 
-    //        GUILayout.Label("Off Hand Rotation Offset");
-    //        offHandRotationOffset = Vector3Field(offHandRotationOffset, 1f);
+            GUILayout.Label("Off Hand Rotation Offset");
+            offHandRotationOffset = Vector3Field(offHandRotationOffset, 1f);
 
-    //        if (GUILayout.Button("Apply Off Hand Offset"))
-    //        {
-    //            ApplyOffHandOffset();
-    //        }
-    //    }
+            if (GUILayout.Button("Apply Off Hand Offset"))
+            {
+                ApplyOffHandOffset();
+            }
+        }
 
-    //    if (GUILayout.Button("Reset All Offsets"))
-    //    {
-    //        ResetOffsets();
-    //    }
+        if (GUILayout.Button("Reset All Offsets"))
+        {
+            ResetOffsets();
+        }
 
-    //    showGizmos = GUILayout.Toggle(showGizmos, "Show Gizmos");
+        showGizmos = GUILayout.Toggle(showGizmos, "Show Gizmos");
 
-    //    GUILayout.EndVertical();
-    //    GUILayout.EndArea();
-    //}
+        GUILayout.EndVertical();
+        GUILayout.EndArea();
+    }
 
-    //private Vector3 Vector3Field(Vector3 value, float sensitivity)
-    //{
-    //    value.x = GUILayout.HorizontalSlider(value.x, -1f, 1f) * sensitivity;
-    //    value.y = GUILayout.HorizontalSlider(value.y, -1f, 1f) * sensitivity;
-    //    value.z = GUILayout.HorizontalSlider(value.z, -1f, 1f) * sensitivity;
-    //    return value;
-    //}
+    private Vector3 Vector3Field(Vector3 value, float sensitivity)
+    {
+        value.x = GUILayout.HorizontalSlider(value.x, -1f, 1f) * sensitivity;
+        value.y = GUILayout.HorizontalSlider(value.y, -1f, 1f) * sensitivity;
+        value.z = GUILayout.HorizontalSlider(value.z, -1f, 1f) * sensitivity;
+        return value;
+    }
 
-    //private void ApplyMainHandOffset()
-    //{
-    //    if (currentIKSetup?.mainHandTarget != null)
-    //    {
-    //        currentIKSetup.mainHandTarget.position += mainHandPositionOffset;
-    //        currentIKSetup.mainHandTarget.rotation *= Quaternion.Euler(mainHandRotationOffset);
-    //    }
-    //}
+    private void ApplyMainHandOffset()
+    {
+        if (currentIKSetup?.mainHandTarget != null)
+        {
+            currentIKSetup.mainHandTarget.position += mainHandPositionOffset;
+            currentIKSetup.mainHandTarget.rotation *= Quaternion.Euler(mainHandRotationOffset);
+        }
+    }
 
-    //private void ApplyOffHandOffset()
-    //{
-    //    if (currentIKSetup?.offHandTarget != null)
-    //    {
-    //        currentIKSetup.offHandTarget.position += offHandPositionOffset;
-    //        currentIKSetup.offHandTarget.rotation *= Quaternion.Euler(offHandRotationOffset);
-    //    }
-    //}
+    private void ApplyOffHandOffset()
+    {
+        if (currentIKSetup?.offHandTarget != null)
+        {
+            currentIKSetup.offHandTarget.position += offHandPositionOffset;
+            currentIKSetup.offHandTarget.rotation *= Quaternion.Euler(offHandRotationOffset);
+        }
+    }
 
-    //private void ResetOffsets()
-    //{
-    //    mainHandPositionOffset = Vector3.zero;
-    //    mainHandRotationOffset = Vector3.zero;
-    //    offHandPositionOffset = Vector3.zero;
-    //    offHandRotationOffset = Vector3.zero;
+    private void ResetOffsets()
+    {
+        mainHandPositionOffset = Vector3.zero;
+        mainHandRotationOffset = Vector3.zero;
+        offHandPositionOffset = Vector3.zero;
+        offHandRotationOffset = Vector3.zero;
 
-    //    if (currentWeaponObject != null)
-    //    {
-    //        Transform mainGrip = currentWeaponObject.transform.Find("GripPoint");
-    //        Transform offGrip = currentWeaponObject.transform.Find("OffHandGripPoint");
+        if (currentWeaponObject != null)
+        {
+            Transform mainGrip = currentWeaponObject.transform.Find("GripPoint");
+            Transform offGrip = currentWeaponObject.transform.Find("OffHandGripPoint");
 
-    //        if (mainGrip != null && currentIKSetup?.mainHandTarget != null)
-    //        {
-    //            currentIKSetup.mainHandTarget.position = mainGrip.position;
-    //            currentIKSetup.mainHandTarget.rotation = mainGrip.rotation;
-    //        }
+            if (mainGrip != null && currentIKSetup?.mainHandTarget != null)
+            {
+                currentIKSetup.mainHandTarget.position = mainGrip.position;
+                currentIKSetup.mainHandTarget.rotation = mainGrip.rotation;
+            }
 
-    //        if (offGrip != null && currentIKSetup?.offHandTarget != null)
-    //        {
-    //            currentIKSetup.offHandTarget.position = offGrip.position;
-    //            currentIKSetup.offHandTarget.rotation = offGrip.rotation;
-    //        }
-    //    }
-    //}
+            if (offGrip != null && currentIKSetup?.offHandTarget != null)
+            {
+                currentIKSetup.offHandTarget.position = offGrip.position;
+                currentIKSetup.offHandTarget.rotation = offGrip.rotation;
+            }
+        }
+    }
 
-    //private void OnDrawGizmos()
-    //{
-    //    if (!showGizmos || currentIKSetup == null) return;
+    private void OnDrawGizmos()
+    {
+        if (!showGizmos || currentIKSetup == null) return;
 
-    //    Gizmos.color = gizmoColor;
+        Gizmos.color = gizmoColor;
 
-    //    if (currentIKSetup.mainHandTarget != null)
-    //    {
-    //        Gizmos.DrawWireSphere(currentIKSetup.mainHandTarget.position, 0.1f);
-    //        DrawAxisGizmo(currentIKSetup.mainHandTarget, 0.2f);
-    //    }
+        if (currentIKSetup.mainHandTarget != null)
+        {
+            Gizmos.DrawWireSphere(currentIKSetup.mainHandTarget.position, 0.1f);
+            DrawAxisGizmo(currentIKSetup.mainHandTarget, 0.2f);
+        }
 
-    //    if (currentIKSetup.offHandTarget != null)
-    //    {
-    //        Gizmos.DrawWireSphere(currentIKSetup.offHandTarget.position, 0.1f);
-    //        DrawAxisGizmo(currentIKSetup.offHandTarget, 0.2f);
-    //    }
-    //}
+        if (currentIKSetup.offHandTarget != null)
+        {
+            Gizmos.DrawWireSphere(currentIKSetup.offHandTarget.position, 0.1f);
+            DrawAxisGizmo(currentIKSetup.offHandTarget, 0.2f);
+        }
+    }
 
-    //private void DrawAxisGizmo(Transform transform, float size)
-    //{
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawRay(transform.position, transform.right * size);
-    //    Gizmos.color = Color.green;
-    //    Gizmos.DrawRay(transform.position, transform.up * size);
-    //    Gizmos.color = Color.blue;
-    //    Gizmos.DrawRay(transform.position, transform.forward * size);
-    //}
+    private void DrawAxisGizmo(Transform transform, float size)
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, transform.right * size);
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, transform.up * size);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, transform.forward * size);
+    }
+#endif
 }

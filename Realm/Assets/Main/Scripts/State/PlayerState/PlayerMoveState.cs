@@ -39,7 +39,7 @@ public class PlayerMoveState : State<Player>
         }
         if (target.TargetMonster != null & target.CanAttack(target.TargetMonster))
         {
-            target.skillController.OnMouseCilck();
+            target.skillController.OnMouseClick();
             target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
             return;
         }
