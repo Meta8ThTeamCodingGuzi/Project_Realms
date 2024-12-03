@@ -38,7 +38,7 @@ public class PlayerAnimatorController : MonoBehaviour
     }
 
 
-    public void clipchange( AnimationClip animationClip)
+    public void Clipchange( AnimationClip animationClip)
     {
         if (currentController == null ||
             currentController.runtimeAnimatorController != GameManager.Instance.player.PlayerAnimator.runtimeAnimatorController)

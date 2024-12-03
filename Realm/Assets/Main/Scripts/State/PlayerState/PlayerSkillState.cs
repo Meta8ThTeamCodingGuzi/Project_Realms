@@ -12,14 +12,10 @@ public class PlayerSkillState : State<Player>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.PlayerAnimator.SetFloat("AttackSpeed", target.CharacterStats.GetStatValue(StatType.AttackSpeed)/2f);
-
-
-        target.PlayerAnimator.SetTrigger("Attack");
     }
     public override void OnExit()
     {
-
+            target.ClearTarget();
     }
     public override void OnUpdate()
     {
@@ -29,8 +25,12 @@ public class PlayerSkillState : State<Player>
         }
         var currentAnimatorState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
-        if (currentAnimatorState.normalizedTime >= 0.3f)
+        if (currentAnimatorState.normalizedTime >= 0.9f)
         {
+            if (target.skillController.CheckSkillInputs())
+            {
+                return;
+            }
             if (target.TargetPos != Vector3.zero)
             {
                 target.PlayerHandler.TransitionTo(new PlayerMoveState(target));

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerIdleState : State<Player>
 {
-    private float IdleTime = 0f;
+    //private float IdleTime = 0f;
 
     public PlayerIdleState(Player target) : base(target)
     {
@@ -15,13 +15,13 @@ public class PlayerIdleState : State<Player>
     public override void OnEnter()
     {
         target.StopMoving();
-        IdleTime = 0f;
+        //IdleTime = 0f;
         base.OnEnter();
     }
 
     public override void OnExit()
     {
-        IdleTime = 0f;
+        //IdleTime = 0f;
         base.OnExit();
     }
 
@@ -30,16 +30,13 @@ public class PlayerIdleState : State<Player>
         if (!target.IsAlive)
         {
             target.PlayerHandler.TransitionTo(new PlayerDieState(target));
+            return;
         }
         AnimatorStateInfo currentState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
         if (target.wasAttacked)
         {
             target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
-        }
-        if (target.TargetPos != Vector3.zero)
-        {
-            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
             return;
         }
 
@@ -49,18 +46,21 @@ public class PlayerIdleState : State<Player>
             return;
         }
 
-        if (currentState.IsName("SetWeapon"))
+        target.MovetoCursor();
+        if(target.TargetMonster != null && target.CanAttack(target.TargetMonster))
         {
-            target.MovetoCursor();
-            if (!currentState.IsName("Idle"))
-            {
-                IdleTime += Time.deltaTime;
-                if (IdleTime > 20f) { target.PlayerAnimator.SetTrigger("FoldWeapon"); IdleTime = 0f; }
-            }
+            target.skillController.OnMouseCilck();
+            target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
         }
-        else if (currentState.IsName("Idle"))
+        if (target.TargetPos != Vector3.zero)
         {
-            if (Input.GetMouseButton(0)) target.PlayerAnimator.SetTrigger("SetWeapon");
+            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+            return;
         }
+        else if (target.TargetMonster != null)
+        {
+            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+        }
+
     }
 }

@@ -68,7 +68,18 @@ public abstract class Skill : MonoBehaviour
             }
 
             GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
+            if (animaClip != null && !IsCurrentAnimation(animaClip))
+            {
+                GameManager.Instance.player.PlayerAnimController.Clipchange(animaClip);
+            }
 
+            var currentState = GameManager.Instance.player.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
+            if (currentState.normalizedTime >= 0.9f || !currentState.IsName("Attack"))
+            {
+                GameManager.Instance.player.PlayerAnimator.SetFloat("AttackSpeed",
+                    GameManager.Instance.player.CharacterStats.GetStatValue(StatType.AttackSpeed) / 2f);
+                GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
+            }
         }
 
         StartCoroutine(UseSkillWithDelay());
@@ -80,6 +91,11 @@ public abstract class Skill : MonoBehaviour
         }
 
         return true;
+    }
+    private bool IsCurrentAnimation(AnimationClip clip)
+    {
+        var currentClip = GameManager.Instance.player.PlayerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip;
+        return currentClip == clip;
     }
 
     public virtual IEnumerator UseSkillWithDelay() 
