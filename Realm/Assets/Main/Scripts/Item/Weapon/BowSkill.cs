@@ -49,12 +49,10 @@ public class BowSkill : WeaponSkill
 
     private IEnumerator DrawAndFireRoutine()
     {
-        isDrawing = true;
+        isSkillInProgress = true;
 
         if (weaponHolder.CurrentIKSetup?.offHandIK != null)
         {
-            print("보우스킬 호출");
-            // 활 당기기 - offHandIK weight를 서서히 0.5까지 증가
             float elapsedTime = 0f;
             float startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
 
@@ -69,7 +67,6 @@ public class BowSkill : WeaponSkill
             FireArrow();
             lastFireTime = Time.time;
 
-            // 활 놓기 - offHandIK weight를 서서히 0으로 감소
             elapsedTime = 0f;
             startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
 
@@ -82,7 +79,8 @@ public class BowSkill : WeaponSkill
             }
         }
 
-        isDrawing = false;
+        isSkillInProgress = false;
+        player.PlayerAnimator.SetTrigger("Idle");
         yield break;
     }
 
@@ -97,19 +95,16 @@ public class BowSkill : WeaponSkill
             {
                 Vector3 targetPoint = ray.GetPoint(distance);
 
-                // 캐릭터를 타겟 방향으로 회전
                 Vector3 directionToTarget = (targetPoint - transform.position).normalized;
-                directionToTarget.y = 0; // Y축 회전만 적용
+                directionToTarget.y = 0;
                 player.transform.rotation = Quaternion.LookRotation(directionToTarget);
 
-                // 사거리 제한
                 float distanceToTarget = Vector3.Distance(transform.position, targetPoint);
                 if (distanceToTarget > GetAttackRange())
                 {
                     targetPoint = transform.position + directionToTarget * GetAttackRange();
                 }
 
-                // 화레이어의 forward 방향으로 화살 발사
                 Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
                     arrowPrefab.gameObject,
                     arrowSpawnPoint.position,

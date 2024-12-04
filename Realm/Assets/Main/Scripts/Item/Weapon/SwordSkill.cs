@@ -15,12 +15,16 @@ public class SwordSkill : WeaponSkill
             float distanceToTarget = Vector3.Distance(transform.position, targetMonster.transform.position);
             float attackRange = GetAttackRange();
 
-            if (distanceToTarget <= attackRange)
+            if (distanceToTarget <= attackRange && !isAttackInProgress)
             {
                 Debug.Log("[SwordSkill] Setting Attack trigger");
                 player.StopMoving();
                 player.transform.LookAt(targetMonster.transform);
+
+                float attackSpeed = GetPlayerAttackSpeed();
+                player.PlayerAnimator.SetFloat("AttackSpeed", attackSpeed);
                 player.PlayerAnimator.SetTrigger("Attack");
+
                 StartCoroutine(SwordAttackRoutine());
             }
         }
@@ -28,28 +32,26 @@ public class SwordSkill : WeaponSkill
 
     private IEnumerator SwordAttackRoutine()
     {
-        // 애니메이션이 시작될 때까지 대기
+        isSkillInProgress = true;
+
         while (!player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             yield return null;
         }
 
-        // 애니메이션의 특정 지점까지 대기
-        while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.4f)
+        float damagePoint = 0.4f;
+        while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < damagePoint)
         {
             yield return null;
         }
 
-        // 데미지 적용
         PerformSectorAttack();
 
-        // 애니메이션이 완료될 때까지 대기
         while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.97f)
         {
             yield return null;
         }
 
-        // 공격 완료 상태로 설정
         OnAttackComplete();
     }
 
