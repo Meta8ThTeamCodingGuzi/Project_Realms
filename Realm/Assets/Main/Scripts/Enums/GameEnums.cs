@@ -27,6 +27,7 @@ public enum SkillID
     Test2,
     Test3,
     Test4,
+    MonsterSkill,
 }
 public enum SkillStatType
 {

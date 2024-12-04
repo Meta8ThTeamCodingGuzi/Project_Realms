@@ -7,6 +7,7 @@ public class ProjectileSkill : Skill
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform firePoint;
     private ProjectileSkillStat projectileStats;
+    private Player player;
 
     public void Start()
     {
@@ -44,6 +45,7 @@ public class ProjectileSkill : Skill
         {
             Debug.LogError($"{gameObject.name}: skillStat이 null입니다!");
         }
+        player = GetComponentInParent<Player>();
     }
 
     protected override void UseSkill()
@@ -51,7 +53,7 @@ public class ProjectileSkill : Skill
         StartCoroutine(FireSequence());
     }
 
-    private IEnumerator FireSequence()
+    protected virtual IEnumerator FireSequence()
     {
         if (projectileStats == null)
         {
@@ -79,14 +81,16 @@ public class ProjectileSkill : Skill
                        projectileStats.GetStatValue<int>(SkillStatType.HomingLevel) ? false : true,
             HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange),
         };
-
         GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
         firePoint.rotation = transform.rotation;
 
         for (int i = 0; i < projectileCount; i++)
         {
-            GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
-            FireProjectile(projectileData);
+            if (player != null)
+            {
+                player.PlayerAnimator.SetTrigger("Attack");
+            }
+           FireProjectile(projectileData);
             if (innerInterval > 0 && i < projectileCount - 1)
             {
                 yield return new WaitForSeconds(innerInterval);
@@ -109,7 +113,7 @@ public class ProjectileSkill : Skill
         return null;
     }
 
-    private void FireProjectile(ProjectileData data)
+    protected  virtual void FireProjectile(ProjectileData data)
     {
         if (projectilePrefab == null)
         {

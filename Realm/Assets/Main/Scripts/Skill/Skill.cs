@@ -6,10 +6,10 @@ public abstract class Skill : MonoBehaviour
 {
     [SerializeField] public SkillData data;
     [SerializeField] public SkillStat skillStat;
-    [SerializeField] private AnimationClip animaClip;
+    [SerializeField] protected AnimationClip animaClip;
     protected bool isSkillInProgress = false;
 
-    private float currentCooldown = 0f;
+    protected float currentCooldown = 0f;
 
     public bool IsOnCooldown => currentCooldown > 0f;
     public float RemainingCooldown => currentCooldown;
@@ -46,7 +46,7 @@ public abstract class Skill : MonoBehaviour
     {
         skillStat.SetSkillLevel(level);
     }
-    private StatModifier CalcManaCost(float costmana)
+    protected StatModifier CalcManaCost(float costmana)
     {
         return new StatModifier(costmana, StatModifierType.Flat, SourceType.Skill);
     }
