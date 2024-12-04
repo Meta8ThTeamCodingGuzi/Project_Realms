@@ -388,4 +388,22 @@ public class Player : Unit
         targetPos = position;
         targetMonster = null;
     }
+
+    public override void MoveTo(Vector3 destination)
+    {
+        if (targetMonster != null)
+        {
+            // 몬스터를 향해 이동할 때는 공격 범위를 고려
+            Vector3 directionToTarget = (destination - transform.position).normalized;
+            float attackRange = characterStats.GetStatValue(StatType.AttackRange);
+
+            // 공격 범위만큼 떨어진 위치로 이동
+            Vector3 targetPosition = destination - (directionToTarget * attackRange);
+            base.MoveTo(targetPosition);
+        }
+        else
+        {
+            base.MoveTo(destination);
+        }
+    }
 }

@@ -16,11 +16,20 @@ public class WorldDropItem : MonoBehaviour
     [SerializeField] private float bobAmount = 0.1f;
     [SerializeField] private LayerMask mouseRaycastLayer;
 
-    private SphereCollider coll;
     private Vector3 startPosition;
     private bool isPlayerInRange;
     private Player player;
     private Camera mainCamera;
+    private bool isMouseOver = false;
+    private static WorldDropItem currentHoveredItem = null;
+
+    [Header("Spawn Animation")]
+    [SerializeField] private float spawnJumpHeight = 2f;
+    [SerializeField] private float spawnRotationSpeed = 720f;
+    [SerializeField] private float spawnAnimationTime = 0.5f;
+    private float spawnStartTime;
+    private bool isSpawning = true;
+    private Vector3 originalRotation;
 
     private void Start()
     {
@@ -28,9 +37,12 @@ public class WorldDropItem : MonoBehaviour
 
         startPosition = transform.position;
         mainCamera = Camera.main;
-        coll = GetComponent<SphereCollider>();
+        player = GameManager.Instance.player;
 
-        coll.radius = nameDisplayRadius;
+        // 스폰 애니메이션 초기화
+        spawnStartTime = Time.time;
+        originalRotation = transform.eulerAngles;
+        isSpawning = true;
 
         // 초기에는 이름 텍스트 비활성화
         if (tooltipCanvas != null)
@@ -42,55 +54,70 @@ public class WorldDropItem : MonoBehaviour
 
     private void Update()
     {
-        // 아이템 위아래로 둥둥 떠다니는 효과
-        float newY = startPosition.y + floatingHeight + Mathf.Sin(Time.time * bobSpeed) * bobAmount;
-        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
-
-        if (isPlayerInRange)
+        if (isSpawning)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-            if (distanceToPlayer <= nameDisplayRadius)
-            {
-                CheckMouseHover();
+            UpdateSpawnAnimation();
+        }
+        else
+        {
+            // 기존의 둥둥 떠다니는 효과
+            float newY = startPosition.y + floatingHeight + Mathf.Sin(Time.time * bobSpeed) * bobAmount;
+            transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+        }
 
-                // 클릭으로 아이템 획득
-                if (distanceToPlayer <= interactionRadius && Input.GetMouseButtonDown(0))
-                {
-                    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-                    if (Physics.Raycast(ray, out hit, 100f, mouseRaycastLayer) && hit.collider.gameObject == gameObject)
-                    {
-                        TryPickupItem();
-                    }
-                }
-            }
-            else
-            {
-                HideTooltip();
-            }
+        // 마우스 레이캐스트 체크로 아이템 이름 표시 (거리 제한 없음)
+        CheckMouseHover();
+
+        // 클릭으로 아이템 획득 (거리 제한 있음)
+        if (distanceToPlayer <= interactionRadius && Input.GetMouseButtonDown(0) && isMouseOver)
+        {
+            TryPickupItem();
         }
     }
 
     private void CheckMouseHover()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, mouseRaycastLayer);
 
-        if (Physics.Raycast(ray, out hit, 1000f, mouseRaycastLayer))
+        // 가장 가까운 아이템 찾기
+        float closestDistance = float.MaxValue;
+        bool foundThis = false;
+
+        foreach (RaycastHit hit in hits)
         {
             if (hit.collider.gameObject == gameObject)
             {
-                ShowTooltip();
-            }
-            else
-            {
-                HideTooltip();
+                float distance = Vector3.Distance(hit.point, mainCamera.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    foundThis = true;
+                }
             }
         }
-        else
+
+        // 마우스 오버 상태 업데이트
+        if (foundThis && currentHoveredItem != this)
+        {
+            if (currentHoveredItem != null)
+            {
+                currentHoveredItem.HideTooltip();
+            }
+            currentHoveredItem = this;
+            ShowTooltip();
+            isMouseOver = true;
+        }
+        else if (!foundThis && isMouseOver)
         {
             HideTooltip();
+            if (currentHoveredItem == this)
+            {
+                currentHoveredItem = null;
+            }
+            isMouseOver = false;
         }
     }
 
@@ -108,24 +135,6 @@ public class WorldDropItem : MonoBehaviour
         if (tooltipCanvas != null)
         {
             tooltipCanvas.gameObject.SetActive(false);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            player = other.GetComponent<Player>();
-            isPlayerInRange = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInRange = false;
-            HideTooltip();
         }
     }
 
@@ -192,5 +201,30 @@ public class WorldDropItem : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, nameDisplayRadius);
+    }
+
+    private void UpdateSpawnAnimation()
+    {
+        float elapsedTime = Time.time - spawnStartTime;
+        float progress = elapsedTime / spawnAnimationTime;
+
+        if (progress >= 1f)
+        {
+            isSpawning = false;
+            transform.eulerAngles = originalRotation;
+            return;
+        }
+
+        float jumpProgress = Mathf.Sin(progress * Mathf.PI);
+        float currentHeight = startPosition.y + (spawnJumpHeight * jumpProgress);
+
+        float rotationAmount = spawnRotationSpeed * elapsedTime;
+
+        transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
+        transform.eulerAngles = new Vector3(
+            originalRotation.x,
+            originalRotation.y,
+            originalRotation.z + rotationAmount
+        );
     }
 }

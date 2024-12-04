@@ -20,6 +20,8 @@ public class ProjectileSkill : Skill
             Debug.LogError($"{gameObject.name}: projectilePrefab이 할당되지 않았습니다!");
         }
 
+        firePoint = GameObject.Find("FirePoint").transform;
+
         if (firePoint == null)
         {
             // firePoint가 없으면 자동으로 생성
@@ -38,7 +40,7 @@ public class ProjectileSkill : Skill
         {
             projectileStats = (ProjectileSkillStat)skillStat;
             projectileStats.InitializeStats();
-            Debug.Log($"{gameObject.name}: ProjectileSkill 초기화 완료");
+           // Debug.Log($"{gameObject.name}: ProjectileSkill 초기화 완료");
         }
         else
         {

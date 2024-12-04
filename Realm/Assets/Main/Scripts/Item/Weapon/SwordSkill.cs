@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class SwordSkill : WeaponSkill
 {
-    private bool isAttacking = false;
-    private float baseAttackDuration = 1f;
 
     protected override void UseSkill()
     {
@@ -24,6 +22,10 @@ public class SwordSkill : WeaponSkill
                 player.transform.LookAt(targetMonster.transform);
                 StartCoroutine(SwordAttackRoutine());
             }
+            else
+            {
+                player.MoveTo(targetMonster.transform.position);
+            }
         }
     }
 
@@ -34,6 +36,8 @@ public class SwordSkill : WeaponSkill
         yield return new WaitForSeconds(0.2f);
 
         PerformSectorAttack();
+
+        yield return new WaitForSeconds(0.1f);
 
         isAttacking = false;
     }

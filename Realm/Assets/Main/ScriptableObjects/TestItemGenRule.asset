@@ -15,11 +15,11 @@ MonoBehaviour:
   monsterDropRules:
   - monsterType: 0
     itemDropChance: 100
-    possibleItemTypes: 0200000003000000
-    possibleStatTypes: 010000000400000007000000
+    possibleItemTypes: 02000000
+    possibleStatTypes: 01000000040000000700000009000000
     raritySettings:
     - rarity: 0
       dropChance: 100
-      statCountRange: {x: 4, y: 4}
+      _statCountRange: {x: 1, y: 4}
       statValueRange: {x: 141.8, y: 281.7}
-      itemNameColor: {r: 1, g: 0.7052167, b: 0, a: 0}
+      itemNameColor: {r: 0.3426486, g: 0.4732119, b: 0.9433962, a: 0}

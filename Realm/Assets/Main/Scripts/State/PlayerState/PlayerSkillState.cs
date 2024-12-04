@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerSkillState : State<Player>
 {
-    private bool isAttackAnimationPlaying = false;
 
     public PlayerSkillState(Player target) : base(target)
     {
@@ -14,13 +14,11 @@ public class PlayerSkillState : State<Player>
     public override void OnEnter()
     {
         target.StopMoving();
-        isAttackAnimationPlaying = true;
     }
 
     public override void OnExit()
     {
         target.ClearTarget();
-        isAttackAnimationPlaying = false;
     }
 
     public override void OnUpdate()
@@ -39,14 +37,68 @@ public class PlayerSkillState : State<Player>
             {
                 return;
             }
-            else
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            if (!EventSystem.current.IsPointerOverGameObject())
             {
-                isAttackAnimationPlaying = false;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
+
+                foreach (RaycastHit hit in hits)
+                {
+                    if (hit.collider.TryGetComponent<Monster>(out Monster monster))
+                    {
+                        target.SetTarget(monster);
+                        float distanceToTarget = Vector3.Distance(target.transform.position, monster.transform.position);
+                        float attackRange = target.CharacterStats.GetStatValue(StatType.AttackRange);
+
+                        if (distanceToTarget <= attackRange)
+                        {
+                            if (target.skillController.CurrentSkill is WeaponSkill weaponSkill && !weaponSkill.IsAttacking)
+                            {
+                                target.skillController.OnMouseClick();
+                            }
+                            return;
+                        }
+                        else
+                        {
+                            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+                            return;
+                        }
+                    }
+                }
+
+                if (Physics.Raycast(ray, out RaycastHit groundHit, Mathf.Infinity, target.GroundLayer))
+                {
+                    target.SetDestination(groundHit.point);
+                    target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+                    return;
+                }
             }
         }
 
+        if (target.TargetMonster != null)
+        {
+            float distanceToTarget = Vector3.Distance(target.transform.position, target.TargetMonster.transform.position);
+            float attackRange = target.CharacterStats.GetStatValue(StatType.AttackRange);
 
-        if (target.TargetPos != Vector3.zero)
+            if (distanceToTarget <= attackRange)
+            {
+                if (target.skillController.CurrentSkill is WeaponSkill weaponSkill && !weaponSkill.IsAttacking)
+                {
+                    target.skillController.OnMouseClick();
+                }
+                return;
+            }
+            else
+            {
+                target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+                return;
+            }
+        }
+        else if (target.TargetPos != Vector3.zero)
         {
             target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
         }
@@ -54,6 +106,5 @@ public class PlayerSkillState : State<Player>
         {
             target.PlayerHandler.TransitionTo(new PlayerIdleState(target));
         }
-
     }
 }

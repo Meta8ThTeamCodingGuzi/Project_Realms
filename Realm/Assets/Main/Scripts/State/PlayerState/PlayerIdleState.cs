@@ -51,7 +51,7 @@ public class PlayerIdleState : State<Player>
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Monster")))
             {
                 if (hit.collider.TryGetComponent<Monster>(out Monster monster))
                 {

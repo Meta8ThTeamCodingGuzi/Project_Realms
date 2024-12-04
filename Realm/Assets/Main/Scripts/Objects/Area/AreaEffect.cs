@@ -28,6 +28,12 @@ public class AreaEffect : MonoBehaviour
     private void Update()
     {
         durationTime += Time.deltaTime;
+
+        if (durationTime >= areaData.duration) 
+        {
+            StopCoroutine(attackCoroutine);
+            PoolManager.Instance.Despawn<AreaEffect>(this);
+        }
     }
 
     private IEnumerator AttackRoutine()
@@ -46,21 +52,5 @@ public class AreaEffect : MonoBehaviour
             }
             yield return new WaitForSeconds(1f);
         }
-    }
-
-    private void StopAttack()
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
-            PoolManager.Instance.Despawn<AreaEffect>(this);
-        }
-        
-    }
-
-    private void OnDestroy()
-    {
-        StopAttack();
     }
 }

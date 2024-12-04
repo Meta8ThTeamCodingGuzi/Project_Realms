@@ -51,17 +51,36 @@ public class ItemManager : SingletonManager<ItemManager>
 
     private void GenerateRandomStats(ItemInstanceData itemInstance, MonsterDropRule dropRule, ItemGenerationRuleSO.RaritySettings raritySettings)
     {
-        int statCount = UnityEngine.Random.Range(raritySettings.statCountRange.x, raritySettings.statCountRange.y + 1);
+        List<StatType> availableStats = new List<StatType>(dropRule.possibleStatTypes);
+        ShuffleList(availableStats);
+
+        int statCount = Mathf.Min(
+            UnityEngine.Random.Range(raritySettings.statCountRange.x, raritySettings.statCountRange.y + 1),
+            availableStats.Count
+        );
 
         for (int i = 0; i < statCount; i++)
         {
-            StatType randomStatType = dropRule.possibleStatTypes[UnityEngine.Random.Range(0, dropRule.possibleStatTypes.Length)];
+            StatType selectedStatType = availableStats[i];
             float randomValue = UnityEngine.Random.Range(raritySettings.statValueRange.x, raritySettings.statValueRange.y);
 
             float rarityMultiplier = 1f + ((int)raritySettings.rarity * 0.2f);
             randomValue *= rarityMultiplier;
 
-            itemInstance.AddStat(randomStatType, randomValue, 0);
+            itemInstance.AddStat(selectedStatType, randomValue, 0);
+        }        
+    }
+
+    private void ShuffleList<T>(List<T> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = UnityEngine.Random.Range(0, n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
         }
     }
 

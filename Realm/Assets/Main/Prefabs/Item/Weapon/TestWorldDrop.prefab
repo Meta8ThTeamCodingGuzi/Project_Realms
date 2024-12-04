@@ -198,14 +198,17 @@ MonoBehaviour:
   item: {fileID: 5882861382193804391}
   tooltipCanvas: {fileID: 7339438445951552435}
   itemNameText: {fileID: 5356101582251710657}
-  interactionRadius: 2
-  nameDisplayRadius: 5
-  floatingHeight: 0.5
+  interactionRadius: 1
+  nameDisplayRadius: 1
+  floatingHeight: 0.1
   bobSpeed: 3
-  bobAmount: 0.5
+  bobAmount: 0.2
   mouseRaycastLayer:
     serializedVersion: 2
     m_Bits: 512
+  spawnJumpHeight: 5
+  spawnRotationSpeed: 1440
+  spawnAnimationTime: 1
 --- !u!135 &8364379988067506401
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -225,7 +228,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4776025235173925169
 Rigidbody:

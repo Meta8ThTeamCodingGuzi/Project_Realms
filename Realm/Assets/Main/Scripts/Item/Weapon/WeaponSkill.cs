@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public abstract class WeaponSkill : Skill
@@ -7,6 +7,8 @@ public abstract class WeaponSkill : Skill
     protected Collider weaponCollider;
     protected Player player;
     protected ICharacterStats playerStats;
+    protected bool isAttacking = false;
+    public bool IsAttacking => isAttacking;
 
     [Header("Weapon Settings")]
     [SerializeField] protected float attackAngle = 90f;
@@ -28,7 +30,7 @@ public abstract class WeaponSkill : Skill
         }
     }
 
-    // ¹«±â°¡ ±³Ã¼µÉ ¶§ È£Ãâ
+    // â°¡ Ã¼ È£
     public virtual void UpdateWeaponComponents()
     {
         if (weaponHolder != null)

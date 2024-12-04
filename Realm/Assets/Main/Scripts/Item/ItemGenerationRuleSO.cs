@@ -20,7 +20,17 @@ public class ItemGenerationRuleSO : ScriptableObject
         public ItemRarity rarity;
         [Range(0f, 100f)]
         public float dropChance;
-        public Vector2Int statCountRange;
+        [SerializeField]
+        internal Vector2Int _statCountRange;
+        public Vector2Int statCountRange
+        {
+            get => _statCountRange;
+            set
+            {
+                _statCountRange.x = Mathf.Max(0, value.x);
+                _statCountRange.y = value.y;
+            }
+        }
         public Vector2 statValueRange;
         public Color itemNameColor = Color.white;
 
@@ -67,7 +77,7 @@ public class ItemGenerationRuleSO : ScriptableObject
 
     private void OnValidate()
     {
-        // 에디터에서 레어도 설정 시 기본 색상 자동 적용
+        // 에디터에서 레어도 설정 시 기본 색상 자동 적용 및 스탯 개수 범위 검증
         foreach (var rule in monsterDropRules)
         {
             if (rule.raritySettings != null)
@@ -78,6 +88,10 @@ public class ItemGenerationRuleSO : ScriptableObject
                     {
                         settings.SetDefaultColor();
                     }
+
+                    int maxPossibleStats = rule.possibleStatTypes?.Length ?? 0;
+                    settings._statCountRange.x = Mathf.Max(0, settings._statCountRange.x);
+                    settings._statCountRange.y = Mathf.Min(settings._statCountRange.y, maxPossibleStats);
                 }
             }
         }

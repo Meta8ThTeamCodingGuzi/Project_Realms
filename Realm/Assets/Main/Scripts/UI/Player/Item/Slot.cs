@@ -63,21 +63,7 @@ public class Slot : MonoBehaviour
     {
         if (item != null && !CanAcceptItem(item)) return;
 
-        Item oldItem = _item;
-        _item = null;
-
-        if (isEquipSlot && oldItem != null && _player != null)
-        {
-            oldItem.RemoveStats(_player.GetComponent<ICharacterStats>());
-
-            if (oldItem.ItemType == ItemType.Sword || oldItem.ItemType == ItemType.Bow)
-            {
-                _player.skillController.UnequipSkill(KeyCode.Mouse0);
-                _player.PlayerAnimController.AnimatorChange(ItemType.None);
-
-                weaponHolder.UnequipCurrentWeapon();
-            }
-        }
+        RemoveCurrentItem();
 
         _item = item;
 
@@ -118,6 +104,22 @@ public class Slot : MonoBehaviour
         statUI.UpdateUI();
     }
 
+    private void RemoveCurrentItem()
+    {
+        if (_item != null && isEquipSlot && _player != null)
+        {
+            _item.RemoveStats(_player.GetComponent<ICharacterStats>());
+            _player.UpdateMoveSpeed();
+
+            if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
+            {
+                _player.skillController.RemoveAllWeaponSkills();
+                _player.PlayerAnimController.AnimatorChange(ItemType.None);
+                weaponHolder.UnequipCurrentWeapon();
+            }
+        }
+    }
+
     public void PlaceholdItem(Item item)
     {
         if (!CanAcceptItem(item)) return;
@@ -129,23 +131,11 @@ public class Slot : MonoBehaviour
 
     public void ClearSlot()
     {
-        if (isEquipSlot && _item != null && _player != null)
-        {
-            _item.RemoveStats(_player.GetComponent<ICharacterStats>());
-
-            // 무기 타입인 경우 추가적인 처리
-            if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
-            {
-                _player.skillController.UnequipSkill(KeyCode.Mouse0);
-                _player.PlayerAnimController.AnimatorChange(ItemType.None);
-                weaponHolder.UnequipCurrentWeapon();
-            }
-
-            statUI.UpdateUI();
-        }
+        RemoveCurrentItem();
         _item = null;
         itemIcon.gameObject.SetActive(false);
         itemIcon.color = Color.white;
+        statUI.UpdateUI();
     }
 
     public void SetAsEquipmentSlot(ItemType type)
