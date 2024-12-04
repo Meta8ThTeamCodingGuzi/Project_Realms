@@ -38,6 +38,10 @@ public class MonsterIdleState : State<Monster>
         var currentAnimatorState = target.M_Animator.GetCurrentAnimatorStateInfo(0);
         if (currentAnimatorState.IsName("Idle"))
         {
+            if (target.CanAttack(target.targetPlayer))
+            {
+                target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
+            }
             if (target.FindPlayer(10f))
             {
                 target.M_StateHandler.TransitionTo(new FollowState(target));

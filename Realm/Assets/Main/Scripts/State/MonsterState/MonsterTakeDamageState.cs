@@ -27,6 +27,7 @@ public class MonsterTakeDamageState : State<Monster>
         }
         else if (target.IsAlive)
         {
+            target.M_Animator.SetTrigger("Idle");
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
         }
     }

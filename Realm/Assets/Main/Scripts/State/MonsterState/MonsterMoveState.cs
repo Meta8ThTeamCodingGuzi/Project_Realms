@@ -12,6 +12,7 @@ public class MonsterMoveState : State<Monster>
 
     public override void OnEnter()
     {
+        target.StopMoving();
         target.M_Animator.SetBool("Move", true);
         MoveStateTime = 0f;
     }
@@ -34,7 +35,7 @@ public class MonsterMoveState : State<Monster>
             target.M_StateHandler.TransitionTo(new FollowState(target));
             return;
         }
-        if (!target.IsMoving) 
+        if (!target.IsMoving &&target.targetPlayer ==null &&!target.CanAttack(target.targetPlayer))
         { 
             target.MoveTo(target.nowTarget);
         }

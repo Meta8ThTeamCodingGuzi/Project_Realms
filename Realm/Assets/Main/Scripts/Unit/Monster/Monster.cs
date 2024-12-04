@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : Unit, IPoolable
+public class Monster : Unit
 {
     private MonsterStateHandler m_StateHandler;
 
@@ -35,6 +35,9 @@ public class Monster : Unit, IPoolable
 
     [SerializeField] private MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
+
+    [SerializeField]private Skill monsterSkill;
+    public Skill Monsterskill => monsterSkill;
 
     protected override void Initialize()
     {
@@ -67,6 +70,9 @@ public class Monster : Unit, IPoolable
         };
 
         transform.localScale *= sizeMultiplier;
+        
+        monsterSkill.Initialize();
+
     }
     public void targetMove(Unit unit)
     {
@@ -196,15 +202,9 @@ public class Monster : Unit, IPoolable
             particle.SetExpAmount(expPerParticle);
         }
     }
-
-    public void OnReturnToPool()
+    private void OnEnable()
     {
-
-    }
-
-    public void OnSpawnFromPool()
-    {
-        Initialize();
+        Initialize(); 
         float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
 
         // 몬스터 타입에 따른 레벨 보정
@@ -220,5 +220,11 @@ public class Monster : Unit, IPoolable
         int adjustedLevel = Mathf.RoundToInt(playerLevel * levelMultiplier);
         monsterStat.SetMonsterLevel(adjustedLevel);
     }
+    private void OnDisable()
+    {
+        patrolPoint.Clear();
+    }
+
+
 
 }

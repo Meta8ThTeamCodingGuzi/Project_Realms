@@ -13,7 +13,8 @@ public class MonsterAttackState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.Attack(target.targetPlayer);
+        target.Monsterskill.TryUseSkill();
+        //target.Attack(target.targetPlayer);
     }
 
     public override void OnExit()
@@ -35,6 +36,7 @@ public class MonsterAttackState : State<Monster>
                 target.M_Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
             }
+            target.M_Animator.SetTrigger("Idle");
         }
     }
 
