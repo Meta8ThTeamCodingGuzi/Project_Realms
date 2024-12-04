@@ -35,7 +35,6 @@ public class WeaponHolder : MonoBehaviour
     private Vector3 offHandRotationOffset;
 
     private GameObject currentWeaponObject;
-    private Collider weaponCollider;
     private ItemType currentWeaponType;
     private WeaponIKSetup currentIKSetup;
 
@@ -97,7 +96,6 @@ public class WeaponHolder : MonoBehaviour
                 StartCoroutine(LerpRigWeight(1f));
             }
 
-            weaponCollider = currentWeaponObject.GetComponentInChildren<Collider>();
         }
     }
 
@@ -118,7 +116,6 @@ public class WeaponHolder : MonoBehaviour
 
             Destroy(currentWeaponObject);
             currentWeaponObject = null;
-            weaponCollider = null;
             currentWeaponType = ItemType.None;
             currentIKSetup = null;
         }
@@ -138,10 +135,6 @@ public class WeaponHolder : MonoBehaviour
         weaponRig.weight = targetWeight;
     }
 
-    public Collider GetWeaponComponents()
-    {
-        return (weaponCollider);
-    }
 
 #if UNITY_EDITOR
     private void OnGUI()

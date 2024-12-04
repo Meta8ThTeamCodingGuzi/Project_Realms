@@ -7,7 +7,7 @@ public class SwordSkill : WeaponSkill
 
     protected override void UseSkill()
     {
-        if (isAttacking) return;
+        Debug.Log("SwordSkill.UseSkill called");
 
         Monster targetMonster = player.TargetMonster;
         if (targetMonster != null)
@@ -17,29 +17,31 @@ public class SwordSkill : WeaponSkill
 
             if (distanceToTarget <= attackRange)
             {
+                Debug.Log("Setting Attack trigger");
                 player.StopMoving();
-                player.PlayerAnimator.SetTrigger("Attack");
                 player.transform.LookAt(targetMonster.transform);
+                player.PlayerAnimator.SetTrigger("Attack");
                 StartCoroutine(SwordAttackRoutine());
-            }
-            else
-            {
-                player.MoveTo(targetMonster.transform.position);
             }
         }
     }
 
     private IEnumerator SwordAttackRoutine()
     {
-        isAttacking = true;
+        // 애니메이션이 시작될 때까지 대기
+        while (!player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            yield return null;
+        }
 
-        yield return new WaitForSeconds(0.2f);
+        // 애니메이션의 특정 지점까지 대기
+        while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.4f)
+        {
+            yield return null;
+        }
 
+        // 데미지 적용
         PerformSectorAttack();
-
-        yield return new WaitForSeconds(0.1f);
-
-        isAttacking = false;
     }
 
     private void PerformSectorAttack()
@@ -53,7 +55,6 @@ public class SwordSkill : WeaponSkill
         foreach (Collider collider in hitColliders)
         {
             Vector3 directionToTarget = (collider.transform.position - playerPosition).normalized;
-
             float angle = Vector3.Angle(forward, directionToTarget);
 
             if (angle <= attackAngle / 2)

@@ -5,6 +5,9 @@ using UnityEngine.EventSystems;
 
 public class PlayerSkillState : State<Player>
 {
+    private bool isSkillComplete = false;
+    private bool isSkillPlaying = false;
+    public bool IsSkillPlaying => isSkillPlaying;
 
     public PlayerSkillState(Player target) : base(target)
     {
@@ -13,98 +16,59 @@ public class PlayerSkillState : State<Player>
 
     public override void OnEnter()
     {
+        Debug.Log("PlayerSkillState.OnEnter");
         target.StopMoving();
+        isSkillComplete = false;
+        isSkillPlaying = true;
+
+        if (target.TargetMonster != null)
+        {
+            Debug.Log("Trying to use skill from SkillState");
+            target.skillController.TryUseSkillByKey(KeyCode.Mouse0);
+        }
     }
 
     public override void OnExit()
     {
         target.ClearTarget();
+        isSkillPlaying = false;
+        isSkillComplete = false;
     }
 
     public override void OnUpdate()
     {
-        if (target.wasAttacked)
-        {
-            target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));
-            return;
-        }
-
         AnimatorStateInfo stateInfo = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
         if (stateInfo.IsName("Attack"))
         {
-            if (stateInfo.normalizedTime < 0.97f)
+            if (stateInfo.normalizedTime >= 0.97f)
             {
-                return;
+                isSkillComplete = true;
+                isSkillPlaying = false;
             }
         }
-
-        if (Input.GetMouseButton(0))
+        else
         {
-            if (!EventSystem.current.IsPointerOverGameObject())
+            isSkillComplete = true;
+            isSkillPlaying = false;
+        }
+
+        if (isSkillComplete)
+        {
+            if (target.TargetMonster != null)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
+                float distanceToTarget = Vector3.Distance(target.transform.position, target.TargetMonster.transform.position);
+                float attackRange = target.CharacterStats.GetStatValue(StatType.AttackRange);
 
-                foreach (RaycastHit hit in hits)
+                if (distanceToTarget > attackRange)
                 {
-                    if (hit.collider.TryGetComponent<Monster>(out Monster monster))
-                    {
-                        target.SetTarget(monster);
-                        float distanceToTarget = Vector3.Distance(target.transform.position, monster.transform.position);
-                        float attackRange = target.CharacterStats.GetStatValue(StatType.AttackRange);
-
-                        if (distanceToTarget <= attackRange)
-                        {
-                            if (target.skillController.CurrentSkill is WeaponSkill weaponSkill && !weaponSkill.IsAttacking)
-                            {
-                                target.skillController.OnMouseClick();
-                            }
-                            return;
-                        }
-                        else
-                        {
-                            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
-                            return;
-                        }
-                    }
-                }
-
-                if (Physics.Raycast(ray, out RaycastHit groundHit, Mathf.Infinity, target.GroundLayer))
-                {
-                    target.SetDestination(groundHit.point);
                     target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
                     return;
                 }
             }
-        }
 
-        if (target.TargetMonster != null)
-        {
-            float distanceToTarget = Vector3.Distance(target.transform.position, target.TargetMonster.transform.position);
-            float attackRange = target.CharacterStats.GetStatValue(StatType.AttackRange);
-
-            if (distanceToTarget <= attackRange)
-            {
-                if (target.skillController.CurrentSkill is WeaponSkill weaponSkill && !weaponSkill.IsAttacking)
-                {
-                    target.skillController.OnMouseClick();
-                }
-                return;
-            }
-            else
-            {
-                target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
-                return;
-            }
-        }
-        else if (target.TargetPos != Vector3.zero)
-        {
-            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
-        }
-        else
-        {
             target.PlayerHandler.TransitionTo(new PlayerIdleState(target));
+            return;
         }
     }
 }

@@ -18,6 +18,7 @@ public class SkillController : MonoBehaviour
     private Skill currentSkill;
     public Skill CurrentSkill => currentSkill;
 
+
     public void Initialize()
     {
         if (player == null)
@@ -45,26 +46,19 @@ public class SkillController : MonoBehaviour
 
     public void OnMouseClick()
     {
-        if (skillSlots.ContainsKey(KeyCode.Mouse0))
+        if (skillSlots.TryGetValue(KeyCode.Mouse0, out Skill skill) && skill != null)
         {
-            if (skillSlots[KeyCode.Mouse0] != null)
-            {
-                currentSkill = skillSlots[KeyCode.Mouse0];
-                currentSkill.TryUseSkill();
-            }
+            currentSkill = skill;
+            currentSkill.TryUseSkill();
         }
     }
 
-    public bool CheckSkillInputs()
+    public bool TryUseSkillByKey(KeyCode keyCode)
     {
-        foreach (var slot in skillSlots)
+        if (skillSlots.TryGetValue(keyCode, out Skill skill) && skill != null)
         {
-            if (Input.GetKey(slot.Key) && slot.Value != null && slot.Key != KeyCode.Mouse0)
-            {
-                currentSkill = slot.Value;
-                slot.Value.TryUseSkill();
-                return true;
-            }
+            currentSkill = skill;
+            return currentSkill.TryUseSkill();
         }
         return false;
     }

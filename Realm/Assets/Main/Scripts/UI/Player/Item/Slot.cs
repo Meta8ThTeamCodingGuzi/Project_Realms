@@ -43,10 +43,8 @@ public class Slot : MonoBehaviour
     {
         if (item == null) return false;
 
-        // 장비 슬롯이면서 허용된 타입이 있는 경우
         if (isEquipSlot && allowedItemType.HasValue)
         {
-            // Weapon 타입 슬롯은 Sword와 Bow를 모두 허용
             if (allowedItemType.Value == ItemType.Weapon)
             {
                 return item.ItemType == ItemType.Sword || item.ItemType == ItemType.Bow;
@@ -55,7 +53,6 @@ public class Slot : MonoBehaviour
             return item.ItemType == allowedItemType.Value;
         }
 
-        // 인벤토리 슬롯은 모든 아이템 허용
         return true;
     }
 
@@ -85,11 +82,6 @@ public class Slot : MonoBehaviour
                     if (defaultSkill != null)
                     {
                         _player.skillController.DirectEquipSkill(defaultSkill, KeyCode.Mouse0);
-
-                        if (defaultSkill is WeaponSkill weaponSkill)
-                        {
-                            weaponSkill.UpdateWeaponComponents();
-                        }
                     }
 
                     _player.PlayerAnimController.AnimatorChange(_item.ItemType);

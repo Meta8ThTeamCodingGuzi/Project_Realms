@@ -54,6 +54,9 @@ public class Player : Unit
     // groundLayerMask에 대한 getter 추가
     public LayerMask GroundLayer => groundLayerMask;
 
+    private PlayerInputManager inputManager;
+    public PlayerInputManager InputManager => inputManager;
+
     private void Start()
     {
         Initialize();
@@ -120,6 +123,9 @@ public class Player : Unit
         // 리젠 코루틴 시작
         StartRegeneration();
 
+        inputManager = gameObject.AddComponent<PlayerInputManager>();
+        inputManager.Initialize(this);
+
         Debug.Log("Player initialized successfully");
     }
 
@@ -127,43 +133,6 @@ public class Player : Unit
     {
         playerHandler.HandleUpdate();
     }
-
-    public void MovetoCursor()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-
-            // UI 요소 클릭 체크
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            {
-                return; // UI 요소를 클릭한 경우 이동하지 않음
-            }
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
-            {
-                if (hit.collider.TryGetComponent<Monster>(out Monster monster))
-                {
-                    targetMonster = monster;
-                    targetPos = Vector3.zero;
-                    return;
-                }
-            }
-
-            if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
-            {
-                targetPos = hit.point;
-                targetMonster = null;
-            }
-        }
-    }
-    public override void StopMoving()
-    {
-        base.StopMoving();
-        targetPos = Vector3.zero;
-    }
-
 
     public void PlayerAnimatorChange(RuntimeAnimatorController newAnimator)
     {
@@ -393,11 +362,9 @@ public class Player : Unit
     {
         if (targetMonster != null)
         {
-            // 몬스터를 향해 이동할 때는 공격 범위를 고려
             Vector3 directionToTarget = (destination - transform.position).normalized;
             float attackRange = characterStats.GetStatValue(StatType.AttackRange);
 
-            // 공격 범위만큼 떨어진 위치로 이동
             Vector3 targetPosition = destination - (directionToTarget * attackRange);
             base.MoveTo(targetPosition);
         }

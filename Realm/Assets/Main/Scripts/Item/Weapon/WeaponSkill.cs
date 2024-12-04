@@ -4,11 +4,8 @@ using System.Collections;
 public abstract class WeaponSkill : Skill
 {
     protected WeaponHolder weaponHolder;
-    protected Collider weaponCollider;
     protected Player player;
     protected ICharacterStats playerStats;
-    protected bool isAttacking = false;
-    public bool IsAttacking => isAttacking;
 
     [Header("Weapon Settings")]
     [SerializeField] protected float attackAngle = 90f;
@@ -21,43 +18,38 @@ public abstract class WeaponSkill : Skill
         {
             playerStats = player.GetComponent<ICharacterStats>();
             weaponHolder = player.GetComponent<WeaponHolder>();
-
-            if (weaponHolder != null)
-            {
-                var collider = weaponHolder.GetWeaponComponents();
-                weaponCollider = collider;
-            }
-        }
-    }
-
-    // Ⱑ ü ȣ
-    public virtual void UpdateWeaponComponents()
-    {
-        if (weaponHolder != null)
-        {
-            var collider = weaponHolder.GetWeaponComponents();
-            weaponCollider = collider;
         }
     }
 
     public override bool TryUseSkill()
     {
+        if (!CanUseSkill()) return false;
+
         UseSkill();
+        return true;
+    }
+
+    protected virtual bool CanUseSkill()
+    {
+        if (player == null || !player.IsAlive) return false;
+
+        // 기본 공격의 경우 대상이 있어야 함
+        if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
+        {
+            return player.TargetMonster != null;
+        }
 
         return true;
     }
 
-    public override IEnumerator UseSkillWithDelay()
+    protected virtual float GetAttackDelay()
     {
+        // 기본 공격의 경우 공격 속도 적용
         if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
         {
-            yield return new WaitForSeconds(0.3f / GetPlayerAttackSpeed());
+            return 1f / GetPlayerAttackSpeed();
         }
-        else
-        {
-            yield return new WaitForSeconds(0.3f);
-        }
-        UseSkill();
+        return 0.3f;
     }
 
     protected float GetPlayerDamage()
