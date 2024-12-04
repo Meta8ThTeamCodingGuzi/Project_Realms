@@ -34,8 +34,8 @@ public class AreaSkill : Skill
             AreaEffectData areaData = new AreaEffectData()
             {
                 damage = areaSkillStat.GetStatValue<float>(SkillStatType.Damage),
-                duration = areaSkillStat.GetStatValue<float>(SkillStatType.Duration),
                 areaScale = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnScale),
+                duration = areaSkillStat.GetStatValue<float>(SkillStatType.Duration)
             };
 
             SpawnArea(areaData);

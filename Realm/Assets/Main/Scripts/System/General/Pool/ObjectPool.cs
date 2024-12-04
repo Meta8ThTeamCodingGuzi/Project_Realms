@@ -15,7 +15,7 @@ public class ObjectPool : MonoBehaviour
     private const int EXPAND_SIZE = 10;
     private const int MAX_POOL_SIZE = 100;
     private const float CLEANUP_INTERVAL = 60f;
-    private const float UNUSED_THRESHOLD = 300f;
+    private const float UNUSED_THRESHOLD = 10f;
 
     [System.Serializable]
     private class PoolStats
@@ -153,7 +153,6 @@ public class ObjectPool : MonoBehaviour
             {
                 CreateNewObjectInPool(tag, poolDictionary[tag]);
             }
-            Debug.Log($"Created new pool for {tag}");
         }
 
         Queue<Component> pool = poolDictionary[tag];
@@ -164,7 +163,6 @@ public class ObjectPool : MonoBehaviour
             {
                 CreateNewObjectInPool(tag, pool);
             }
-            Debug.Log($"Expanded pool {tag} by {EXPAND_SIZE}");
         }
 
         Component obj = pool.Dequeue();

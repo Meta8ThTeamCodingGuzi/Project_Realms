@@ -72,34 +72,47 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!IsInventorySlot || slot.IsEmpty()) return;
+        if (slot.IsEmpty()) return;
 
-        foreach (Slot equipSlot in inventory.EquipmentSlots)
+        if (IsInventorySlot)
         {
-            if (equipSlot.CanAcceptItem(slot.Item))
+            // 인벤토리 슬롯 클릭 시 - 장비 장착 로직
+            foreach (Slot equipSlot in inventory.EquipmentSlots)
             {
-                if (equipSlot.IsEmpty())
+                if (equipSlot.CanAcceptItem(slot.Item))
                 {
-                    Item itemToEquip = slot.Item;
-                    slot.ClearSlot();
-                    equipSlot.PlaceItem(itemToEquip);
-                }
-                else
-                {
-                    Item equippedItem = equipSlot.Item;
-                    Item inventoryItem = slot.Item;
+                    if (equipSlot.IsEmpty())
+                    {
+                        Item itemToEquip = slot.Item;
+                        slot.ClearSlot();
+                        equipSlot.PlaceItem(itemToEquip);
+                    }
+                    else
+                    {
+                        Item equippedItem = equipSlot.Item;
+                        Item inventoryItem = slot.Item;
 
-                    slot.ClearSlot();
-                    equipSlot.ClearSlot();
+                        slot.ClearSlot();
+                        equipSlot.ClearSlot();
 
-                    equipSlot.PlaceItem(inventoryItem);
-                    slot.PlaceItem(equippedItem);
-                }
+                        equipSlot.PlaceItem(inventoryItem);
+                        slot.PlaceItem(equippedItem);
+                    }
 
-                if (IsInventorySlot)
                     inventory.CompactInventory();
-
-                break;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // 장비 슬롯 클릭 시 - 장비 해제 로직
+            if (inventory.HasFreeInventorySpace())
+            {
+                Item unequippedItem = slot.Item;  // 먼저 아이템 참조를 저장
+                slot.ClearSlot();                 // 슬롯 비우기
+                inventory.TryAddItem(unequippedItem);  // 저장해둔 아이템 참조 사용
+                inventory.CompactInventory();
             }
         }
     }

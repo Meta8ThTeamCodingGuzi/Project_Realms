@@ -58,13 +58,11 @@ public abstract class Skill : MonoBehaviour
             float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
             if (IsOnCooldown)
             {
-                Debug.Log($"스킬이 쿨다운 중입니다. 남은 시간: {currentCooldown:F1}초");
                 return false;
             }
 
             if (GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Mana) < costmana)
             {
-                Debug.Log("마나가 부족합니다");
                 return false;
             }
 

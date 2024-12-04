@@ -1,12 +1,12 @@
-using UnityEngine;
+癤퓎sing UnityEngine;
 using System.Collections;
 
 public abstract class WeaponSkill : Skill
 {
     protected WeaponHolder weaponHolder;
-    protected Collider weaponCollider;
     protected Player player;
     protected ICharacterStats playerStats;
+    protected bool isAttackInProgress = false;
 
     [Header("Weapon Settings")]
     [SerializeField] protected float attackAngle = 90f;
@@ -19,43 +19,40 @@ public abstract class WeaponSkill : Skill
         {
             playerStats = player.GetComponent<ICharacterStats>();
             weaponHolder = player.GetComponent<WeaponHolder>();
-
-            if (weaponHolder != null)
-            {
-                var collider = weaponHolder.GetWeaponComponents();
-                weaponCollider = collider;
-            }
-        }
-    }
-
-    // 무기가 교체될 때 호출
-    public virtual void UpdateWeaponComponents()
-    {
-        if (weaponHolder != null)
-        {
-            var collider = weaponHolder.GetWeaponComponents();
-            weaponCollider = collider;
         }
     }
 
     public override bool TryUseSkill()
     {
+        Debug.Log($"[WeaponSkill] TryUseSkill called");
+        if (!CanUseSkill()) return false;
+        if (isAttackInProgress) return false;
+
+        isAttackInProgress = true;
         UseSkill();
+        return true;
+    }
+
+    protected virtual bool CanUseSkill()
+    {
+        Debug.Log($"[WeaponSkill] CanUseSkill check");
+        if (player == null || !player.IsAlive) return false;
+
+        if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
+        {
+            return player.TargetMonster != null;
+        }
 
         return true;
     }
 
-    public override IEnumerator UseSkillWithDelay()
+    protected virtual float GetAttackDelay()
     {
         if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
         {
-            yield return new WaitForSeconds(0.3f / GetPlayerAttackSpeed());
+            return 1f / GetPlayerAttackSpeed();
         }
-        else
-        {
-            yield return new WaitForSeconds(0.3f);
-        }
-        UseSkill();
+        return 0.3f;
     }
 
     protected float GetPlayerDamage()
@@ -71,5 +68,10 @@ public abstract class WeaponSkill : Skill
     protected float GetAttackRange()
     {
         return playerStats?.GetStatValue(StatType.AttackRange) ?? 2f;
+    }
+
+    protected void OnAttackComplete()
+    {
+        isAttackInProgress = false;
     }
 }

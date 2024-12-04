@@ -20,11 +20,6 @@ public class BowSkill : WeaponSkill
         UpdateArrowSpawnPoint();
     }
 
-    public override void UpdateWeaponComponents()
-    {
-        base.UpdateWeaponComponents();
-        UpdateArrowSpawnPoint();
-    }
 
     private void UpdateArrowSpawnPoint()
     {

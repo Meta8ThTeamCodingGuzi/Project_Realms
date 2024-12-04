@@ -4,12 +4,10 @@ using System.Collections.Generic;
 
 public class SwordSkill : WeaponSkill
 {
-    private bool isAttacking = false;
-    private float baseAttackDuration = 1f;
 
     protected override void UseSkill()
     {
-        if (isAttacking) return;
+        Debug.Log("[SwordSkill] UseSkill called");
 
         Monster targetMonster = player.TargetMonster;
         if (targetMonster != null)
@@ -19,9 +17,10 @@ public class SwordSkill : WeaponSkill
 
             if (distanceToTarget <= attackRange)
             {
+                Debug.Log("[SwordSkill] Setting Attack trigger");
                 player.StopMoving();
-                player.PlayerAnimator.SetTrigger("Attack");
                 player.transform.LookAt(targetMonster.transform);
+                player.PlayerAnimator.SetTrigger("Attack");
                 StartCoroutine(SwordAttackRoutine());
             }
         }
@@ -29,13 +28,29 @@ public class SwordSkill : WeaponSkill
 
     private IEnumerator SwordAttackRoutine()
     {
-        isAttacking = true;
+        // 애니메이션이 시작될 때까지 대기
+        while (!player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            yield return null;
+        }
 
-        yield return new WaitForSeconds(0.2f);
+        // 애니메이션의 특정 지점까지 대기
+        while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.4f)
+        {
+            yield return null;
+        }
 
+        // 데미지 적용
         PerformSectorAttack();
 
-        isAttacking = false;
+        // 애니메이션이 완료될 때까지 대기
+        while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.97f)
+        {
+            yield return null;
+        }
+
+        // 공격 완료 상태로 설정
+        OnAttackComplete();
     }
 
     private void PerformSectorAttack()
@@ -49,7 +64,6 @@ public class SwordSkill : WeaponSkill
         foreach (Collider collider in hitColliders)
         {
             Vector3 directionToTarget = (collider.transform.position - playerPosition).normalized;
-
             float angle = Vector3.Angle(forward, directionToTarget);
 
             if (angle <= attackAngle / 2)

@@ -24,7 +24,6 @@ public abstract class SkillStat : MonoBehaviour
 
     public virtual void InitializeStats()
     {
-        print("스킬 스탯 초기화 호출");
 
         skillStats.Clear();
         var initialStats = GetInitialStats();
@@ -40,7 +39,7 @@ public abstract class SkillStat : MonoBehaviour
                     (int)statInit.GrowthValue,
                     statInit.GrowthRate
                 );
-                print($"{statInit.Type} 스탯 초기화: {(int)statInit.BaseValue} (정수)");
+                //print($"{statInit.Type} 스탯 초기화: {(int)statInit.BaseValue} (정수)");
             }
             else
             {
@@ -49,7 +48,7 @@ public abstract class SkillStat : MonoBehaviour
                     statInit.GrowthValue,
                     statInit.GrowthRate
                 );
-                print($"{statInit.Type} 스탯 초기화: {statInit.BaseValue} (실수)");
+                //print($"{statInit.Type} 스탯 초기화: {statInit.BaseValue} (실수)");
             }
         }
 

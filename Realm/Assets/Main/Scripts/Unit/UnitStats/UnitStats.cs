@@ -21,11 +21,11 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
         stats.Clear();
         var initialStats = GetInitialStats();
 
-        Debug.Log($"Initializing stats with {initialStats.Length} values");
+        //Debug.Log($"Initializing stats with {initialStats.Length} values");
 
         foreach (var statInit in initialStats)
         {
-            Debug.Log($"Initializing {statInit.Type} with base value {statInit.BaseValue}");
+            //Debug.Log($"Initializing {statInit.Type} with base value {statInit.BaseValue}");
             stats[statInit.Type] = new FloatStat(statInit.BaseValue, statInit.PointIncrease);
 
             if (statInit.Type == StatType.MaxHealth)
@@ -46,7 +46,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
             if (!stats.ContainsKey(statType))
             {
                 stats[statType] = new FloatStat(0f);
-                Debug.Log($" ü {statType} Ⱦΰ?");
+                //Debug.Log($"{statType}");
             }
         }
     }
@@ -57,7 +57,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
         {
             return (float)stat.Value;
         }
-        Debug.LogWarning($" {statType} !!!"); 
+        Debug.LogWarning($" {statType} 이 없는데 접근하려 합니다."); 
         return 0f;
     }
 
@@ -111,7 +111,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
         {
             return stat;
         }
-        Debug.Log($"Stat {statType} not found!");
+        Debug.Log($"Stat {statType} 이 없는데 접근하려 합니다.");
         return null;
     }
 
@@ -125,7 +125,6 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
             return statInit.PointIncrease;
         }
 
-        Debug.LogWarning($"No point increase amount found for stat type {statType}");
         return 0f;
     }
 }
