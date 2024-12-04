@@ -7,6 +7,7 @@ public abstract class Skill : MonoBehaviour
     [SerializeField] public SkillData data;
     [SerializeField] public SkillStat skillStat;
     [SerializeField] private AnimationClip animaClip;
+    protected bool isSkillInProgress = false;
 
     private float currentCooldown = 0f;
 
@@ -52,7 +53,7 @@ public abstract class Skill : MonoBehaviour
 
     public virtual bool TryUseSkill()
     {
-        if(data.skillID != SkillID.BasicSwordAttack) 
+        if (data.skillID != SkillID.BasicSwordAttack)
         {
             float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
             if (IsOnCooldown)
@@ -68,23 +69,20 @@ public abstract class Skill : MonoBehaviour
             }
 
             GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
-            if (animaClip != null && !IsCurrentAnimation(animaClip))
+            if (animaClip != null)
             {
                 GameManager.Instance.player.PlayerAnimController.Clipchange(animaClip);
+                StartCoroutine(SkillSequenceTimer());
             }
 
-            var currentState = GameManager.Instance.player.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
-            if (currentState.normalizedTime >= 0.9f || !currentState.IsName("Attack"))
-            {
-                GameManager.Instance.player.PlayerAnimator.SetFloat("AttackSpeed",
-                    GameManager.Instance.player.CharacterStats.GetStatValue(StatType.AttackSpeed) / 2f);
-                GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
-            }
+            //TODO : 마이크로컨트롤
+            GameManager.Instance.player.PlayerAnimator.SetFloat("AttackSpeed",
+                5f);
+            GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
         }
 
-        StartCoroutine(UseSkillWithDelay());
+        UseSkill();
 
-        // 쿨다운이 0보다 큰 경우에만 쿨다운 시작
         if (TotalCooldown > 0)
         {
             StartCooldown();
@@ -92,13 +90,28 @@ public abstract class Skill : MonoBehaviour
 
         return true;
     }
+
+    protected IEnumerator SkillSequenceTimer()
+    {
+        isSkillInProgress = true;
+
+        float animationSpeed = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.AttackSpeed) / 2f;
+        float actualDuration = animaClip.length / animationSpeed;
+
+        yield return new WaitForSeconds(actualDuration);
+
+        isSkillInProgress = false;
+    }
+
+    public bool IsSkillInProgress => isSkillInProgress;
+
     private bool IsCurrentAnimation(AnimationClip clip)
     {
         var currentClip = GameManager.Instance.player.PlayerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip;
         return currentClip == clip;
     }
 
-    public virtual IEnumerator UseSkillWithDelay() 
+    public virtual IEnumerator UseSkillWithDelay()
     {
         yield return new WaitForSeconds(0.3f);
         UseSkill();

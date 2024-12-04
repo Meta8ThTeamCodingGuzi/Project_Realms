@@ -22,7 +22,11 @@ public enum SkillID
 {
     BasicSwordAttack,
     BasicBowAttack,
-    TestSkill
+    TestSkill,
+    Test1,
+    Test2,
+    Test3,
+    Test4,
 }
 public enum SkillStatType
 {

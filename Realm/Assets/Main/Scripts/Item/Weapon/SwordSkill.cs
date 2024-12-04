@@ -1,16 +1,29 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SwordSkill : WeaponSkill
 {
     private bool isAttacking = false;
-    private float baseAttackDuration = 1f;  // 기본 공격 지속시간
+    private float baseAttackDuration = 1f;
 
     protected override void UseSkill()
     {
-        if (!isAttacking)  // 이전 공격이 끝났을 때만 새로운 공격 시작
+        if (isAttacking) return;
+
+        Monster targetMonster = player.TargetMonster;
+        if (targetMonster != null)
         {
-            StartCoroutine(SwordAttackRoutine());
+            float distanceToTarget = Vector3.Distance(transform.position, targetMonster.transform.position);
+            float attackRange = GetAttackRange();
+
+            if (distanceToTarget <= attackRange)
+            {
+                player.StopMoving();
+                player.PlayerAnimator.SetTrigger("Attack");
+                player.transform.LookAt(targetMonster.transform);
+                StartCoroutine(SwordAttackRoutine());
+            }
         }
     }
 
@@ -18,29 +31,62 @@ public class SwordSkill : WeaponSkill
     {
         isAttacking = true;
 
-        if (weaponCollider != null) weaponCollider.enabled = true;
-        if (weaponTrail != null) weaponTrail.enabled = true;
+        yield return new WaitForSeconds(0.2f);
 
-        // 공격 속도에 따른 지속시간 계산
-        float attackDuration = baseAttackDuration / GetPlayerAttackSpeed();
-        yield return new WaitForSeconds(attackDuration);
+        PerformSectorAttack();
 
-        if (weaponCollider != null) weaponCollider.enabled = false;
-        if (weaponTrail != null) weaponTrail.enabled = false;
-        print("소드스킬 호출");
         isAttacking = false;
     }
 
-    protected override void OnWeaponHit(Collider other)
+    private void PerformSectorAttack()
     {
-        if (((1 << other.gameObject.layer) & targetLayer) != 0)
+        Vector3 playerPosition = transform.position;
+        Vector3 forward = player.transform.forward;
+        float attackRange = GetAttackRange();
+
+        Collider[] hitColliders = Physics.OverlapSphere(playerPosition, attackRange, targetLayer);
+
+        foreach (Collider collider in hitColliders)
         {
-            if (other.TryGetComponent<Monster>(out Monster monster))
+            Vector3 directionToTarget = (collider.transform.position - playerPosition).normalized;
+
+            float angle = Vector3.Angle(forward, directionToTarget);
+
+            if (angle <= attackAngle / 2)
             {
-                float totalDamage = GetPlayerDamage() *
-                    (1 + skillStat.GetStatValue<float>(SkillStatType.Damage) / 100f);
-                monster.TakeDamage(totalDamage);
+                if (collider.TryGetComponent<Monster>(out Monster monster))
+                {
+                    float totalDamage = GetPlayerDamage();
+                    monster.TakeDamage(totalDamage);
+                }
             }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (player == null) return;
+
+        Vector3 position = transform.position;
+        Vector3 forward = transform.forward;
+        float range = GetAttackRange();
+
+        Gizmos.color = Color.red;
+
+        int segments = 20;
+        float angleStep = attackAngle / segments;
+        Vector3 previousPoint = position + Quaternion.Euler(0, -attackAngle / 2, 0) * forward * range;
+
+        for (int i = 0; i <= segments; i++)
+        {
+            float currentAngle = (-attackAngle / 2) + (angleStep * i);
+            Vector3 currentPoint = position + Quaternion.Euler(0, currentAngle, 0) * forward * range;
+
+            Gizmos.DrawLine(position, currentPoint);
+            if (i > 0)
+                Gizmos.DrawLine(previousPoint, currentPoint);
+
+            previousPoint = currentPoint;
         }
     }
 }

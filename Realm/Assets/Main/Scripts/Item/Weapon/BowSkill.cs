@@ -137,8 +137,4 @@ public class BowSkill : WeaponSkill
         }
     }
 
-    protected override void OnWeaponHit(Collider other)
-    {
-        // 활은 발사체로 처리
-    }
 }

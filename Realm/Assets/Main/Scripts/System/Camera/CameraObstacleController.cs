@@ -39,7 +39,6 @@ public class CameraObstacleController : MonoBehaviour, IInitializable
         {
             Vector3 directionToPlayer = (playerTarget.transform.position - rayPos.position).normalized;
             Ray ray = new Ray(rayPos.position, directionToPlayer);
-            Debug.DrawRay(ray.origin, directionToPlayer * rayDistance, Color.red);
             ProcessRaycast(ray);
         }
     }

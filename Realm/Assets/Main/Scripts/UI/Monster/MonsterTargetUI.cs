@@ -42,8 +42,6 @@ public class MonsterTargetUI : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 1f);
-
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, LayerMask.GetMask("Monster")))
         {
 

@@ -5,7 +5,6 @@ public abstract class WeaponSkill : Skill
 {
     protected WeaponHolder weaponHolder;
     protected Collider weaponCollider;
-    protected TrailRenderer weaponTrail;
     protected Player player;
     protected ICharacterStats playerStats;
 
@@ -23,9 +22,8 @@ public abstract class WeaponSkill : Skill
 
             if (weaponHolder != null)
             {
-                var (collider, trail) = weaponHolder.GetWeaponComponents();
+                var collider = weaponHolder.GetWeaponComponents();
                 weaponCollider = collider;
-                weaponTrail = trail;
             }
         }
     }
@@ -35,21 +33,16 @@ public abstract class WeaponSkill : Skill
     {
         if (weaponHolder != null)
         {
-            var (collider, trail) = weaponHolder.GetWeaponComponents();
+            var collider = weaponHolder.GetWeaponComponents();
             weaponCollider = collider;
-            weaponTrail = trail;
         }
     }
 
     public override bool TryUseSkill()
     {
-        if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
-        {
-            StartCoroutine(UseSkillWithDelay());
-            return true;
-        }
+        UseSkill();
 
-        return base.TryUseSkill();
+        return true;
     }
 
     public override IEnumerator UseSkillWithDelay()
@@ -79,6 +72,4 @@ public abstract class WeaponSkill : Skill
     {
         return playerStats?.GetStatValue(StatType.AttackRange) ?? 2f;
     }
-
-    protected abstract void OnWeaponHit(Collider other);
 }

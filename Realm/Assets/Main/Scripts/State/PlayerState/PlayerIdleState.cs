@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerIdleState : State<Player>
 {
-    //private float IdleTime = 0f;
 
     public PlayerIdleState(Player target) : base(target)
     {
@@ -15,13 +15,11 @@ public class PlayerIdleState : State<Player>
     public override void OnEnter()
     {
         target.StopMoving();
-        //IdleTime = 0f;
         base.OnEnter();
     }
 
     public override void OnExit()
     {
-        //IdleTime = 0f;
         base.OnExit();
     }
 
@@ -32,7 +30,6 @@ public class PlayerIdleState : State<Player>
             target.PlayerHandler.TransitionTo(new PlayerDieState(target));
             return;
         }
-        AnimatorStateInfo currentState = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
 
         if (target.wasAttacked)
         {
@@ -46,21 +43,41 @@ public class PlayerIdleState : State<Player>
             return;
         }
 
-        target.MovetoCursor();
-        if(target.TargetMonster != null && target.CanAttack(target.TargetMonster))
+        if (Input.GetMouseButton(0))
         {
-            target.skillController.OnMouseCilck();
-            target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
-        }
-        if (target.TargetPos != Vector3.zero)
-        {
-            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
-            return;
-        }
-        else if (target.TargetMonster != null)
-        {
-            target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
-        }
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                return;
 
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.TryGetComponent<Monster>(out Monster monster))
+                {
+                    target.SetTarget(monster);
+
+                    float distanceToTarget = Vector3.Distance(target.transform.position, monster.transform.position);
+                    float attackRange = target.CharacterStats.GetStatValue(StatType.AttackRange);
+
+                    if (distanceToTarget <= attackRange)
+                    {
+                        target.skillController.OnMouseClick();
+                        target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
+                    }
+                    else
+                    {
+                        target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+                    }
+                    return;
+                }
+            }
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, target.GroundLayer))
+            {
+                target.SetDestination(hit.point);
+                target.PlayerHandler.TransitionTo(new PlayerMoveState(target));
+            }
+        }
     }
 }

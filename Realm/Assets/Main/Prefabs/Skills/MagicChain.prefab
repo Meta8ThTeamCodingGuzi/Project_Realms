@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 190125308229457458}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.57, y: 5.01, z: 85.608696}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 6048696843086911448}
-  skillStat: {fileID: 0}
+  skillStat: {fileID: 86021560679512469}
   animaClip: {fileID: -203655887218126122, guid: 37251f406784c044e92c7efc93f8ffd1, type: 3}
   areaPrefab: {fileID: 4818918737149278404, guid: 9d0201bb4d9eb284092cab8939f8b873, type: 3}
   spawnPoint: {x: 0, y: 0, z: 0}
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillIcon: {fileID: 21300000, guid: ee1dbff151266ee46a3efd85476f1e8e, type: 3}
-  skillID: 2
+  skillID: 4
 --- !u!114 &86021560679512469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialStats:
   - Type: 2
-    BaseValue: 5
+    BaseValue: 900
     GrowthValue: 0
     growthPercent: 0
   - Type: 1
@@ -111,14 +111,14 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 21
-    BaseValue: 0
+    BaseValue: 1
     GrowthValue: 0
     growthPercent: 0
   - Type: 0
-    BaseValue: 0
+    BaseValue: 1
     GrowthValue: 0
     growthPercent: 0
   - Type: 4
-    BaseValue: 3
+    BaseValue: 0.5
     GrowthValue: 0
     growthPercent: 0

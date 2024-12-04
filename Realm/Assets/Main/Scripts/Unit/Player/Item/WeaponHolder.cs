@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -35,7 +36,6 @@ public class WeaponHolder : MonoBehaviour
 
     private GameObject currentWeaponObject;
     private Collider weaponCollider;
-    private TrailRenderer weaponTrail;
     private ItemType currentWeaponType;
     private WeaponIKSetup currentIKSetup;
 
@@ -98,7 +98,6 @@ public class WeaponHolder : MonoBehaviour
             }
 
             weaponCollider = currentWeaponObject.GetComponentInChildren<Collider>();
-            weaponTrail = currentWeaponObject.GetComponentInChildren<TrailRenderer>();
         }
     }
 
@@ -120,7 +119,6 @@ public class WeaponHolder : MonoBehaviour
             Destroy(currentWeaponObject);
             currentWeaponObject = null;
             weaponCollider = null;
-            weaponTrail = null;
             currentWeaponType = ItemType.None;
             currentIKSetup = null;
         }
@@ -140,11 +138,12 @@ public class WeaponHolder : MonoBehaviour
         weaponRig.weight = targetWeight;
     }
 
-    public (Collider collider, TrailRenderer trail) GetWeaponComponents()
+    public Collider GetWeaponComponents()
     {
-        return (weaponCollider, weaponTrail);
+        return (weaponCollider);
     }
 
+#if UNITY_EDITOR
     private void OnGUI()
     {
         if (!showDebugControls || currentIKSetup == null) return;
@@ -281,4 +280,5 @@ public class WeaponHolder : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, transform.forward * size);
     }
+#endif
 }

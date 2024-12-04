@@ -38,7 +38,7 @@ public class PlayerAnimatorController : MonoBehaviour
     }
 
 
-    public void Clipchange( AnimationClip animationClip)
+    public void Clipchange(AnimationClip animationClip)
     {
         if (currentController == null ||
             currentController.runtimeAnimatorController != GameManager.Instance.player.PlayerAnimator.runtimeAnimatorController)
@@ -49,7 +49,6 @@ public class PlayerAnimatorController : MonoBehaviour
         if (animationClip != null)
         {
             currentController["Attack"] = animationClip;
-            Debug.Log($"Changed animation clip to: {animationClip.name}");
         }
     }
 }
