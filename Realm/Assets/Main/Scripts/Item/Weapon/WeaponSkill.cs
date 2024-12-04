@@ -6,6 +6,7 @@ public abstract class WeaponSkill : Skill
     protected WeaponHolder weaponHolder;
     protected Player player;
     protected ICharacterStats playerStats;
+    protected bool isAttackInProgress = false;
 
     [Header("Weapon Settings")]
     [SerializeField] protected float attackAngle = 90f;
@@ -23,17 +24,20 @@ public abstract class WeaponSkill : Skill
 
     public override bool TryUseSkill()
     {
+        Debug.Log($"[WeaponSkill] TryUseSkill called");
         if (!CanUseSkill()) return false;
+        if (isAttackInProgress) return false;
 
+        isAttackInProgress = true;
         UseSkill();
         return true;
     }
 
     protected virtual bool CanUseSkill()
     {
+        Debug.Log($"[WeaponSkill] CanUseSkill check");
         if (player == null || !player.IsAlive) return false;
 
-        // 기본 공격의 경우 대상이 있어야 함
         if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
         {
             return player.TargetMonster != null;
@@ -44,7 +48,6 @@ public abstract class WeaponSkill : Skill
 
     protected virtual float GetAttackDelay()
     {
-        // 기본 공격의 경우 공격 속도 적용
         if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
         {
             return 1f / GetPlayerAttackSpeed();
@@ -65,5 +68,10 @@ public abstract class WeaponSkill : Skill
     protected float GetAttackRange()
     {
         return playerStats?.GetStatValue(StatType.AttackRange) ?? 2f;
+    }
+
+    protected void OnAttackComplete()
+    {
+        isAttackInProgress = false;
     }
 }

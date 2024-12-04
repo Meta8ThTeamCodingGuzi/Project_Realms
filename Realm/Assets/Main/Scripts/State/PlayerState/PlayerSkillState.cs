@@ -16,14 +16,12 @@ public class PlayerSkillState : State<Player>
 
     public override void OnEnter()
     {
-        Debug.Log("PlayerSkillState.OnEnter");
         target.StopMoving();
         isSkillComplete = false;
         isSkillPlaying = true;
 
         if (target.TargetMonster != null)
         {
-            Debug.Log("Trying to use skill from SkillState");
             target.skillController.TryUseSkillByKey(KeyCode.Mouse0);
         }
     }

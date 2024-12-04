@@ -7,7 +7,7 @@ public class SwordSkill : WeaponSkill
 
     protected override void UseSkill()
     {
-        Debug.Log("SwordSkill.UseSkill called");
+        Debug.Log("[SwordSkill] UseSkill called");
 
         Monster targetMonster = player.TargetMonster;
         if (targetMonster != null)
@@ -17,7 +17,7 @@ public class SwordSkill : WeaponSkill
 
             if (distanceToTarget <= attackRange)
             {
-                Debug.Log("Setting Attack trigger");
+                Debug.Log("[SwordSkill] Setting Attack trigger");
                 player.StopMoving();
                 player.transform.LookAt(targetMonster.transform);
                 player.PlayerAnimator.SetTrigger("Attack");
@@ -42,6 +42,15 @@ public class SwordSkill : WeaponSkill
 
         // 데미지 적용
         PerformSectorAttack();
+
+        // 애니메이션이 완료될 때까지 대기
+        while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.97f)
+        {
+            yield return null;
+        }
+
+        // 공격 완료 상태로 설정
+        OnAttackComplete();
     }
 
     private void PerformSectorAttack()
