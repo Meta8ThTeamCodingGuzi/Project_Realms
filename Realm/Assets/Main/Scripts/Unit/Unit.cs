@@ -76,11 +76,11 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
                     lastAttackTime = currentTime;
                 }
             }
-            else
-            {
-                // 대상이 공격 범위를 벗어났을 경우
-                MoveTo(target.transform.position);
-            }
+            //else
+            //{
+            //    // 대상이 공격 범위를 벗어났을 경우
+            //    MoveTo(target.transform.position);
+            //}
 
             yield return new WaitForSeconds(0.1f);
         }

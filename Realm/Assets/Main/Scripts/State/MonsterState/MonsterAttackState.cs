@@ -12,14 +12,13 @@ public class MonsterAttackState : State<Monster>
 
     public override void OnEnter()
     {
-        target.Attack(target.targetPlayer);
         target.StopMoving();
-        target.M_Animator.SetTrigger("Attack");
+        target.Attack(target.targetPlayer);
     }
 
     public override void OnExit()
     {
-        target.StopAttack();
+        
     }
 
     public override void OnUpdate()

@@ -3357,7 +3357,7 @@ Animator:
   m_GameObject: {fileID: 7967740956367972048}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: aa19438d32e37614eb4d2df20e144d1e, type: 3}
-  m_Controller: {fileID: 9100000, guid: 9bb0f59c79348bf4684f2cd15c9ed91c, type: 2}
+  m_Controller: {fileID: 9100000, guid: d7be7797c507f96438da1aa39f4e31d2, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3441,9 +3441,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1276356603850641267}
-  - component: {fileID: 1277533238191318732}
   - component: {fileID: 3993120601059748256}
+  - component: {fileID: 1277533238191318732}
   - component: {fileID: 1158549471176475299}
+  - component: {fileID: 6102507406504879975}
+  - component: {fileID: 7648872008552318114}
   m_Layer: 0
   m_Name: Bee Red
   m_TagString: Untagged
@@ -3468,29 +3470,6 @@ Transform:
   - {fileID: 5228333112216581255}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1277533238191318732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8372143632925090849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetPlayer: {fileID: 0}
-  setPatrolTransforms:
-  - {fileID: 6749294856859559959}
-  - {fileID: 2811884321649162627}
-  - {fileID: 308854323280911157}
-  - {fileID: 245660380009314491}
-  - {fileID: 3770346983317340875}
-  wasAttacked: 0
-  isattacked: 1
-  nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 5828352603561494906}
 --- !u!195 &3993120601059748256
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3513,6 +3492,31 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1277533238191318732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8372143632925090849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wasAttacked: 0
+  setPatrolTransforms:
+  - {fileID: 6749294856859559959}
+  - {fileID: 2811884321649162627}
+  - {fileID: 308854323280911157}
+  - {fileID: 245660380009314491}
+  - {fileID: 3770346983317340875}
+  isattacked: 1
+  expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
+  nowTarget: {x: 0, y: 0, z: 0}
+  M_Animator: {fileID: 5828352603561494906}
+  monsterDieParticle: {fileID: 198475560534896312, guid: d61b742e329cf58468e2c16c35be0ce4, type: 3}
+  monsterType: 0
 --- !u!114 &1158549471176475299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3529,27 +3533,77 @@ MonoBehaviour:
   - Type: 0
     BaseValue: 1
     PointIncrease: 0
-  - Type: 7
-    BaseValue: 4
+  - Type: 9
+    BaseValue: 7
     PointIncrease: 0.2
-  - Type: 6
+  - Type: 8
     BaseValue: 10
     PointIncrease: 2
-  - Type: 11
+  - Type: 13
     BaseValue: 20
     PointIncrease: 3
-  - Type: 8
-    BaseValue: 1.5
-    PointIncrease: 0
-  - Type: 9
+  - Type: 10
     BaseValue: 2
     PointIncrease: 0
-  - Type: 5
+  - Type: 11
+    BaseValue: 2
+    PointIncrease: 0
+  - Type: 7
     BaseValue: 50
     PointIncrease: 20
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
+--- !u!136 &6102507406504879975
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8372143632925090849}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.36989212
+  m_Height: 1.3000951
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.57489085, z: 0}
+--- !u!54 &7648872008552318114
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8372143632925090849}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8493952943090212164
 GameObject:
   m_ObjectHideFlags: 0

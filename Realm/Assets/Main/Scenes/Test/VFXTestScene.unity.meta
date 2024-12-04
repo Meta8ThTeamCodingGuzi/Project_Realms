@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Realm/Assets/Main/Prefabs/Unit/Player/TestPlayer 1.prefab.meta
+guid: 5e52fb3d7af8afd47a8a89077e4712f6
+PrefabImporter:
+========
 guid: 90e4b3987d8a4934ab0fc8cc27bf5af0
 DefaultImporter:
+>>>>>>>> main:Realm/Assets/Main/Scenes/Test/VFXTestScene.unity.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
