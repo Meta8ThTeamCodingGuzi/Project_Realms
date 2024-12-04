@@ -33,6 +33,12 @@ public class PlayerInputManager : MonoBehaviour
     {
         if (!player.IsAlive || isHandlingInput) return;
 
+        if (player.skillController.CurrentSkill != null &&
+            player.skillController.CurrentSkill.IsSkillInProgress)
+        {
+            return;
+        }
+
         isHandlingInput = true;
         try
         {
@@ -108,7 +114,6 @@ public class PlayerInputManager : MonoBehaviour
 
             if (distanceToTarget <= attackRange)
             {
-                Debug.Log("Transitioning to SkillState from HandleMonsterClick");
                 player.PlayerHandler.TransitionTo(new PlayerSkillState(player));
             }
             else

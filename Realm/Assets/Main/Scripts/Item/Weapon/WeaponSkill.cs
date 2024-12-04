@@ -24,18 +24,14 @@ public abstract class WeaponSkill : Skill
 
     public override bool TryUseSkill()
     {
-        Debug.Log($"[WeaponSkill] TryUseSkill called");
         if (!CanUseSkill()) return false;
         if (isAttackInProgress) return false;
-
-        isAttackInProgress = true;
         UseSkill();
         return true;
     }
 
     protected virtual bool CanUseSkill()
     {
-        Debug.Log($"[WeaponSkill] CanUseSkill check");
         if (player == null || !player.IsAlive) return false;
 
         if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
@@ -72,6 +68,7 @@ public abstract class WeaponSkill : Skill
 
     protected void OnAttackComplete()
     {
-        isAttackInProgress = false;
+        isSkillInProgress = false;
+        player.PlayerAnimator.SetTrigger("Idle");
     }
 }
