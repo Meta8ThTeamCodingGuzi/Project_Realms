@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Buffers;
 
 public abstract class WeaponSkill : Skill
 {
@@ -12,7 +13,7 @@ public abstract class WeaponSkill : Skill
     [SerializeField] protected float attackAngle = 90f;
     [SerializeField] protected LayerMask targetLayer;
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
         player = GetComponentInParent<Player>();
         if (player != null)
@@ -69,6 +70,6 @@ public abstract class WeaponSkill : Skill
     protected void OnAttackComplete()
     {
         isSkillInProgress = false;
-        player.PlayerAnimator.SetTrigger("Idle");
+        player.Animator.SetTrigger("Idle");
     }
 }

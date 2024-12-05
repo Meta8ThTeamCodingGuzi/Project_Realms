@@ -71,7 +71,7 @@ public class Monster : Unit
 
         transform.localScale *= sizeMultiplier;
         
-        monsterSkill.Initialize();
+        monsterSkill.Initialize(this);
 
     }
     public void targetMove(Unit unit)

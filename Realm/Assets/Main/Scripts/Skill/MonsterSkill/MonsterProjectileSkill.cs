@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,9 +18,9 @@ public class MonsterProjectileSkill : ProjectileSkill
         print("필요없음");
     }
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
+        base.Initialize(owner);
         monster = GetComponent<Monster>();
     }
 

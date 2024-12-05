@@ -35,7 +35,7 @@ public class PlayerSkillState : State<Player>
 
     public override void OnUpdate()
     {
-        AnimatorStateInfo stateInfo = target.PlayerAnimator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo stateInfo = target.Animator.GetCurrentAnimatorStateInfo(0);
 
         if (stateInfo.IsName("Attack"))
         {

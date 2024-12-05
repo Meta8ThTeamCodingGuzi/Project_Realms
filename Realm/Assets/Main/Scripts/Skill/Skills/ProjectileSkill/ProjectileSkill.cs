@@ -7,22 +7,20 @@ public class ProjectileSkill : Skill
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform firePoint;
     private ProjectileSkillStat projectileStats;
-    private Player player;
-    private Monster monster;
 
-    public virtual void Start()
+    public void Start()
     {
         ValidateComponents();
     }
 
-    protected virtual void ValidateComponents()
+    private void ValidateComponents()
     {
         if (projectilePrefab == null)
         {
             Debug.LogError($"{gameObject.name}: projectilePrefab이 할당되지 않았습니다!");
         }
 
-        firePoint = GameObject.Find("FirePoint").transform;
+        firePoint = GameObject.Find("FirePoint")?.transform;
 
         if (firePoint == null)
         {
@@ -35,9 +33,10 @@ public class ProjectileSkill : Skill
         }
     }
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
+        base.Initialize(owner);
+
         if (skillStat != null)
         {
             projectileStats = (ProjectileSkillStat)skillStat;
@@ -47,8 +46,6 @@ public class ProjectileSkill : Skill
         {
             Debug.LogError($"{gameObject.name}: skillStat이 null입니다!");
         }
-        player = GetComponentInParent<Player>();
-        monster = GetComponent<Monster>();
     }
 
     protected override void UseSkill()
@@ -91,13 +88,9 @@ public class ProjectileSkill : Skill
 
         for (int i = 0; i < projectileCount; i++)
         {
-            if (player != null)
+            if (Owner != null)
             {
-                player.PlayerAnimator.SetTrigger("Attack");
-            }
-            else if (monster != null)
-            {
-                monster.M_Animator.SetTrigger("Attack");
+                Owner.Animator.SetTrigger("Attack");
             }
            FireProjectile(projectileData);
             if (innerInterval > 0 && i < projectileCount - 1)
@@ -106,7 +99,7 @@ public class ProjectileSkill : Skill
             }
         }
 
-        GameManager.Instance.player.PlayerAnimator.SetTrigger("Idle");
+        Owner.Animator.SetTrigger("Idle");
 
         isSkillInProgress = false;
     }

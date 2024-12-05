@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-public class MonsterChaosAttack : Skill
+public class MeleeAttack : Skill
 {
 
     [SerializeField] private LayerMask targetLayer;
@@ -16,8 +16,9 @@ public class MonsterChaosAttack : Skill
     private float monsterBoxScale;
 
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
+        base.Initialize(owner);
         monster = GetComponent<Monster>();
         if (monster != null)
         {

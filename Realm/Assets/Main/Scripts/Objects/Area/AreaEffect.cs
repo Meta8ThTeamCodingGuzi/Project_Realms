@@ -42,7 +42,6 @@ public class AreaEffect : MonoBehaviour
         {
             if (areaData.duration < durationTime) PoolManager.Instance.Despawn<AreaEffect>(this);
             Collider[] colliders = Physics.OverlapSphere(transform.position,areaData.areaScale);
-
             foreach (Collider collider in colliders)
             {
                 if (collider.TryGetComponent<Monster>(out Monster monster))

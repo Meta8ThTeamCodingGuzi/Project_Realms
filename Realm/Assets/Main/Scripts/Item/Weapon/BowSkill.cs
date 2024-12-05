@@ -14,9 +14,9 @@ public class BowSkill : WeaponSkill
     private bool isDrawing = false;
     private Coroutine drawRoutine;
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
+        base.Initialize(owner);
         UpdateArrowSpawnPoint();
     }
 
@@ -80,7 +80,7 @@ public class BowSkill : WeaponSkill
         }
 
         isSkillInProgress = false;
-        player.PlayerAnimator.SetTrigger("Idle");
+        player.Animator.SetTrigger("Idle");
         yield break;
     }
 

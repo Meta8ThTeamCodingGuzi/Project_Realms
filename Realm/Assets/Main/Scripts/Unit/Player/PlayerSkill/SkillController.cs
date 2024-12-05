@@ -34,7 +34,7 @@ public class SkillController : MonoBehaviour
         foreach (var skillPrefab in availableSkillPrefabs)
         {
             Skill instance = Instantiate(skillPrefab, transform);
-            instance.Initialize();
+            instance.Initialize(player);
             initializedSkills[skillPrefab.data.skillID] = instance;
         }
     }
@@ -68,7 +68,7 @@ public class SkillController : MonoBehaviour
         if (!availableSkillPrefabs.Contains(skill))
         {
             Skill instance = Instantiate(skill, transform);
-            instance.Initialize();
+            instance.Initialize(player);
             availableSkillPrefabs.Add(instance);
             initializedSkills[skill.data.skillID] = instance;
         }
@@ -203,7 +203,7 @@ public class SkillController : MonoBehaviour
 
         // 스킬 인스턴스 생성 및 초기화
         Skill instance = Instantiate(skillPrefab, transform);
-        instance.Initialize();
+        instance.Initialize(player);
 
         // 스킬을 바로 activeSkills에 추가하고 슬롯에 할당
         activeSkills.Add(instance);

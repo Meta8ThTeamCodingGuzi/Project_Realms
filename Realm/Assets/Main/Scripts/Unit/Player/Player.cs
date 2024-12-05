@@ -28,9 +28,6 @@ public class Player : Unit
 
     private StatPointSystem statPoint;
 
-    private Animator playerAnimator;
-    public Animator PlayerAnimator => playerAnimator;
-
     private PlayerAnimatorController playerAnimCon;
     public PlayerAnimatorController PlayerAnimController => playerAnimCon;
 
@@ -108,11 +105,11 @@ public class Player : Unit
             playerAnimCon = gameObject.AddComponent<PlayerAnimatorController>();
         }
 
-        playerAnimator = GetComponent<Animator>();
+        Animator = GetComponent<Animator>();
 
-        if (playerAnimator == null)
+        if (Animator == null)
         {
-            playerAnimator = gameObject.AddComponent<Animator>();
+            Animator = gameObject.AddComponent<Animator>();
         }
 
         playerHandler = new PlayerStateHandler(this);
@@ -136,7 +133,7 @@ public class Player : Unit
 
     public void PlayerAnimatorChange(RuntimeAnimatorController newAnimator)
     {
-        playerAnimator.runtimeAnimatorController = newAnimator;
+        Animator.runtimeAnimatorController = newAnimator;
     }
 
     #region 레벨 시스템
@@ -318,14 +315,14 @@ public class Player : Unit
 
     public IEnumerator DieRoutine()
     {
-        PlayerAnimator.SetTrigger("Die");
+        Animator.SetTrigger("Die");
 
-        while (!PlayerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        while (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
         {
             yield return null;
         }
 
-        while (PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
         {
             yield return null;
         }
