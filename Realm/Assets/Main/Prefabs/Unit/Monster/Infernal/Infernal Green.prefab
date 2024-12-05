@@ -331,7 +331,7 @@ MonoBehaviour:
   data: {fileID: 8552876911085801568}
   skillStat: {fileID: 2615285828035474339}
   animaClip: {fileID: 0}
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 2246292599717819007, guid: 82bf9ea283043f84aa03a6e4e12c4796, type: 3}
   firePoint: {fileID: 3773620611530119476}
 --- !u!114 &2615285828035474339
 MonoBehaviour:
@@ -10822,7 +10822,7 @@ Transform:
   m_GameObject: {fileID: 5677032836396442422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.059, y: 0.652, z: 1.901}
+  m_LocalPosition: {x: 0.859, y: 0.648, z: 0.457}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
