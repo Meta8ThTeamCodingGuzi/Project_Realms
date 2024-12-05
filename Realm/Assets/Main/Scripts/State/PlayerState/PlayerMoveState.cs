@@ -24,6 +24,12 @@ public class PlayerMoveState : State<Player>
 
     public override void OnUpdate()
     {
+        if (target.skillController.CurrentSkill != null &&
+            target.skillController.CurrentSkill.IsSkillInProgress)
+        {
+            return;
+        }
+
         if (target.wasAttacked)
         {
             target.PlayerHandler.TransitionTo(new PlayerTakeDamageState(target));

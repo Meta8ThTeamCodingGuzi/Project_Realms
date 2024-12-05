@@ -29,6 +29,8 @@ public class AreaSkill : Skill
         int spawnCount = Mathf.RoundToInt(areaSkillStat.GetStatValue<float>(SkillStatType.SpawnCount));
         float spawnInterval = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnInterval);
 
+        isSkillInProgress = true;
+        
         for (int i = 0; i < spawnCount; i++)
         {
             AreaEffectData areaData = new AreaEffectData()
@@ -45,6 +47,11 @@ public class AreaSkill : Skill
                 yield return new WaitForSeconds(spawnInterval);
             }
         }
+        
+        GameManager.Instance.player.PlayerAnimator.SetTrigger("Idle");
+
+        yield return new WaitForSeconds(0.3f);
+        isSkillInProgress = false;
     }
 
     private void SetSpawnPoint()

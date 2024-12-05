@@ -42,7 +42,6 @@ public class ProjectileSkill : Skill
         {
             projectileStats = (ProjectileSkillStat)skillStat;
             projectileStats.InitializeStats();
-           // Debug.Log($"{gameObject.name}: ProjectileSkill 초기화 완료");
         }
         else
         {
@@ -70,6 +69,8 @@ public class ProjectileSkill : Skill
         {
             yield break;
         }
+
+        isSkillInProgress = true;
 
         float shotInterval = projectileStats.GetStatValue<float>(SkillStatType.ShotInterval);
         float innerInterval = projectileStats.GetStatValue<float>(SkillStatType.InnerInterval);
@@ -104,6 +105,10 @@ public class ProjectileSkill : Skill
                 yield return new WaitForSeconds(innerInterval);
             }
         }
+
+        GameManager.Instance.player.PlayerAnimator.SetTrigger("Idle");
+
+        isSkillInProgress = false;
     }
 
     private Vector3? GetTargetDirection()

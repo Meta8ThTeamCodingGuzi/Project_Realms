@@ -70,12 +70,11 @@ public abstract class Skill : MonoBehaviour
             if (animaClip != null)
             {
                 GameManager.Instance.player.PlayerAnimController.Clipchange(animaClip);
-                StartCoroutine(SkillSequenceTimer());
             }
 
             //TODO : 마이크로컨트롤
             GameManager.Instance.player.PlayerAnimator.SetFloat("AttackSpeed",
-                5f);
+                3f);
             GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
         }
 
@@ -93,7 +92,7 @@ public abstract class Skill : MonoBehaviour
     {
         isSkillInProgress = true;
 
-        float animationSpeed = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.AttackSpeed) / 2f;
+        float animationSpeed = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.AttackSpeed);
         float actualDuration = animaClip.length / animationSpeed;
 
         yield return new WaitForSeconds(actualDuration);
