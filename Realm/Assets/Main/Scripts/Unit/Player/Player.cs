@@ -28,8 +28,6 @@ public class Player : Unit
 
     private StatPointSystem statPoint;
 
-    private PlayerAnimatorController playerAnimCon;
-    public PlayerAnimatorController PlayerAnimController => playerAnimCon;
 
     private PlayerStateHandler playerHandler;
     public PlayerStateHandler PlayerHandler => playerHandler;
@@ -98,11 +96,11 @@ public class Player : Unit
             inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
         }
 
-        playerAnimCon = GetComponent<PlayerAnimatorController>();
+        AnimController = GetComponent<AnimatorController>();
 
-        if (playerAnimCon == null)
+        if (AnimController == null)
         {
-            playerAnimCon = gameObject.AddComponent<PlayerAnimatorController>();
+            AnimController = gameObject.AddComponent<AnimatorController>();
         }
 
         Animator = GetComponent<Animator>();
@@ -131,10 +129,7 @@ public class Player : Unit
         playerHandler.HandleUpdate();
     }
 
-    public void PlayerAnimatorChange(RuntimeAnimatorController newAnimator)
-    {
-        Animator.runtimeAnimatorController = newAnimator;
-    }
+
 
     #region 레벨 시스템
     public float TotalExp => totalExp;

@@ -58,7 +58,7 @@ public abstract class Skill : MonoBehaviour
 
     public virtual bool TryUseSkill()
     {
-        if (data.skillID != SkillID.BasicSwordAttack)
+        if (data.skillID != SkillID.BasicSwordAttack || data.skillID != SkillID.BasicBowAttack)
         {
             float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
             if (IsOnCooldown)
@@ -66,21 +66,22 @@ public abstract class Skill : MonoBehaviour
                 return false;
             }
 
-            if (GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Mana) < costmana)
+            if (owner.CharacterStats.GetStatValue(StatType.Mana) < costmana)
             {
                 return false;
             }
 
-            GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
-            if (animaClip != null)
+            owner.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
+            if(owner is Player) 
             {
-                GameManager.Instance.player.PlayerAnimController.Clipchange(animaClip);
-            }
-
+                if (animaClip != null)
+                {
+                    GameManager.Instance.player.AnimController.Clipchange(animaClip);
+                }
+            }            
             //TODO : 마이크로컨트롤
-            GameManager.Instance.player.Animator.SetFloat("AttackSpeed",
+            owner.Animator.SetFloat("AttackSpeed",
                 3f);
-            GameManager.Instance.player.Animator.SetTrigger("Attack");
         }
 
         UseSkill();

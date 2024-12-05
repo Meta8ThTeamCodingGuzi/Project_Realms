@@ -7,7 +7,7 @@ public class AreaEffect : MonoBehaviour
 {
     private AreaEffectData areaData;
     private float durationTime;
-    private Coroutine attackCoroutine;  
+    private Coroutine attackCoroutine;
 
     public void Initialize(AreaEffectData Data)
     {
@@ -29,7 +29,7 @@ public class AreaEffect : MonoBehaviour
     {
         durationTime += Time.deltaTime;
 
-        if (durationTime >= areaData.duration) 
+        if (durationTime >= areaData.duration)
         {
             StopCoroutine(attackCoroutine);
             PoolManager.Instance.Despawn<AreaEffect>(this);
@@ -38,15 +38,25 @@ public class AreaEffect : MonoBehaviour
 
     private IEnumerator AttackRoutine()
     {
+        bool isOwnerPlayer = areaData.owner is Player;
+
         while (true)
         {
-            if (areaData.duration < durationTime) PoolManager.Instance.Despawn<AreaEffect>(this);
-            Collider[] colliders = Physics.OverlapSphere(transform.position,areaData.areaScale);
+            if (areaData.duration < durationTime)
+            {
+                PoolManager.Instance.Despawn<AreaEffect>(this);
+                yield break;
+            }
+
+            Collider[] colliders = Physics.OverlapSphere(transform.position, areaData.areaScale);
             foreach (Collider collider in colliders)
             {
-                if (collider.TryGetComponent<Monster>(out Monster monster))
+                if (!collider.TryGetComponent<Unit>(out Unit targetUnit))
+                    continue;
+
+                if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
                 {
-                    monster.TakeDamage(areaData.damage);
+                    targetUnit.TakeDamage(areaData.damage);
                 }
             }
             yield return new WaitForSeconds(1f);

@@ -48,6 +48,7 @@ public class SkillController : MonoBehaviour
     {
         if (skillSlots.TryGetValue(KeyCode.Mouse0, out Skill skill) && skill != null)
         {
+            print("마우스클릭호출");
             currentSkill = skill;
             currentSkill.TryUseSkill();
         }
@@ -195,22 +196,18 @@ public class SkillController : MonoBehaviour
         if (!skillSlots.ContainsKey(slot))
             return;
 
-        // 기존 슬롯의 스킬 제거
         if (skillSlots[slot] != null)
         {
             UnequipSkill(slot);
         }
 
-        // 스킬 인스턴스 생성 및 초기화
         Skill instance = Instantiate(skillPrefab, transform);
         instance.Initialize(player);
 
-        // 스킬을 바로 activeSkills에 추가하고 슬롯에 할당
         activeSkills.Add(instance);
         initializedSkills[skillPrefab.data.skillID] = instance;
         skillSlots[slot] = instance;
 
-        // UI 업데이트
         if (skillBarUI != null)
         {
             skillBarUI.UpdateSkillSlot(slot, instance);
@@ -219,13 +216,10 @@ public class SkillController : MonoBehaviour
 
     public void RemoveAllWeaponSkills()
     {
-        // Mouse0에 있는 기본 공격 스킬 제거
         UnequipSkill(KeyCode.Mouse0);
 
-        // 무기 관련 스킬들을 모두 제거
         List<KeyCode> keysToUnequip = new List<KeyCode>();
 
-        // 먼저 제거할 스킬들의 키를 수집
         foreach (var slot in skillSlots)
         {
             if (slot.Value != null && slot.Value is WeaponSkill)
@@ -234,13 +228,11 @@ public class SkillController : MonoBehaviour
             }
         }
 
-        // 수집된 키를 기반으로 스킬 제거
         foreach (var key in keysToUnequip)
         {
             UnequipSkill(key);
         }
 
-        // initializedSkills에서 남아있는 무기 스킬들도 정리
         var weaponSkillsToRemove = initializedSkills.Where(pair => pair.Value is WeaponSkill)
                                                    .Select(pair => pair.Key)
                                                    .ToList();

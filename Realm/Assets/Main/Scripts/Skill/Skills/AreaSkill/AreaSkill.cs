@@ -30,9 +30,10 @@ public class AreaSkill : Skill
         float spawnInterval = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnInterval);
 
         isSkillInProgress = true;
-        
+
         for (int i = 0; i < spawnCount; i++)
         {
+            Owner.Animator.SetTrigger("Attack");
             AreaEffectData areaData = new AreaEffectData()
             {
                 owner = Owner,
@@ -48,7 +49,7 @@ public class AreaSkill : Skill
                 yield return new WaitForSeconds(spawnInterval);
             }
         }
-        
+
         Owner.Animator.SetTrigger("Idle");
 
         yield return new WaitForSeconds(0.3f);
@@ -102,38 +103,24 @@ public class AreaSkill : Skill
         Transform nearestTarget = null;
         float nearestDistance = float.MaxValue;
 
+        bool isOwnerPlayer = Owner is Player;
+
         foreach (Collider collider in colliders)
         {
-            if(Owner.TryGetComponent<Player>(out Player player)) 
-            {
-                if (collider.TryGetComponent<Monster>(out Monster Monster))
-                {
-                    float distance = Vector3.Distance(transform.position, Monster.transform.position);
-                    if (distance < nearestDistance)
-                    {
-                        nearestDistance = distance;
-                        nearestTarget = Monster.transform;
-                    }
-                }
-                else
-                {
-                    SpawnAtMouseCursor();
-                }
-            }
-            if (Owner.TryGetComponent<Monster>(out Monster monster)) 
-            {
-                if (collider.TryGetComponent<Player>(out Player Player))
-                {
-                    float distance = Vector3.Distance(transform.position, Player.transform.position);
-                    if (distance < nearestDistance)
-                    {
-                        nearestDistance = distance;
-                        nearestTarget = Player.transform;
-                    }
-                }
-            }
+            if (!collider.TryGetComponent<Unit>(out Unit targetUnit))
+                continue;
 
+            if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
+            {
+                float distance = Vector3.Distance(transform.position, targetUnit.transform.position);
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestTarget = targetUnit.transform;
+                }
+            }
         }
+
         if (nearestTarget != null)
         {
             Vector3 direction = (nearestTarget.position - transform.position).normalized;
@@ -141,6 +128,29 @@ public class AreaSkill : Skill
             transform.rotation = Quaternion.LookRotation(direction);
             spawnPoint = nearestTarget.position;
         }
+        else
+        {
+            if (isOwnerPlayer)
+            {
+                SpawnAtMouseCursor();
+            }
+            else
+            {
+                SpawnAtRandomPosition();
+            }
+        }
+    }
+
+    private void SpawnAtRandomPosition()
+    {
+        float spawnRange = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange);
+        float randomAngle = Random.Range(0f, 360f);
+        float randomDistance = Random.Range(0f, spawnRange);
+
+        Vector3 randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward;
+        spawnPoint = transform.position + randomDirection * randomDistance;
+
+        transform.rotation = Quaternion.LookRotation(randomDirection);
     }
 
 

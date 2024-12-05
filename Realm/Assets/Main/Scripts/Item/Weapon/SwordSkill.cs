@@ -7,8 +7,6 @@ public class SwordSkill : WeaponSkill
 
     protected override void UseSkill()
     {
-        Debug.Log("[SwordSkill] UseSkill called");
-
         Monster targetMonster = player.TargetMonster;
         if (targetMonster != null)
         {
@@ -17,7 +15,6 @@ public class SwordSkill : WeaponSkill
 
             if (distanceToTarget <= attackRange && !isAttackInProgress)
             {
-                Debug.Log("[SwordSkill] Setting Attack trigger");
                 player.StopMoving();
                 player.transform.LookAt(targetMonster.transform);
 
