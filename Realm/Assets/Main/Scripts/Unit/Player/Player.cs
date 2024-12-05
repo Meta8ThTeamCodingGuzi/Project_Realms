@@ -101,6 +101,7 @@ public class Player : Unit
         {
             AnimController = gameObject.AddComponent<AnimatorController>();
         }
+        AnimController.Initialize(this);
 
         Animator = GetComponent<Animator>();
 

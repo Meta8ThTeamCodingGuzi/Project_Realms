@@ -1,17 +1,33 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
+public enum UnitState
+{
+    None,
+    Fly,
+    Ground,
+}
+[Serializable]
+public class AnimaState
+{
+    public UnitState UnitState;
+    public ItemType ItemType;
+    public RuntimeAnimatorController AnimaController;
+}
+
 
 public class AnimatorController : MonoBehaviour
 {
     private Unit owner;
 
-    [SerializeField] private List<RuntimeAnimatorController> AnimaContoller;
-
+    [SerializeField] private List<AnimaState> animaStates = new List<AnimaState>();
 
     private AnimatorOverrideController currentController;
 
-    public void IsInitialized(Unit owner)
+    public void Initialize(Unit owner)
     {
        this.owner = owner;
     }
@@ -24,22 +40,14 @@ public class AnimatorController : MonoBehaviour
         return overrideController;
     }
 
-
-    public void AnimatorChange(ItemType itemType)
+    public void PlayerAnimatorChange(ItemType itemType)
     {
-        switch (itemType)
+        foreach(AnimaState state in animaStates)
         {
-            case ItemType.None:
-                owner.ChangeAnimController(AnimaContoller[0]);
-                break;
-            case ItemType.Sword:
-                owner.ChangeAnimController(AnimaContoller[1]);
-                break;
-            case ItemType.Bow:
-                owner.ChangeAnimController(AnimaContoller[2]);
-                break;
-            default:
-                return;
+            if(state.ItemType == itemType)
+            {
+                owner.ChangeAnimController(state.AnimaController);
+            }
         }
     }
 

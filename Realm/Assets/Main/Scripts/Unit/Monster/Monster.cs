@@ -9,10 +9,6 @@ public class Monster : Unit
 {
     private MonsterStateHandler m_StateHandler;
 
-    private Player player;
-
-    public Player targetPlayer => player;
-
     [SerializeField]
     private Transform[] setPatrolTransforms;
 
@@ -22,7 +18,7 @@ public class Monster : Unit
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 nowTarget;
+    public Vector3 NowpatrolPoint;
 
     public Animator M_Animator;
     public MonsterStateHandler M_StateHandler => m_StateHandler;
@@ -41,6 +37,7 @@ public class Monster : Unit
 
     protected override void Initialize()
     {
+        base.Initialize();
         foreach (Transform setPatrolTransform in setPatrolTransforms)
         {
             patrolPoint.Add(setPatrolTransform.position);
@@ -51,13 +48,11 @@ public class Monster : Unit
             m_StateHandler = new MonsterStateHandler(this);
         }
         m_StateHandler.Initialize();
-        base.Initialize();
 
         if (characterStats != null)
         {
             monsterStat = (MonsterStat)characterStats;
         }
-        player = null;
 
         // 몬스터 타입에 따른 크기 조정
         float sizeMultiplier = monsterType switch
@@ -91,8 +86,10 @@ public class Monster : Unit
 
     public bool FindPlayer(float Detection)
     {
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position, Detection);
+        if (this.Target != null) return true;
 
+        Collider[] colliders = Physics.OverlapSphere(this.transform.position, Detection);
+        print("플레이어 찾는당");
         foreach (Collider collider in colliders)
         {
             if (collider.TryGetComponent<Player>(out Player player))
@@ -100,11 +97,12 @@ public class Monster : Unit
                 if (player.IsAlive)
                 {
                     this.Target = player;
+                    print($"{Target} 찾음");
                     return true;
                 }
             }
         }
-        StopAttack();
+        print($"{Target}못찾음");
         this.Target = null;
         return false;
     }
@@ -142,10 +140,10 @@ public class Monster : Unit
         if (patrolKey >= patrolPoint.Count)
         {
             patrolKey = 0;
-            nowTarget = patrolPoint[patrolKey];
+            NowpatrolPoint = patrolPoint[patrolKey];
             return;
         }
-        nowTarget = patrolPoint[patrolKey];
+        NowpatrolPoint = patrolPoint[patrolKey];
     }
     public void MonsterDie()
     {

@@ -25,7 +25,7 @@ public class FollowState : State<Monster>
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
         }
-        if (target.CanAttack(target.targetPlayer))
+        if (target.CanAttack(target.Target))
         {
             target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
         }
@@ -34,10 +34,10 @@ public class FollowState : State<Monster>
             target.M_Animator.SetTrigger("Idle");
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
         }
-        if (target.targetPlayer != null && !target.CanAttack(target.targetPlayer))
+        if (target.Target != null && !target.CanAttack(target.Target))
         {
             if (target.M_Animator.GetBool("Move") != true) { target.M_Animator.SetBool("Move", true); }
-            target.targetMove(target.targetPlayer);
+            target.targetMove(target.Target);
         }
     }
 }

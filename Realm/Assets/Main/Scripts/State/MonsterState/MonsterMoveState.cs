@@ -29,15 +29,15 @@ public class MonsterMoveState : State<Monster>
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
         }
-        if (target.FindPlayer(Mathf.Max(target.CharacterStats.GetStatValue(StatType.AttackRange),6f)))
+        if (target.FindPlayer(Mathf.Max(target.CharacterStats.GetStatValue(StatType.AttackRange)-4f,6f)))
         {
             target.M_StateHandler.TransitionTo(new FollowState(target));
             return;
         }
-        if (!target.IsMoving &&target.targetPlayer ==null &&!target.CanAttack(target.targetPlayer))
+        if (!target.IsMoving && target.Target == null &&!target.CanAttack(target.Target))
         {
             if (target.M_Animator.GetBool("Move") != true) { target.M_Animator.SetBool("Move", true); }
-            target.MoveTo(target.nowTarget);
+            target.MoveTo(target.NowpatrolPoint);
         }
         if (target.HasReachedDestination()|| MoveStateTime>10f)
         {
