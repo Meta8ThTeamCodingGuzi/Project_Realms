@@ -18,7 +18,7 @@ public class Monster : Unit
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 NowpatrolPoint;
+    public Vector3 currentPatrolPoint;
 
     public Animator M_Animator;
     public MonsterStateHandler M_StateHandler => m_StateHandler;
@@ -37,7 +37,6 @@ public class Monster : Unit
 
     protected override void Initialize()
     {
-        base.Initialize();
         foreach (Transform setPatrolTransform in setPatrolTransforms)
         {
             patrolPoint.Add(setPatrolTransform.position);
@@ -48,6 +47,7 @@ public class Monster : Unit
             m_StateHandler = new MonsterStateHandler(this);
         }
         m_StateHandler.Initialize();
+        base.Initialize();
 
         if (characterStats != null)
         {
@@ -86,10 +86,8 @@ public class Monster : Unit
 
     public bool FindPlayer(float Detection)
     {
-        if (this.Target != null) return true;
-
         Collider[] colliders = Physics.OverlapSphere(this.transform.position, Detection);
-        print("플레이어 찾는당");
+
         foreach (Collider collider in colliders)
         {
             if (collider.TryGetComponent<Player>(out Player player))
@@ -97,12 +95,11 @@ public class Monster : Unit
                 if (player.IsAlive)
                 {
                     this.Target = player;
-                    print($"{Target} 찾음");
                     return true;
                 }
             }
         }
-        print($"{Target}못찾음");
+        StopAttack();
         this.Target = null;
         return false;
     }
@@ -140,10 +137,10 @@ public class Monster : Unit
         if (patrolKey >= patrolPoint.Count)
         {
             patrolKey = 0;
-            NowpatrolPoint = patrolPoint[patrolKey];
+            currentPatrolPoint = patrolPoint[patrolKey];
             return;
         }
-        NowpatrolPoint = patrolPoint[patrolKey];
+        currentPatrolPoint = patrolPoint[patrolKey];
     }
     public void MonsterDie()
     {

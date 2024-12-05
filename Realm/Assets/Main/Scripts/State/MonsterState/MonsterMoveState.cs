@@ -13,6 +13,7 @@ public class MonsterMoveState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
+        target.M_Animator.SetBool("Move", true);
         MoveStateTime = 0f;
     }
 
@@ -29,17 +30,17 @@ public class MonsterMoveState : State<Monster>
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
         }
-        if (target.FindPlayer(Mathf.Max(target.CharacterStats.GetStatValue(StatType.AttackRange)-4f,6f)))
+        if (target.FindPlayer(6f))
         {
+            Debug.Log($"타킷  : {target.Target} , 몬스터 팔로우스테이트 진입 ");
             target.M_StateHandler.TransitionTo(new FollowState(target));
             return;
         }
-        if (!target.IsMoving && target.Target == null &&!target.CanAttack(target.Target))
-        {
-            if (target.M_Animator.GetBool("Move") != true) { target.M_Animator.SetBool("Move", true); }
-            target.MoveTo(target.NowpatrolPoint);
+        if (!target.IsMoving &&target.Target ==null &&!target.CanAttack(target.Target))
+        { 
+            target.MoveTo(target.currentPatrolPoint);
         }
-        if (target.HasReachedDestination()|| MoveStateTime>10f)
+        if (target.HasReachedDestination()|| MoveStateTime>15f)
         {
             target.M_Animator.SetTrigger("Idle");
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));

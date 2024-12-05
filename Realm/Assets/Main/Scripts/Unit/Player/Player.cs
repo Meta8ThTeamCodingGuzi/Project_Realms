@@ -58,7 +58,6 @@ public class Player : Unit
 
     protected override void Initialize()
     {
-        Debug.Log("Player Initialize 시작");
 
         if (characterStats == null)
         {

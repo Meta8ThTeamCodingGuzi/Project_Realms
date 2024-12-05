@@ -25,7 +25,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
 
         foreach (var statInit in initialStats)
         {
-            Debug.Log($"Initializing {statInit.Type} with base value {statInit.BaseValue}");
+            //Debug.Log($"Initializing {statInit.Type} with base value {statInit.BaseValue}");
             stats[statInit.Type] = new FloatStat(statInit.BaseValue, statInit.PointIncrease);
 
             if (statInit.Type == StatType.MaxHealth)
