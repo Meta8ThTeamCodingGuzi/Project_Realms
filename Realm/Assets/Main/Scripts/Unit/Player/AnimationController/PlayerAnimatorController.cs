@@ -12,9 +12,9 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private AnimatorOverrideController SetupOverrideController()
     {
-        RuntimeAnimatorController Controller = GameManager.Instance.player.PlayerAnimator.runtimeAnimatorController;
+        RuntimeAnimatorController Controller = GameManager.Instance.player.Animator.runtimeAnimatorController;
         AnimatorOverrideController overrideController = new AnimatorOverrideController(Controller);
-        GameManager.Instance.player.PlayerAnimator.runtimeAnimatorController = overrideController;
+        GameManager.Instance.player.Animator.runtimeAnimatorController = overrideController;
         return overrideController;
     }
 
@@ -41,7 +41,7 @@ public class PlayerAnimatorController : MonoBehaviour
     public void Clipchange(AnimationClip animationClip)
     {
         if (currentController == null ||
-            currentController.runtimeAnimatorController != GameManager.Instance.player.PlayerAnimator.runtimeAnimatorController)
+            currentController.runtimeAnimatorController != GameManager.Instance.player.Animator.runtimeAnimatorController)
         {
             currentController = SetupOverrideController();
         }

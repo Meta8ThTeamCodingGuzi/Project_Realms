@@ -11,7 +11,7 @@ public class PlayerTakeDamageState : State<Player>
 
     public override void OnEnter()
     {
-        target.PlayerAnimator.SetTrigger("TakeDamage");
+        target.Animator.SetTrigger("TakeDamage");
     }
 
     public override void OnExit()
@@ -27,7 +27,7 @@ public class PlayerTakeDamageState : State<Player>
         }
         else if (target.IsAlive)
         {
-            target.PlayerAnimator.SetTrigger("Idle");
+            target.Animator.SetTrigger("Idle");
             target.PlayerHandler.TransitionTo(new PlayerIdleState(target));      
         }
     }

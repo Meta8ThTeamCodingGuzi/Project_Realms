@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Buffers;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ public abstract class Skill : MonoBehaviour
     [SerializeField] public SkillData data;
     [SerializeField] public SkillStat skillStat;
     [SerializeField] protected AnimationClip animaClip;
+    private Unit owner;
+    public Unit Owner => owner;
     protected bool isSkillInProgress = false;
 
     protected float currentCooldown = 0f;
@@ -15,8 +18,10 @@ public abstract class Skill : MonoBehaviour
     public float RemainingCooldown => currentCooldown;
     public float TotalCooldown => skillStat.GetStatValue<float>(SkillStatType.Cooldown);
 
-    public virtual void Initialize()
+    public virtual void Initialize(Unit owner)
     {
+        this.owner = owner;
+
         if (skillStat == null)
         {
             skillStat = GetComponent<SkillStat>();
@@ -73,9 +78,9 @@ public abstract class Skill : MonoBehaviour
             }
 
             //TODO : 마이크로컨트롤
-            GameManager.Instance.player.PlayerAnimator.SetFloat("AttackSpeed",
+            GameManager.Instance.player.Animator.SetFloat("AttackSpeed",
                 3f);
-            GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
+            GameManager.Instance.player.Animator.SetTrigger("Attack");
         }
 
         UseSkill();
@@ -104,7 +109,7 @@ public abstract class Skill : MonoBehaviour
 
     private bool IsCurrentAnimation(AnimationClip clip)
     {
-        var currentClip = GameManager.Instance.player.PlayerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip;
+        var currentClip = GameManager.Instance.player.Animator.GetCurrentAnimatorClipInfo(0)[0].clip;
         return currentClip == clip;
     }
 

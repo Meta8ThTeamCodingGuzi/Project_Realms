@@ -11,9 +11,9 @@ public class AreaSkill : Skill
     [SerializeField] private Vector3 spawnPoint;
     private AreaSkillStat areaSkillStat;
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
+        base.Initialize(owner);
         areaSkillStat = (AreaSkillStat)skillStat;
         areaSkillStat.InitializeStats();
     }
@@ -35,6 +35,7 @@ public class AreaSkill : Skill
         {
             AreaEffectData areaData = new AreaEffectData()
             {
+                owner = Owner,
                 damage = areaSkillStat.GetStatValue<float>(SkillStatType.Damage),
                 areaScale = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnScale),
                 duration = areaSkillStat.GetStatValue<float>(SkillStatType.Duration)
@@ -48,7 +49,7 @@ public class AreaSkill : Skill
             }
         }
         
-        GameManager.Instance.player.PlayerAnimator.SetTrigger("Idle");
+        Owner.Animator.SetTrigger("Idle");
 
         yield return new WaitForSeconds(0.3f);
         isSkillInProgress = false;
@@ -62,7 +63,7 @@ public class AreaSkill : Skill
         }
         else if (areaSkillStat.GetStatValue<int>(SkillStatType.IsSpawnAtEnemy) == 1)
         {
-            SpawnAtEnemyPosition();
+            SpawnAtTargetPosition();
         }
         else
         {
@@ -79,14 +80,11 @@ public class AreaSkill : Skill
         {
             Vector3 targetPoint = ray.GetPoint(distance);
 
-            // 캐릭터와 커서 사이의 방향을 계산합니다
             Vector3 direction = (targetPoint - transform.position).normalized;
-            direction.y = 0; // Y축 회전만 필요하므로 y값은 0으로 설정
+            direction.y = 0;
 
-            // 캐릭터를 커서 방향으로 회전시킵니다
-            GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(direction);
+            Owner.transform.rotation = Quaternion.LookRotation(direction);
 
-            // 스킬 범위 제한 확인
             if (Vector3.Distance(transform.position, targetPoint) > areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange))
             {
                 spawnPoint = transform.position + direction * areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange);
@@ -98,36 +96,50 @@ public class AreaSkill : Skill
         }
     }
 
-    private void SpawnAtEnemyPosition()
+    private void SpawnAtTargetPosition()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange));
-        Transform nearestMonster = null;
+        Transform nearestTarget = null;
         float nearestDistance = float.MaxValue;
 
         foreach (Collider collider in colliders)
         {
-            if (collider.TryGetComponent<Monster>(out Monster monster))
+            if(Owner.TryGetComponent<Player>(out Player player)) 
             {
-                float distance = Vector3.Distance(transform.position, monster.transform.position);
-                if (distance < nearestDistance)
+                if (collider.TryGetComponent<Monster>(out Monster Monster))
                 {
-                    nearestDistance = distance;
-                    nearestMonster = monster.transform;
+                    float distance = Vector3.Distance(transform.position, Monster.transform.position);
+                    if (distance < nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        nearestTarget = Monster.transform;
+                    }
+                }
+                else
+                {
+                    SpawnAtMouseCursor();
                 }
             }
-        }
+            if (Owner.TryGetComponent<Monster>(out Monster monster)) 
+            {
+                if (collider.TryGetComponent<Player>(out Player Player))
+                {
+                    float distance = Vector3.Distance(transform.position, Player.transform.position);
+                    if (distance < nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        nearestTarget = Player.transform;
+                    }
+                }
+            }
 
-        if (nearestMonster != null)
+        }
+        if (nearestTarget != null)
         {
-            // 가장 가까운 몬스터 방향으로 캐릭터를 회전
-            Vector3 direction = (nearestMonster.position - transform.position).normalized;
+            Vector3 direction = (nearestTarget.position - transform.position).normalized;
             direction.y = 0;
             transform.rotation = Quaternion.LookRotation(direction);
-            spawnPoint = nearestMonster.position;
-        }
-        else
-        {
-            SpawnAtMouseCursor();
+            spawnPoint = nearestTarget.position;
         }
     }
 
@@ -144,12 +156,12 @@ public class AreaSkill : Skill
     public override void LevelUp()
     {
         base.LevelUp();
-        PrintAllStats();
     }
 }
 
 public struct AreaEffectData
 {
+    public Unit owner;
     public float damage;
     public float duration;
     public float areaScale;

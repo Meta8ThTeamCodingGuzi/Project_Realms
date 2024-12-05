@@ -22,8 +22,8 @@ public class SwordSkill : WeaponSkill
                 player.transform.LookAt(targetMonster.transform);
 
                 float attackSpeed = GetPlayerAttackSpeed();
-                player.PlayerAnimator.SetFloat("AttackSpeed", attackSpeed);
-                player.PlayerAnimator.SetTrigger("Attack");
+                player.Animator.SetFloat("AttackSpeed", attackSpeed);
+                player.Animator.SetTrigger("Attack");
 
                 StartCoroutine(SwordAttackRoutine());
             }
@@ -34,20 +34,20 @@ public class SwordSkill : WeaponSkill
     {
         isSkillInProgress = true;
 
-        while (!player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        while (!player.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             yield return null;
         }
 
         float damagePoint = 0.4f;
-        while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < damagePoint)
+        while (player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < damagePoint)
         {
             yield return null;
         }
 
         PerformSectorAttack();
 
-        while (player.PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.97f)
+        while (player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.97f)
         {
             yield return null;
         }

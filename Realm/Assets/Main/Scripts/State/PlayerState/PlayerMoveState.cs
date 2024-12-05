@@ -13,13 +13,13 @@ public class PlayerMoveState : State<Player>
 
     public override void OnEnter()
     {
-        target.PlayerAnimator.SetFloat("MoveSpeed", target.CharacterStats.GetStatValue(StatType.MoveSpeed) / 4.5f);
-        target.PlayerAnimator.SetBool("Move", true);
+        target.Animator.SetFloat("MoveSpeed", target.CharacterStats.GetStatValue(StatType.MoveSpeed) / 4.5f);
+        target.Animator.SetBool("Move", true);
     }
 
     public override void OnExit()
     {
-        target.PlayerAnimator.SetBool("Move", false);
+        target.Animator.SetBool("Move", false);
     }
 
     public override void OnUpdate()
