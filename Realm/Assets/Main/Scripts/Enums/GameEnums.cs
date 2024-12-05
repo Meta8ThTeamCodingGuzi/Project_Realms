@@ -75,6 +75,8 @@ public enum SkillStatType
 
     #endregion
 
+    DashDistance
+
 }
 
 public enum SourceType

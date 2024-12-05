@@ -3442,7 +3442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1276356603850641267}
   - component: {fileID: 3993120601059748256}
-  - component: {fileID: 1277533238191318732}
+  - component: {fileID: 2798790848391492987}
   - component: {fileID: 1158549471176475299}
   - component: {fileID: 8436973270082742477}
   - component: {fileID: -6472777804048102829}
@@ -3494,7 +3494,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1277533238191318732
+--- !u!114 &2798790848391492987
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3503,16 +3503,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8372143632925090849}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
+  m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   wasAttacked: 0
-  setPatrolTransforms:
-  - {fileID: 6749294856859559959}
-  - {fileID: 2811884321649162627}
-  - {fileID: 308854323280911157}
-  - {fileID: 245660380009314491}
-  - {fileID: 3770346983317340875}
+  setPatrolTransforms: []
   isattacked: 1
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
   nowTarget: {x: 0, y: 0, z: 0}

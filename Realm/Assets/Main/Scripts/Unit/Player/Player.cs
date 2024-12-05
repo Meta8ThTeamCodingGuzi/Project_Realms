@@ -357,17 +357,20 @@ public class Player : Unit
 
     public override void MoveTo(Vector3 destination)
     {
-        if (targetMonster != null)
+        if (!IsDashing) 
         {
-            Vector3 directionToTarget = (destination - transform.position).normalized;
-            float attackRange = characterStats.GetStatValue(StatType.AttackRange);
+            if (targetMonster != null)
+            {
+                Vector3 directionToTarget = (destination - transform.position).normalized;
+                float attackRange = characterStats.GetStatValue(StatType.AttackRange);
 
-            Vector3 targetPosition = destination - (directionToTarget * attackRange);
-            base.MoveTo(targetPosition);
-        }
-        else
-        {
-            base.MoveTo(destination);
+                Vector3 targetPosition = destination - (directionToTarget * attackRange);
+                base.MoveTo(targetPosition);
+            }
+            else
+            {
+                base.MoveTo(destination);
+            }
         }
     }
 }

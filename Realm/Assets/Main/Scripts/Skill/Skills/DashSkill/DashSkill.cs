@@ -1,44 +1,81 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DashSkill : Skill
 {
-    private bool isDash = true;
-    private Player player;
-    private Collider playerCollider;
-    private Quaternion tarGetQuaternion;
 
-    public override void Initialize()
+    private Collider ownerCollider;
+    private Quaternion ownerQuaternion;
+    private Vector3 ownerDashdistance;
+
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
-        playerCollider = GetComponent<Collider>();
+        base.Initialize(owner);
+        ownerCollider = owner.GetComponentInParent<Collider>();
+        if (ownerCollider == null)
+        {
+            Debug.LogError($"{gameObject.name} 대쉬대상 콜라이더없음!");
+        }
+        skillStat.InitializeStats();
+    }
+
+    public override bool TryUseSkill()
+    {
+        if (Owner.IsDashing == true) return false;
+        if (GetTargetDirection() == false) return false;
+        return base.TryUseSkill();
     }
 
     protected override void UseSkill()
     {
-        if (isDash == false) return; 
-        if (GetTargetDirection() == false) return; 
-        StartCoroutine(DashRoutine());
+        StartCoroutine(DashCoroutine());
     }
 
 
 
-    private IEnumerator DashRoutine()
+    private IEnumerator DashCoroutine()
     {
-        isDash = false;
-
-        playerCollider.gameObject.SetActive(false);
-        
+        Owner.IsDashing = true;
+        ownerCollider.enabled = false;
 
 
-        playerCollider.gameObject.SetActive(true);
+        float dashDistance = skillStat.GetStatValue<float>(SkillStatType.DashDistance);
+        Vector3 startPosition = Owner.transform.position;
+        Vector3 targetPosition = startPosition + ownerDashdistance;
+        float dashTime = 0f;
+        float dashDuration = 0.2f;
 
-        yield return new WaitForSeconds(1f);
 
-        isDash = true;
+        Owner.transform.rotation = ownerQuaternion;
 
-        yield break;
+
+
+        while (dashTime < dashDuration)
+        {
+            dashTime += Time.deltaTime;
+            float t = dashTime / dashDuration;
+
+            Owner.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            yield return null;
+        }
+
+        Owner.transform.position = targetPosition;
+        Owner.Agent.Warp(targetPosition);
+
+        yield return new WaitForSeconds(0.3f);
+        Owner.Animator.SetTrigger("Idle");
+
+
+
+        ownerCollider.enabled = true;
+        Owner.IsDashing = false;
+
+
+
     }
 
 
@@ -50,11 +87,28 @@ public class DashSkill : Skill
         if (groundPlane.Raycast(ray, out float distance))
         {
             Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = (targetPoint - transform.position).normalized;
+            Vector3 direction = (targetPoint - Owner.transform.position).normalized;
             direction.y = 0;
-            tarGetQuaternion = Quaternion.LookRotation(direction);
+
+            direction = direction * 10f;
+
+            float maxDashDistance = Mathf.Max(skillStat.GetStatValue<float>(SkillStatType.DashDistance));
+
+            if (direction.magnitude > maxDashDistance)
+            {
+                direction = direction.normalized * maxDashDistance;
+            }
+
+            if (Physics.Raycast(Owner.transform.position, direction.normalized, out RaycastHit hit, direction.magnitude))
+            {
+                direction = direction.normalized * hit.distance;
+            }
+
+            ownerDashdistance = direction;
+            ownerQuaternion = Quaternion.LookRotation(direction);
             return true;
         }
         return false;
     }
+
 }

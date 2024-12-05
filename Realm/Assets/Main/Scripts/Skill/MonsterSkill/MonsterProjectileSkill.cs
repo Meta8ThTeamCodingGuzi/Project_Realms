@@ -8,16 +8,11 @@ public class MonsterProjectileSkill : ProjectileSkill
     private Monster monster;
     private Player targetplayer;
 
-    public override void Start()
+    public new void Start()
     {
         print("필요없음");
     }
-
-    protected override void ValidateComponents()
-    {
-        print("필요없음");
-    }
-
+    
     public override void Initialize(Unit owner)
     {
         base.Initialize(owner);

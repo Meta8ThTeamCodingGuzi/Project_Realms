@@ -3,12 +3,18 @@ using UnityEngine.AI;
 using System.Collections;
 using UnityEditor;
 
-public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializable
+public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializable
 {
     protected NavMeshAgent agent;
+    public NavMeshAgent Agent { get=>agent; set => agent = value; }
+
     protected ICharacterStats characterStats;
     private Animator animator;
     public Animator Animator { get; set; }
+
+    private bool isDashing = false;
+    public bool IsDashing { get; set; }
+
     public ICharacterStats CharacterStats => characterStats;
 
     public bool IsInitialized { get; private set; }
@@ -16,6 +22,8 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
 
     protected float lastAttackTime;
     protected Coroutine attackCoroutine;
+
+
 
     protected virtual void Initialize()
     {
