@@ -7,6 +7,15 @@ public class MonsterProjectileSkill : ProjectileSkill
     private Monster monster;
     private Player targetplayer;
 
+    public override void Start()
+    {
+        print("필요없음");
+    }
+
+    protected override void ValidateComponents()
+    {
+        print("필요없음");
+    }
 
     public override void Initialize()
     {
@@ -38,6 +47,7 @@ public class MonsterProjectileSkill : ProjectileSkill
                 StartCoroutine(SkillSequenceTimer());
             }
         }
+
 
         UseSkill();
 

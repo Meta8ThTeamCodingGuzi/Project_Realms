@@ -2121,6 +2121,8 @@ GameObject:
   - component: {fileID: 522232256752901799}
   - component: {fileID: 294538156241341026}
   - component: {fileID: 5160237862136158189}
+  - component: {fileID: 6129369798288772196}
+  - component: {fileID: 5376598021612247349}
   - component: {fileID: 7035118218481515173}
   - component: {fileID: 5388806325952756284}
   m_Layer: 0
@@ -2158,9 +2160,9 @@ NavMeshAgent:
   m_AgentTypeID: -1372625422
   m_Radius: 0.2
   m_Speed: 3.5
-  m_Acceleration: 2000
+  m_Acceleration: 3000
   avoidancePriority: 50
-  m_AngularSpeed: 2000
+  m_AngularSpeed: 3000
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -2194,6 +2196,7 @@ MonoBehaviour:
   M_Animator: {fileID: 2686738428520541941}
   monsterDieParticle: {fileID: 198505150952397844, guid: f1de78bcb509f9f4f81dd92becbf341c, type: 3}
   monsterType: 0
+  monsterSkill: {fileID: 6129369798288772196}
 --- !u!114 &5160237862136158189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2220,10 +2223,10 @@ MonoBehaviour:
     BaseValue: 20
     PointIncrease: 3
   - Type: 10
-    BaseValue: 2
+    BaseValue: 0.25
     PointIncrease: 0
   - Type: 11
-    BaseValue: 2
+    BaseValue: 1.5
     PointIncrease: 0
   - Type: 7
     BaseValue: 50
@@ -2231,6 +2234,39 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
+--- !u!114 &6129369798288772196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5432848196177168347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6218653006781444080ccf28817bab00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 5376598021612247349}
+  skillStat: {fileID: 0}
+  animaClip: {fileID: 0}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  attackOffset: 1
+--- !u!114 &5376598021612247349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5432848196177168347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d63cb37ddeb1f4086d92b2f68e5387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
+  skillID: 7
 --- !u!136 &7035118218481515173
 CapsuleCollider:
   m_ObjectHideFlags: 0

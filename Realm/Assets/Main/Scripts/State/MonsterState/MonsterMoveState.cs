@@ -13,7 +13,6 @@ public class MonsterMoveState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.M_Animator.SetBool("Move", true);
         MoveStateTime = 0f;
     }
 
@@ -30,16 +29,17 @@ public class MonsterMoveState : State<Monster>
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
         }
-        if (target.FindPlayer(6f))
+        if (target.FindPlayer(Mathf.Max(target.CharacterStats.GetStatValue(StatType.AttackRange),6f)))
         {
             target.M_StateHandler.TransitionTo(new FollowState(target));
             return;
         }
         if (!target.IsMoving &&target.targetPlayer ==null &&!target.CanAttack(target.targetPlayer))
-        { 
+        {
+            if (target.M_Animator.GetBool("Move") != true) { target.M_Animator.SetBool("Move", true); }
             target.MoveTo(target.nowTarget);
         }
-        if (target.HasReachedDestination()|| MoveStateTime>15f)
+        if (target.HasReachedDestination()|| MoveStateTime>10f)
         {
             target.M_Animator.SetTrigger("Idle");
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));

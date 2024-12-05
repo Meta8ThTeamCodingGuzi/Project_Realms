@@ -7,8 +7,7 @@ public class MonsterChaosAttack : Skill
 {
 
     [SerializeField] private LayerMask targetLayer;
-    [Header("몬스터 위치에서 얼마나 앞에 OverlapBox 만들지")]
-    [SerializeField] private float attackOffset = 1f;
+    [SerializeField] private float attackOffset;
 
     private bool isAttacking = false;
     private Monster monster;
@@ -24,14 +23,14 @@ public class MonsterChaosAttack : Skill
         {
             monsterStats = monster.GetComponent<ICharacterStats>();
         }
-        monsterBoxScale = monster.transform.localScale.x;
+        monsterBoxScale = monster.transform.localScale.x/2f;
+        attackOffset = GetAttackRange() / 2f;
     }
 
     public override bool TryUseSkill()
     {
         if (isAttacking) return false;
 
-        monster.M_Animator.SetTrigger("Attack");
         UseSkill();
         return true;
     }
@@ -81,7 +80,7 @@ public class MonsterChaosAttack : Skill
 
         Vector3 attackCenter = monsterPosition + (forward * attackOffset);
 
-        Collider[] hitColliders = Physics.OverlapBox(attackCenter,new Vector3(monsterBoxScale,1f,1*attackRange), transform.rotation, targetLayer);
+        Collider[] hitColliders = Physics.OverlapBox(attackCenter,new Vector3(monsterBoxScale,1f,1*attackRange/2f), transform.rotation, targetLayer);
 
         foreach (Collider collider in hitColliders)
         {
@@ -106,7 +105,7 @@ public class MonsterChaosAttack : Skill
         Vector3 attackCenter = transform.position + (transform.forward * attackOffset);
 
         Gizmos.matrix = Matrix4x4.TRS(attackCenter, transform.rotation, Vector3.one);
-        Gizmos.DrawWireCube(Vector3.zero, new Vector3(monsterBoxScale*2f,2f,1*GetAttackRange()*2f));
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(monsterBoxScale*2f,2f,1*GetAttackRange()));
     }
 
 

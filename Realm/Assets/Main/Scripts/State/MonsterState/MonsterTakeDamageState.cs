@@ -21,6 +21,7 @@ public class MonsterTakeDamageState : State<Monster>
 
     public override void OnUpdate()
     {
+        target.FindPlayer(20f);
         if (!target.IsAlive)
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));

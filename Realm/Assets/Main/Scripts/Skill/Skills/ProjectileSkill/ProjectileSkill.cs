@@ -8,13 +8,14 @@ public class ProjectileSkill : Skill
     [SerializeField] private Transform firePoint;
     private ProjectileSkillStat projectileStats;
     private Player player;
+    private Monster monster;
 
-    public void Start()
+    public virtual void Start()
     {
         ValidateComponents();
     }
 
-    private void ValidateComponents()
+    protected virtual void ValidateComponents()
     {
         if (projectilePrefab == null)
         {
@@ -48,6 +49,7 @@ public class ProjectileSkill : Skill
             Debug.LogError($"{gameObject.name}: skillStat이 null입니다!");
         }
         player = GetComponentInParent<Player>();
+        monster = GetComponent<Monster>();
     }
 
     protected override void UseSkill()
@@ -91,6 +93,10 @@ public class ProjectileSkill : Skill
             if (player != null)
             {
                 player.PlayerAnimator.SetTrigger("Attack");
+            }
+            else if (monster != null)
+            {
+                monster.M_Animator.SetTrigger("Attack");
             }
            FireProjectile(projectileData);
             if (innerInterval > 0 && i < projectileCount - 1)

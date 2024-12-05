@@ -50,7 +50,7 @@ MonoBehaviour:
   data: {fileID: 5205079589154066666}
   skillStat: {fileID: 8035002135269178052}
   animaClip: {fileID: -203655887218126122, guid: f388b6006af5c20408008415689f0500, type: 3}
-  projectilePrefab: {fileID: 2164046226966270966, guid: 0c1bb5596e1631f4fad88050930a096f, type: 3}
+  projectilePrefab: {fileID: 8378067300321673947, guid: 72dd260434a371d48963f0e7f1d48db5, type: 3}
   firePoint: {fileID: 2576823358758784094}
 --- !u!114 &2009148991960990164
 MonoBehaviour:

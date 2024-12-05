@@ -42,7 +42,11 @@ public class MonsterIdleState : State<Monster>
             {
                 target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
             }
-            if (target.FindPlayer(10f))
+            if (target.targetPlayer !=null)
+            {
+                target.M_StateHandler.TransitionTo(new FollowState(target));
+            }
+            else if (target.FindPlayer(Mathf.Max(target.CharacterStats.GetStatValue(StatType.AttackRange),10f)))
             {
                 target.M_StateHandler.TransitionTo(new FollowState(target));
             }

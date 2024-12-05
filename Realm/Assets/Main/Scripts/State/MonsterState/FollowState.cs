@@ -12,7 +12,6 @@ public class FollowState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.M_Animator.SetBool("Move", true);
     }
 
     public override void OnExit()
@@ -30,11 +29,15 @@ public class FollowState : State<Monster>
         {
             target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
         }
-        if (!target.FindPlayer(10f))
+        if (!target.FindPlayer(Mathf.Max(target.CharacterStats.GetStatValue(StatType.AttackRange), 10f)))
         {
             target.M_Animator.SetTrigger("Idle");
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
         }
-        if (target.targetPlayer != null&&!target.CanAttack(target.targetPlayer)) target.targetMove(target.targetPlayer);
+        if (target.targetPlayer != null && !target.CanAttack(target.targetPlayer))
+        {
+            if (target.M_Animator.GetBool("Move") != true) { target.M_Animator.SetBool("Move", true); }
+            target.targetMove(target.targetPlayer);
+        }
     }
 }
