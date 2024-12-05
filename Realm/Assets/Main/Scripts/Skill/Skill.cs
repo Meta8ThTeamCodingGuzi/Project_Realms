@@ -21,15 +21,7 @@ public abstract class Skill : MonoBehaviour
     public virtual void Initialize(Unit owner)
     {
         this.owner = owner;
-
-        if (skillStat == null)
-        {
-            skillStat = GetComponent<SkillStat>();
-            if (skillStat == null)
-            {
-                Debug.LogError("SkillStat component not found!");
-            }
-        }
+        skillStat = this?.GetComponent<SkillStat>();
     }
 
     private void Update()

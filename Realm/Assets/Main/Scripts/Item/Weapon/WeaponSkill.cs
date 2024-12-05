@@ -15,6 +15,7 @@ public abstract class WeaponSkill : Skill
 
     public override void Initialize(Unit owner)
     {
+        base.Initialize(owner);
         player = GetComponentInParent<Player>();
         if (player != null)
         {

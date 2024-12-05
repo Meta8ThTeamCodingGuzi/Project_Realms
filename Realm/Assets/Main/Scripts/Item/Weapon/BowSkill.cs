@@ -16,10 +16,9 @@ public class BowSkill : WeaponSkill
 
     public override void Initialize(Unit owner)
     {
-        base.Initialize(owner);
         print($"{owner} , {owner.Animator}");
+        base.Initialize(owner);
         UpdateArrowSpawnPoint();
-        player = owner as Player;
     }
 
 
@@ -55,7 +54,7 @@ public class BowSkill : WeaponSkill
 
         if (weaponHolder?.CurrentIKSetup?.offHandIK != null)
         {
-            player.Animator.SetTrigger("Attack");
+            Owner.Animator.SetTrigger("Attack");
             float elapsedTime = 0f;
             float startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
 
@@ -89,9 +88,9 @@ public class BowSkill : WeaponSkill
 
         isSkillInProgress = false;
 
-        if (player?.Animator != null)
+        if (Owner?.Animator != null)
         {
-            player.Animator.SetTrigger("Idle");
+            Owner.Animator.SetTrigger("Idle");
         }
 
         yield break;
