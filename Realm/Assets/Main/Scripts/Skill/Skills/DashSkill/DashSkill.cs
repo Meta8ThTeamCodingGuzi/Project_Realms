@@ -42,7 +42,7 @@ public class DashSkill : Skill
         Owner.IsDashing = true;
         ownerCollider.enabled = false;
 
-
+        Owner.Animator.SetTrigger("Attack");
         float dashDistance = skillStat.GetStatValue<float>(SkillStatType.DashDistance);
         Vector3 startPosition = Owner.transform.position;
         Vector3 targetPosition = startPosition + ownerDashdistance;

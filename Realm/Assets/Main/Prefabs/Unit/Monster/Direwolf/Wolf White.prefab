@@ -1282,7 +1282,7 @@ GameObject:
   - component: {fileID: 2693903783011050582}
   - component: {fileID: 5889783840944072735}
   - component: {fileID: -4271505619204185316}
-  - component: {fileID: 6536675483409847576}
+  - component: {fileID: 75094576440711549}
   - component: {fileID: 2693932084577508542}
   - component: {fileID: -5955166696768177822}
   - component: {fileID: -7728674905062149137}
@@ -1382,7 +1382,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6536675483409847576
+--- !u!114 &75094576440711549
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1391,23 +1391,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 5642600776820439909}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
+  m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   wasAttacked: 0
-  setPatrolTransforms:
-  - {fileID: 4240856727099767856}
-  - {fileID: 705118442075853449}
-  - {fileID: 2304222615616909678}
-  - {fileID: 496764615078642298}
-  - {fileID: 8539209486823800241}
+  setPatrolTransforms: []
   isattacked: 1
-  expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
+  expParticle: {fileID: 0}
   nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 7423734860729984066}
-  monsterDieParticle: {fileID: 198112793686261236, guid: 3845c058642164c4aa72204c65011e98, type: 3}
+  M_Animator: {fileID: 0}
+  monsterDieParticle: {fileID: 0}
   monsterType: 0
-  monsterSkill: {fileID: -5955166696768177822}
+  monsterSkill: {fileID: 0}
 --- !u!114 &2693932084577508542
 MonoBehaviour:
   m_ObjectHideFlags: 0

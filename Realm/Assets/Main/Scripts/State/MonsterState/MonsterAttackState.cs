@@ -14,7 +14,6 @@ public class MonsterAttackState : State<Monster>
     {
         target.StopMoving();
         target.Monsterskill.TryUseSkill();
-        //target.Attack(target.targetPlayer);
     }
 
     public override void OnExit()

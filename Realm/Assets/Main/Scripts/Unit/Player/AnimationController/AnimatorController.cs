@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class AnimatorController : MonoBehaviour
 {
-    [SerializeField] private RuntimeAnimatorController none;
-    [SerializeField] private RuntimeAnimatorController knightControllers;
-    [SerializeField] private RuntimeAnimatorController archerControllers;
+    private Unit owner;
+
+    [SerializeField] private List<RuntimeAnimatorController> AnimaContoller;
+
 
     private AnimatorOverrideController currentController;
 
+    public void IsInitialized(Unit owner)
+    {
+       this.owner = owner;
+    }
+
     private AnimatorOverrideController SetupOverrideController()
     {
-        RuntimeAnimatorController Controller = GameManager.Instance.player.Animator.runtimeAnimatorController;
+        RuntimeAnimatorController Controller = owner.Animator.runtimeAnimatorController;
         AnimatorOverrideController overrideController = new AnimatorOverrideController(Controller);
-        GameManager.Instance.player.Animator.runtimeAnimatorController = overrideController;
+        owner.Animator.runtimeAnimatorController = overrideController;
         return overrideController;
     }
 
@@ -24,13 +30,13 @@ public class AnimatorController : MonoBehaviour
         switch (itemType)
         {
             case ItemType.None:
-                GameManager.Instance.player.ChangeAnimController(none);
+                owner.ChangeAnimController(AnimaContoller[0]);
                 break;
             case ItemType.Sword:
-                GameManager.Instance.player.ChangeAnimController(knightControllers);
+                owner.ChangeAnimController(AnimaContoller[1]);
                 break;
             case ItemType.Bow:
-                GameManager.Instance.player.ChangeAnimController(archerControllers);
+                owner.ChangeAnimController(AnimaContoller[2]);
                 break;
             default:
                 return;
@@ -41,7 +47,7 @@ public class AnimatorController : MonoBehaviour
     public void Clipchange(AnimationClip animationClip)
     {
         if (currentController == null ||
-            currentController.runtimeAnimatorController != GameManager.Instance.player.Animator.runtimeAnimatorController)
+            currentController.runtimeAnimatorController != owner.Animator.runtimeAnimatorController)
         {
             currentController = SetupOverrideController();
         }
