@@ -10,6 +10,9 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
     protected ICharacterStats characterStats;
     private Animator animator;
+
+    private Unit target;
+    public Unit Target { get; set; }
     public Animator Animator { get; set; }
 
     private bool isDashing = false;

@@ -138,7 +138,7 @@ public class SkillController : MonoBehaviour
             activeSkills.Remove(skillToRemove);
 
             // 무기 스킬인 경우 완전히 제거
-            if (skillToRemove is WeaponSkill)
+            if (skillToRemove is DefaultSkill)
             {
                 if (initializedSkills.ContainsKey(skillToRemove.data.skillID))
                 {
@@ -222,7 +222,7 @@ public class SkillController : MonoBehaviour
 
         foreach (var slot in skillSlots)
         {
-            if (slot.Value != null && slot.Value is WeaponSkill)
+            if (slot.Value != null && slot.Value is DefaultSkill)
             {
                 keysToUnequip.Add(slot.Key);
             }
@@ -233,7 +233,7 @@ public class SkillController : MonoBehaviour
             UnequipSkill(key);
         }
 
-        var weaponSkillsToRemove = initializedSkills.Where(pair => pair.Value is WeaponSkill)
+        var weaponSkillsToRemove = initializedSkills.Where(pair => pair.Value is DefaultSkill)
                                                    .Select(pair => pair.Key)
                                                    .ToList();
 

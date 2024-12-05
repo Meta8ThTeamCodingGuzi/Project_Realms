@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BowSkill : WeaponSkill
+public class BowSkill : DefaultSkill
 {
     [SerializeField] private Transform arrowSpawnPoint;
     [SerializeField] private Projectile arrowPrefab;
@@ -16,10 +16,9 @@ public class BowSkill : WeaponSkill
 
     public override void Initialize(Unit owner)
     {
-        base.Initialize(owner);
         print($"{owner} , {owner.Animator}");
+        base.Initialize(owner);
         UpdateArrowSpawnPoint();
-        player = owner as Player;
     }
 
 
@@ -55,7 +54,7 @@ public class BowSkill : WeaponSkill
 
         if (weaponHolder?.CurrentIKSetup?.offHandIK != null)
         {
-            player.Animator.SetTrigger("Attack");
+            Owner.Animator.SetTrigger("Attack");
             float elapsedTime = 0f;
             float startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
 
@@ -89,9 +88,9 @@ public class BowSkill : WeaponSkill
 
         isSkillInProgress = false;
 
-        if (player?.Animator != null)
+        if (Owner?.Animator != null)
         {
-            player.Animator.SetTrigger("Idle");
+            Owner.Animator.SetTrigger("Idle");
         }
 
         yield break;
@@ -110,7 +109,7 @@ public class BowSkill : WeaponSkill
 
                 Vector3 directionToTarget = (targetPoint - transform.position).normalized;
                 directionToTarget.y = 0;
-                player.transform.rotation = Quaternion.LookRotation(directionToTarget);
+                Owner.transform.rotation = Quaternion.LookRotation(directionToTarget);
 
                 float distanceToTarget = Vector3.Distance(transform.position, targetPoint);
                 if (distanceToTarget > GetAttackRange())
@@ -121,11 +120,11 @@ public class BowSkill : WeaponSkill
                 Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
                     arrowPrefab.gameObject,
                     arrowSpawnPoint.position,
-                    Quaternion.LookRotation(player.transform.forward));
+                    Quaternion.LookRotation(Owner.transform.forward));
 
                 if (arrow != null)
                 {
-                    float totalDamage = GetPlayerDamage();
+                    float totalDamage = GetDamage();
 
                     ProjectileData data = new ProjectileData
                     {

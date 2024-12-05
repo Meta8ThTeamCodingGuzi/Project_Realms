@@ -20,7 +20,7 @@ public class PlayerSkillState : State<Player>
         isSkillComplete = false;
         isSkillPlaying = true;
 
-        if (target.TargetMonster != null)
+        if (target.Target != null)
         {
             target.skillController.TryUseSkillByKey(KeyCode.Mouse0);
         }
@@ -53,9 +53,9 @@ public class PlayerSkillState : State<Player>
 
         if (isSkillComplete)
         {
-            if (target.TargetMonster != null)
+            if (target.Target != null)
             {
-                float distanceToTarget = Vector3.Distance(target.transform.position, target.TargetMonster.transform.position);
+                float distanceToTarget = Vector3.Distance(target.transform.position, target.Target.transform.position);
                 float attackRange = target.CharacterStats.GetStatValue(StatType.AttackRange);
 
                 if (distanceToTarget > attackRange)

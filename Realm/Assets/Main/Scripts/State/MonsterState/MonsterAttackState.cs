@@ -13,7 +13,8 @@ public class MonsterAttackState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.Monsterskill.TryUseSkill();
+        target?.Monsterskill?.TryUseSkill();
+        //target.Attack(target.targetPlayer);
     }
 
     public override void OnExit()
