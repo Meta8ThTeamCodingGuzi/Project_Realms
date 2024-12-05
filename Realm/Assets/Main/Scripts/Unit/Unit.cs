@@ -20,10 +20,9 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
     public ICharacterStats CharacterStats => characterStats;
 
-    private AnimatorController animatorController;
     public AnimatorController AnimController { get; set; }
     public bool IsInitialized { get; private set; }
-    public bool wasAttacked = false;
+    public bool wasAttacked { get; set; }  = false;
 
     protected float lastAttackTime;
     protected Coroutine attackCoroutine;
@@ -55,54 +54,6 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
     #region 전투관련
     public virtual bool IsAlive => characterStats.GetStatValue(StatType.Health) > 0;
-    public virtual void Attack(Unit target)
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-        }
-        attackCoroutine = StartCoroutine(AttackRoutine(target));
-    }
-
-
-    public virtual void StopAttack()
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
-        }
-    }
-
-    protected virtual IEnumerator AttackRoutine(Unit target)
-    {
-        while (IsAlive && target != null && target.IsAlive)
-        {
-            if (CanAttack(target))
-            {
-                agent.ResetPath();
-                float currentTime = Time.time;
-                float attackSpeed = characterStats.GetStatValue(StatType.AttackSpeed);
-                float timeBetweenAttacks = 1f / attackSpeed;
-
-                if (currentTime - lastAttackTime >= timeBetweenAttacks)
-                {
-                    PerformAttack(target);
-                    lastAttackTime = currentTime;
-                }
-            }
-            //else
-            //{
-            //    // 대상이 공격 범위를 벗어났을 경우
-            //    MoveTo(target.transform.position);
-            //}
-
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        attackCoroutine = null;
-    }
-
 
     public virtual bool CanAttack(Unit target)
     {
@@ -114,14 +65,6 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
         return distanceToTarget <= attackRange;
     }
 
-    protected virtual void PerformAttack(Unit target)
-    {
-        if (target != null && target.IsAlive)
-        {
-            float damage = characterStats.GetStatValue(StatType.Damage);
-            target.TakeDamage(damage);
-        }
-    }
 
     public virtual void TakeDamage(float damage)
     {

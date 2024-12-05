@@ -2407,8 +2407,8 @@ GameObject:
   - component: {fileID: 1755669086104097744}
   - component: {fileID: -2933000396619721894}
   - component: {fileID: -3794458696798709244}
-  - component: {fileID: 156630592446214348}
   - component: {fileID: 5746649029815530178}
+  - component: {fileID: 4348788731846151296}
   m_Layer: 7
   m_Name: Cobra Black
   m_TagString: Untagged
@@ -2518,20 +2518,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wasAttacked: 0
   setPatrolTransforms:
   - {fileID: 2809704273792801874}
   - {fileID: 6123487778354944753}
   - {fileID: 2765924381979726589}
   - {fileID: 1202456568337246898}
   - {fileID: 6992079393746467712}
-  isattacked: 1
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
-  nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 6851653864413928278}
   monsterDieParticle: {fileID: 2268233570459045565, guid: 05e83b04bef7fa54889fd6d5221474f7, type: 3}
   monsterType: 0
-  monsterSkill: {fileID: 156630592446214348}
 --- !u!114 &-2933000396619721894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2583,23 +2578,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
   skillID: 7
---- !u!114 &156630592446214348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8680324024123509421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4f2ada121f7b0c4c81cfef7ba652cba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: -3794458696798709244}
-  skillStat: {fileID: 5746649029815530178}
-  animaClip: {fileID: 0}
-  projectilePrefab: {fileID: 8378067300321673947, guid: 72dd260434a371d48963f0e7f1d48db5, type: 3}
-  firePoint: {fileID: 8614076078116588713}
 --- !u!114 &5746649029815530178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2646,7 +2624,7 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 12
-    BaseValue: 0
+    BaseValue: 10
     GrowthValue: 0
     growthPercent: 0
   - Type: 15
@@ -2669,6 +2647,23 @@ MonoBehaviour:
     BaseValue: 2
     GrowthValue: 0
     growthPercent: 0
+--- !u!114 &4348788731846151296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8680324024123509421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5be5fa1a3703f45a240cd6af0fa4db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: -3794458696798709244}
+  skillStat: {fileID: 5746649029815530178}
+  animaClip: {fileID: 0}
+  projectilePrefab: {fileID: 3616117883005094147, guid: 72dd260434a371d48963f0e7f1d48db5, type: 3}
+  firePoint: {fileID: 8614076078116588713}
 --- !u!1 &8735198435109621285
 GameObject:
   m_ObjectHideFlags: 0

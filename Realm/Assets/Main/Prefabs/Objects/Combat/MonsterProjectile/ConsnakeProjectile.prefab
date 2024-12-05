@@ -19666,8 +19666,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2662055279748305561}
-  - component: {fileID: 8378067300321673947}
   - component: {fileID: 9099012812173132781}
+  - component: {fileID: 3616117883005094147}
   m_Layer: 0
   m_Name: ConsnakeProjectile
   m_TagString: Untagged
@@ -19691,19 +19691,6 @@ Transform:
   - {fileID: 1577482731853422805}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8378067300321673947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8650271041180350588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0de5b3b6d025294f9308c403ebd2667, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitParticle: {fileID: 198094002163677414, guid: eb4e4a06528c2da4b85ff27c4eb39712, type: 3}
 --- !u!136 &9099012812173132781
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -19727,3 +19714,16 @@ CapsuleCollider:
   m_Height: 0.68707657
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3616117883005094147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650271041180350588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbaafa2e1c8aa28489740a1b84997712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitParticle: {fileID: 2383102107888725196, guid: 0493a6d43bef8b84e89825def6d8385f, type: 3}

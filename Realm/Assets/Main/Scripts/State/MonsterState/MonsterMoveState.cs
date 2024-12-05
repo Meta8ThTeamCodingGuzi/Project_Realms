@@ -13,14 +13,14 @@ public class MonsterMoveState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.M_Animator.SetBool("Move", true);
+        target.Animator.SetBool("Move", true);
         MoveStateTime = 0f;
     }
 
     public override void OnExit()
     {
         MoveStateTime = 0;
-        target.M_Animator.SetBool("Move", false);
+        target.Animator.SetBool("Move", false);
     }
 
     public override void OnUpdate()
@@ -42,7 +42,7 @@ public class MonsterMoveState : State<Monster>
         }
         if (target.HasReachedDestination()|| MoveStateTime>15f)
         {
-            target.M_Animator.SetTrigger("Idle");
+            target.Animator.SetTrigger("Idle");
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
         }
     }

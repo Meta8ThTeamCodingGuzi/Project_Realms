@@ -961,8 +961,8 @@ GameObject:
   - component: {fileID: 972155034305916704}
   - component: {fileID: 6569092658945343162}
   - component: {fileID: -4442311987754380701}
-  - component: {fileID: 2221287134334002645}
   - component: {fileID: 8541719635301764038}
+  - component: {fileID: 1823851079629182695}
   m_Layer: 7
   m_Name: Cobra Red
   m_TagString: Untagged
@@ -1072,20 +1072,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wasAttacked: 0
   setPatrolTransforms:
   - {fileID: 1471986543318154567}
   - {fileID: 3638891424129399669}
   - {fileID: 7421824923472246987}
   - {fileID: 4734544757909582274}
   - {fileID: 3902436161447704421}
-  isattacked: 1
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
-  nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 3284501336631681673}
   monsterDieParticle: {fileID: 198049818700294864, guid: da420a91596617b4ab0f8941677b52e2, type: 3}
   monsterType: 0
-  monsterSkill: {fileID: 2221287134334002645}
 --- !u!114 &6569092658945343162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1137,23 +1132,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
   skillID: 7
---- !u!114 &2221287134334002645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2870003257934478144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4f2ada121f7b0c4c81cfef7ba652cba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: -4442311987754380701}
-  skillStat: {fileID: 8541719635301764038}
-  animaClip: {fileID: 0}
-  projectilePrefab: {fileID: 8378067300321673947, guid: 72dd260434a371d48963f0e7f1d48db5, type: 3}
-  firePoint: {fileID: 5536497039709438023}
 --- !u!114 &8541719635301764038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1223,6 +1201,23 @@ MonoBehaviour:
     BaseValue: 2
     GrowthValue: 0
     growthPercent: 0
+--- !u!114 &1823851079629182695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2870003257934478144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5be5fa1a3703f45a240cd6af0fa4db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: -4442311987754380701}
+  skillStat: {fileID: 8541719635301764038}
+  animaClip: {fileID: 0}
+  projectilePrefab: {fileID: 8378067300321673947, guid: 72dd260434a371d48963f0e7f1d48db5, type: 3}
+  firePoint: {fileID: 5536497039709438023}
 --- !u!1 &2989398853775930061
 GameObject:
   m_ObjectHideFlags: 0

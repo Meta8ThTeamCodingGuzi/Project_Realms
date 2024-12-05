@@ -10,8 +10,10 @@ public class MonsterProjectile : Projectile
     {
         if(other.TryGetComponent<Player>(out Player Player))
         {
+            print("½Ã¹ß");
             Player.TakeDamage(data.Damage);
             PoolManager.Instance.Despawn(this);
         }           
     }
+
 }

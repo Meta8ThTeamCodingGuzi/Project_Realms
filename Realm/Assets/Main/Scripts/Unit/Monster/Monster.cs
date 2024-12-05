@@ -14,13 +14,12 @@ public class Monster : Unit
 
     private List<Vector3> patrolPoint = new List<Vector3>();
 
-    public bool isattacked = true;
+    public bool isattacked { set; get; } = true;
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 currentPatrolPoint;
+    public Vector3 currentPatrolPoint { get; set ; }
 
-    public Animator M_Animator;
     public MonsterStateHandler M_StateHandler => m_StateHandler;
 
     private MonsterStat MonsterStat;
@@ -32,11 +31,12 @@ public class Monster : Unit
     [SerializeField] private MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
 
-    [SerializeField]private Skill monsterSkill;
-    public Skill Monsterskill => monsterSkill;
+    private Skill monsterSkill;
+    public Skill Monsterskill { get => monsterSkill; set => monsterSkill = value; }
 
     protected override void Initialize()
     {
+        base.Initialize();
         foreach (Transform setPatrolTransform in setPatrolTransforms)
         {
             patrolPoint.Add(setPatrolTransform.position);
@@ -47,7 +47,8 @@ public class Monster : Unit
             m_StateHandler = new MonsterStateHandler(this);
         }
         m_StateHandler.Initialize();
-        base.Initialize();
+
+        Animator = GetComponentInChildren<Animator>();
 
         if (characterStats != null)
         {
@@ -65,10 +66,13 @@ public class Monster : Unit
         };
 
         transform.localScale *= sizeMultiplier;
-        
-        monsterSkill?.Initialize(this);
+
+        monsterSkill = GetComponent<Skill>();
+
+        monsterSkill.Initialize(this);
 
     }
+
     public void targetMove(Unit unit)
     {
         if (unit != null && agent.isActiveAndEnabled && IsAlive)
@@ -99,38 +103,10 @@ public class Monster : Unit
                 }
             }
         }
-        StopAttack();
         this.Target = null;
         return false;
     }
 
-
-
-
-    protected override IEnumerator AttackRoutine(Unit target)
-    {
-        while (IsAlive && target != null && target.IsAlive)
-        {
-            if (CanAttack(target))
-            {
-                agent.ResetPath();
-                float currentTime = Time.time;
-                float attackSpeed = characterStats.GetStatValue(StatType.AttackSpeed);
-                float timeBetweenAttacks = 1f / attackSpeed;
-
-                if (currentTime - lastAttackTime >= timeBetweenAttacks)
-                {
-                    M_Animator.SetTrigger("Attack");
-                    yield return new WaitForSeconds(0.7f);
-                    PerformAttack(target);
-                    lastAttackTime = currentTime;
-                }
-            }
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        attackCoroutine = null;
-    }
     public void nextPatrol()
     {
         patrolKey++;
@@ -149,14 +125,14 @@ public class Monster : Unit
 
     public IEnumerator DieRoutine()
     {
-        M_Animator.SetTrigger("Die");
+        Animator.SetTrigger("Die");
 
-        while (!M_Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        while (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
         {
             yield return null;
         }
 
-        while (M_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
         {
             yield return null;
         }
@@ -214,6 +190,7 @@ public class Monster : Unit
 
         int adjustedLevel = Mathf.RoundToInt(playerLevel * levelMultiplier);
         monsterStat.SetMonsterLevel(adjustedLevel);
+        this.monsterSkill.SetLevel(adjustedLevel);
     }
     private void OnDisable()
     {

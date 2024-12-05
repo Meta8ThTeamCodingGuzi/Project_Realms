@@ -4909,7 +4909,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4032810995809222198}
-  - component: {fileID: 2246292599717819007}
+  - component: {fileID: -6513845039715445785}
   - component: {fileID: 6872152770230129051}
   m_Layer: 0
   m_Name: InfernalProjectile
@@ -4934,7 +4934,7 @@ Transform:
   - {fileID: 7377397987399879039}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2246292599717819007
+--- !u!114 &-6513845039715445785
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4943,10 +4943,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3655166755832332823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0de5b3b6d025294f9308c403ebd2667, type: 3}
+  m_Script: {fileID: 11500000, guid: fbaafa2e1c8aa28489740a1b84997712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitParticle: {fileID: 0}
+  hitParticle: {fileID: 1570490977758113565, guid: 59514b9b1a530464099a6d8ed7dc1d93, type: 3}
 --- !u!135 &6872152770230129051
 SphereCollider:
   m_ObjectHideFlags: 0

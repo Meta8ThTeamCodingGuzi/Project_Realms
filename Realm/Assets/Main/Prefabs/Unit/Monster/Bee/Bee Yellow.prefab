@@ -2118,9 +2118,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 663085635871424144}
+  - component: {fileID: 8692036342158060929}
   - component: {fileID: 3060220770797521091}
   - component: {fileID: 5160237862136158189}
-  - component: {fileID: 6129369798288772196}
+  - component: {fileID: 5903817691821773618}
   - component: {fileID: 5376598021612247349}
   - component: {fileID: 7035118218481515173}
   - component: {fileID: 5388806325952756284}
@@ -2148,6 +2149,28 @@ Transform:
   - {fileID: 3367941197089043614}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &8692036342158060929
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5432848196177168347}
+  m_Enabled: 1
+  m_AgentTypeID: -1372625422
+  m_Radius: 0.5
+  m_Speed: 4
+  m_Acceleration: 3000
+  avoidancePriority: 50
+  m_AngularSpeed: 3000
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &3060220770797521091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2160,15 +2183,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wasAttacked: 0
   setPatrolTransforms: []
-  isattacked: 1
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
-  nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 2686738428520541941}
   monsterDieParticle: {fileID: 198325895038918106, guid: 7e6767444726b234c868079dec6d7ae0, type: 3}
   monsterType: 0
-  monsterSkill: {fileID: 6129369798288772196}
 --- !u!114 &5160237862136158189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2206,7 +2224,7 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
---- !u!114 &6129369798288772196
+--- !u!114 &5903817691821773618
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2215,16 +2233,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5432848196177168347}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6218653006781444080ccf28817bab00, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d8c43196c863c54eb272c7b5117bf05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 5376598021612247349}
   skillStat: {fileID: 0}
   animaClip: {fileID: 0}
+  attackAngle: 60
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  attackOffset: 1
 --- !u!114 &5376598021612247349
 MonoBehaviour:
   m_ObjectHideFlags: 0

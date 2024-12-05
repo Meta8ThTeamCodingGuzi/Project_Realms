@@ -15379,11 +15379,11 @@ GameObject:
   - component: {fileID: 1687796549447654791}
   - component: {fileID: 7644437801930842974}
   - component: {fileID: 2132033959975943433}
-  - component: {fileID: 7556344865099097288}
+  - component: {fileID: 357704525021674111}
   - component: {fileID: 3866222582951452796}
   - component: {fileID: 8867510119693316277}
-  - component: {fileID: 5731213868333460712}
-  - component: {fileID: 7461424241117535308}
+  - component: {fileID: -4350280313379741316}
+  - component: {fileID: -4463196656258468884}
   m_Layer: 0
   m_Name: Infernal Purple
   m_TagString: Untagged
@@ -15462,9 +15462,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7430306012190880324}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -15476,12 +15476,12 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7556344865099097288
+--- !u!114 &357704525021674111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15490,23 +15490,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 7430306012190880324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
+  m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wasAttacked: 0
   setPatrolTransforms:
   - {fileID: 4985372751541084302}
   - {fileID: 7028211223325074609}
   - {fileID: 6152366716796010271}
   - {fileID: 2991899427639605637}
   - {fileID: 8941621710759260292}
-  isattacked: 1
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
-  nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 2103015913597784985}
-  monsterDieParticle: {fileID: 198791514311090032, guid: f5933e79cbb33c14cadcc4d779aa4245, type: 3}
+  monsterDieParticle: {fileID: 198049818700294864, guid: da420a91596617b4ab0f8941677b52e2, type: 3}
   monsterType: 0
-  monsterSkill: {fileID: 5731213868333460712}
 --- !u!114 &3866222582951452796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15558,24 +15553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
   skillID: 7
---- !u!114 &5731213868333460712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7430306012190880324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4f2ada121f7b0c4c81cfef7ba652cba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 8867510119693316277}
-  skillStat: {fileID: 7461424241117535308}
-  animaClip: {fileID: 0}
-  projectilePrefab: {fileID: 2246292599717819007, guid: 82bf9ea283043f84aa03a6e4e12c4796, type: 3}
-  firePoint: {fileID: 2369749160496263942}
---- !u!114 &7461424241117535308
+--- !u!114 &-4350280313379741316
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15601,7 +15579,7 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 2
-    BaseValue: 30
+    BaseValue: 20
     GrowthValue: 0
     growthPercent: 0
   - Type: 6
@@ -15617,19 +15595,19 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 10
-    BaseValue: 2
+    BaseValue: 1
     GrowthValue: 0
     growthPercent: 0
   - Type: 12
-    BaseValue: 0
+    BaseValue: 3
     GrowthValue: 0
     growthPercent: 0
   - Type: 15
-    BaseValue: 1
+    BaseValue: 0.7
     GrowthValue: 0
     growthPercent: 0
   - Type: 14
-    BaseValue: 1
+    BaseValue: 0.7
     GrowthValue: 0
     growthPercent: 0
   - Type: 9
@@ -15640,10 +15618,23 @@ MonoBehaviour:
     BaseValue: 0
     GrowthValue: 0
     growthPercent: 0
-  - Type: 4
-    BaseValue: 2
-    GrowthValue: 0
-    growthPercent: 0
+--- !u!114 &-4463196656258468884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430306012190880324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5be5fa1a3703f45a240cd6af0fa4db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 8867510119693316277}
+  skillStat: {fileID: -4350280313379741316}
+  animaClip: {fileID: 0}
+  projectilePrefab: {fileID: -6513845039715445785, guid: 82bf9ea283043f84aa03a6e4e12c4796, type: 3}
+  firePoint: {fileID: 2369749160496263942}
 --- !u!1 &7558002256068206664
 GameObject:
   m_ObjectHideFlags: 0

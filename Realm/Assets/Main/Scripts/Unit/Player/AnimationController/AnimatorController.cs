@@ -51,6 +51,15 @@ public class AnimatorController : MonoBehaviour
         }
     }
 
+    public void DragonAnimatorChange(UnitState unitState)
+    {
+
+        foreach(AnimaState state in animaStates)
+        {
+            owner.ChangeAnimController(state.AnimaController);
+        }
+    }
+
 
     public void Clipchange(AnimationClip animationClip)
     {
