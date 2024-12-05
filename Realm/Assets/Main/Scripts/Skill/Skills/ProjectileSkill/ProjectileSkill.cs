@@ -75,6 +75,7 @@ public class ProjectileSkill : Skill
 
         ProjectileData projectileData = new ProjectileData
         {
+            owner = Owner,
             Damage = projectileStats.GetStatValue<float>(SkillStatType.Damage),
             Speed = projectileStats.GetStatValue<float>(SkillStatType.ProjectileSpeed),
             Range = projectileStats.GetStatValue<float>(SkillStatType.ProjectileRange),
@@ -83,16 +84,15 @@ public class ProjectileSkill : Skill
                        projectileStats.GetStatValue<int>(SkillStatType.HomingLevel) ? false : true,
             HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange),
         };
-        GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
-        firePoint.rotation = transform.rotation;
+        Owner.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
 
         for (int i = 0; i < projectileCount; i++)
         {
-            if (Owner != null)
+            if (Owner.Animator != null)
             {
                 Owner.Animator.SetTrigger("Attack");
             }
-           FireProjectile(projectileData);
+            FireProjectile(projectileData);
             if (innerInterval > 0 && i < projectileCount - 1)
             {
                 yield return new WaitForSeconds(innerInterval);
@@ -167,6 +167,7 @@ public class ProjectileSkill : Skill
 
 public struct ProjectileData
 {
+    public Unit owner;
     public float Damage;
     public float Speed;
     public float Range;

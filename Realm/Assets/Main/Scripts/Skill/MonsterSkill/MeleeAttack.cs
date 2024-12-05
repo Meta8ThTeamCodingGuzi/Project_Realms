@@ -18,7 +18,6 @@ public class MeleeAttack : Skill
 
     public override void Initialize(Unit owner)
     {
-        base.Initialize(owner);
         monster = GetComponent<Monster>();
         if (monster != null)
         {

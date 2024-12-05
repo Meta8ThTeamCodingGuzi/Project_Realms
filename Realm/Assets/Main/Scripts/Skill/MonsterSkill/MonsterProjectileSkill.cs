@@ -39,8 +39,8 @@ public class MonsterProjectileSkill : ProjectileSkill
             GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
             if (animaClip != null)
             {
-                GameManager.Instance.player.PlayerAnimController.Clipchange(animaClip);
-                StartCoroutine(SkillSequenceTimer());
+                GameManager.Instance.player.AnimController.Clipchange(animaClip);
+                //tartCoroutine(SkillSequenceTimer());
             }
         }
 

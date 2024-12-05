@@ -144,7 +144,7 @@ namespace RapidIcon_1_7_1
 				//---If prefab has Animator component, then try to get first animation clip---//
 				if (animator != null)
 				{
-					AnimatorController animatorController = animator.runtimeAnimatorController as AnimatorController;
+                    UnityEditor.Animations.AnimatorController animatorController = animator.runtimeAnimatorController as UnityEditor.Animations.AnimatorController;
 					if (animatorController != null && animatorController.animationClips != null && animatorController.animationClips.Length > 0)
 						icon.iconSettings.animationClip = animatorController.animationClips[0];
 				}

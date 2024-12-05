@@ -17,7 +17,9 @@ public class BowSkill : WeaponSkill
     public override void Initialize(Unit owner)
     {
         base.Initialize(owner);
+        print($"{owner} , {owner.Animator}");
         UpdateArrowSpawnPoint();
+        player = owner as Player;
     }
 
 
@@ -51,8 +53,9 @@ public class BowSkill : WeaponSkill
     {
         isSkillInProgress = true;
 
-        if (weaponHolder.CurrentIKSetup?.offHandIK != null)
+        if (weaponHolder?.CurrentIKSetup?.offHandIK != null)
         {
+            player.Animator.SetTrigger("Attack");
             float elapsedTime = 0f;
             float startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
 
@@ -78,9 +81,19 @@ public class BowSkill : WeaponSkill
                 yield return null;
             }
         }
+        else
+        {
+            FireArrow();
+            lastFireTime = Time.time;
+        }
 
         isSkillInProgress = false;
-        player.Animator.SetTrigger("Idle");
+
+        if (player?.Animator != null)
+        {
+            player.Animator.SetTrigger("Idle");
+        }
+
         yield break;
     }
 
@@ -116,6 +129,7 @@ public class BowSkill : WeaponSkill
 
                     ProjectileData data = new ProjectileData
                     {
+                        owner = Owner,
                         Damage = totalDamage,
                         Speed = 15f,
                         Range = 15f

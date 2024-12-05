@@ -48,6 +48,7 @@ public class PlayerInputManager : MonoBehaviour
             }
 
             CheckSkillInputs();
+            CheckItemHover();
         }
         finally
         {
@@ -84,6 +85,15 @@ public class PlayerInputManager : MonoBehaviour
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.TryGetComponent<WorldDropItem>(out WorldDropItem dropItem))
+            {
+                HandleDropItemClick(dropItem);
+                return;
+            }
+        }
 
         foreach (RaycastHit hit in hits)
         {
@@ -131,5 +141,43 @@ public class PlayerInputManager : MonoBehaviour
     {
         player.SetDestination(position);
         player.PlayerHandler.TransitionTo(new PlayerMoveState(player));
+    }
+
+    private void HandleDropItemClick(WorldDropItem dropItem)
+    {
+        float distanceToItem = Vector3.Distance(player.transform.position, dropItem.transform.position);
+        if (distanceToItem <= dropItem.InteractionRadius)
+        {
+            dropItem.TryPickupItem();
+        }
+        else
+        {
+            player.SetDestination(dropItem.transform.position);
+            dropItem.TryPickupItem();
+        }
+    }
+
+    public void CheckItemHover()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
+
+        WorldDropItem closestItem = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.TryGetComponent<WorldDropItem>(out WorldDropItem dropItem))
+            {
+                float distance = Vector3.Distance(hit.point, mainCamera.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestItem = dropItem;
+                }
+            }
+        }
+
+        WorldDropItem.UpdateHoveredItem(closestItem);
     }
 }

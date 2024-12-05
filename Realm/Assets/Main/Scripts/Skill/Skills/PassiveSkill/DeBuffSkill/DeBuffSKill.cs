@@ -22,6 +22,7 @@ public class DebuffSKill : Skill
 
     protected override void UseSkill()
     {
+        Owner.Animator.SetTrigger("Attack");
         if (!isSkillActive)
         {
             isSkillActive = true;
@@ -30,6 +31,7 @@ public class DebuffSKill : Skill
         {
             isSkillActive = false;
         }
+        Owner.Animator.SetTrigger("Idle");
     }
 
 

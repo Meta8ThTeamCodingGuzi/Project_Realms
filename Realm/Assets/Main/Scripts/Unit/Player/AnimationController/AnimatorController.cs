@@ -1,0 +1,54 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AnimatorController : MonoBehaviour
+{
+    [SerializeField] private RuntimeAnimatorController none;
+    [SerializeField] private RuntimeAnimatorController knightControllers;
+    [SerializeField] private RuntimeAnimatorController archerControllers;
+
+    private AnimatorOverrideController currentController;
+
+    private AnimatorOverrideController SetupOverrideController()
+    {
+        RuntimeAnimatorController Controller = GameManager.Instance.player.Animator.runtimeAnimatorController;
+        AnimatorOverrideController overrideController = new AnimatorOverrideController(Controller);
+        GameManager.Instance.player.Animator.runtimeAnimatorController = overrideController;
+        return overrideController;
+    }
+
+
+    public void AnimatorChange(ItemType itemType)
+    {
+        switch (itemType)
+        {
+            case ItemType.None:
+                GameManager.Instance.player.ChangeAnimController(none);
+                break;
+            case ItemType.Sword:
+                GameManager.Instance.player.ChangeAnimController(knightControllers);
+                break;
+            case ItemType.Bow:
+                GameManager.Instance.player.ChangeAnimController(archerControllers);
+                break;
+            default:
+                return;
+        }
+    }
+
+
+    public void Clipchange(AnimationClip animationClip)
+    {
+        if (currentController == null ||
+            currentController.runtimeAnimatorController != GameManager.Instance.player.Animator.runtimeAnimatorController)
+        {
+            currentController = SetupOverrideController();
+        }
+
+        if (animationClip != null)
+        {
+            currentController["Attack"] = animationClip;
+        }
+    }
+}

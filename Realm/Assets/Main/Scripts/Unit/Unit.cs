@@ -17,6 +17,8 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
     public ICharacterStats CharacterStats => characterStats;
 
+    private AnimatorController animatorController;
+    public AnimatorController AnimController { get; set; }
     public bool IsInitialized { get; private set; }
     public bool wasAttacked = false;
 
@@ -201,6 +203,11 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
     }
 
     #endregion
+
+    public void ChangeAnimController(RuntimeAnimatorController newAnimator)
+    {
+        Animator.runtimeAnimatorController = newAnimator;
+    }
 
     #region 기즈모 관련
 #if UNITY_EDITOR

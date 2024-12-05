@@ -10,14 +10,14 @@ public class WeaponHolder : MonoBehaviour
         public ItemType weaponType;
         public TwoBoneIKConstraint mainHandIK;
         public Transform mainHandTarget;
-        public TwoBoneIKConstraint offHandIK;  // 활 등 양손 무기용
+        public TwoBoneIKConstraint offHandIK; 
         public Transform offHandTarget;
     }
 
     [Header("Rig Settings")]
     [SerializeField] private Rig weaponRig;
     [SerializeField] private WeaponIKSetup[] weaponIKSetups;
-    [SerializeField] private RigBuilder rigBuilder;  // Inspector에서 할당
+    [SerializeField] private RigBuilder rigBuilder;  
 
     [Header("Debug Settings")]
     [SerializeField] private bool showDebugControls = false;
@@ -28,7 +28,6 @@ public class WeaponHolder : MonoBehaviour
     [SerializeField] private float weaponScale = 1f;
     [SerializeField] private float ikWeightSpeed = 10f;
 
-    // 런타임 조정을 위한 오프셋 값들
     private Vector3 mainHandPositionOffset;
     private Vector3 mainHandRotationOffset;
     private Vector3 offHandPositionOffset;

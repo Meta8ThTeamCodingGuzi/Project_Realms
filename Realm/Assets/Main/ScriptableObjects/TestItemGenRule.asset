@@ -15,7 +15,7 @@ MonoBehaviour:
   monsterDropRules:
   - monsterType: 0
     itemDropChance: 100
-    possibleItemTypes: 02000000
+    possibleItemTypes: 0200000003000000
     possibleStatTypes: 0100000004000000
     raritySettings:
     - rarity: 0
