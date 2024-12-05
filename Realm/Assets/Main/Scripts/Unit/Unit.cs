@@ -8,6 +8,9 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
     protected NavMeshAgent agent;
     protected ICharacterStats characterStats;
     private Animator animator;
+
+    private Unit target;
+    public Unit Target { get; set; }
     public Animator Animator { get; set; }
     public ICharacterStats CharacterStats => characterStats;
 

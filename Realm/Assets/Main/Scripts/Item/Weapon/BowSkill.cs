@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BowSkill : WeaponSkill
+public class BowSkill : DefaultSkill
 {
     [SerializeField] private Transform arrowSpawnPoint;
     [SerializeField] private Projectile arrowPrefab;
@@ -109,7 +109,7 @@ public class BowSkill : WeaponSkill
 
                 Vector3 directionToTarget = (targetPoint - transform.position).normalized;
                 directionToTarget.y = 0;
-                player.transform.rotation = Quaternion.LookRotation(directionToTarget);
+                Owner.transform.rotation = Quaternion.LookRotation(directionToTarget);
 
                 float distanceToTarget = Vector3.Distance(transform.position, targetPoint);
                 if (distanceToTarget > GetAttackRange())
@@ -120,11 +120,11 @@ public class BowSkill : WeaponSkill
                 Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
                     arrowPrefab.gameObject,
                     arrowSpawnPoint.position,
-                    Quaternion.LookRotation(player.transform.forward));
+                    Quaternion.LookRotation(Owner.transform.forward));
 
                 if (arrow != null)
                 {
-                    float totalDamage = GetPlayerDamage();
+                    float totalDamage = GetDamage();
 
                     ProjectileData data = new ProjectileData
                     {

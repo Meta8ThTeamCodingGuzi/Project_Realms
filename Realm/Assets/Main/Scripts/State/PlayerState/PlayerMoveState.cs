@@ -38,19 +38,19 @@ public class PlayerMoveState : State<Player>
 
         target.InputManager.HandleInput();
 
-        if (target.TargetMonster != null)
+        if (target.Target != null)
         {
-            float distanceToTarget = Vector3.Distance(target.transform.position, target.TargetMonster.transform.position);
+            float distanceToTarget = Vector3.Distance(target.transform.position, target.Target.transform.position);
             float attackRange = target.CharacterStats.GetStatValue(StatType.AttackRange);
 
             if (distanceToTarget <= attackRange)
             {
                 target.StopMoving();
-                target.transform.LookAt(target.TargetMonster.transform);
+                target.transform.LookAt(target.Target.transform);
                 target.PlayerHandler.TransitionTo(new PlayerSkillState(target));
                 return;
             }
-            target.MoveTo(target.TargetMonster.transform.position);
+            target.MoveTo(target.Target.transform.position);
         }
         else if (target.TargetPos != Vector3.zero)
         {

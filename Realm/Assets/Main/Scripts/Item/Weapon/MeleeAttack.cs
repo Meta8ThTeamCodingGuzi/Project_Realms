@@ -2,25 +2,27 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SwordSkill : WeaponSkill
+public class MeleeAttack : DefaultSkill
 {
+    private bool isOwnerPlayer;
 
     protected override void UseSkill()
     {
-        Monster targetMonster = player.TargetMonster;
-        if (targetMonster != null)
+        isOwnerPlayer = Owner is Player;
+        Unit target = Owner.Target;
+        if (target != null)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, targetMonster.transform.position);
+            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
             float attackRange = GetAttackRange();
 
             if (distanceToTarget <= attackRange && !isAttackInProgress)
             {
-                player.StopMoving();
-                player.transform.LookAt(targetMonster.transform);
+                Owner.StopMoving();
+                Owner.transform.LookAt(target.transform);
 
                 float attackSpeed = GetPlayerAttackSpeed();
-                player.Animator.SetFloat("AttackSpeed", attackSpeed);
-                player.Animator.SetTrigger("Attack");
+                Owner.Animator.SetFloat("AttackSpeed", attackSpeed);
+                Owner.Animator.SetTrigger("Attack");
 
                 StartCoroutine(SwordAttackRoutine());
             }
@@ -31,20 +33,20 @@ public class SwordSkill : WeaponSkill
     {
         isSkillInProgress = true;
 
-        while (!player.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        while (!Owner.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             yield return null;
         }
 
         float damagePoint = 0.4f;
-        while (player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < damagePoint)
+        while (Owner.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < damagePoint)
         {
             yield return null;
         }
 
         PerformSectorAttack();
 
-        while (player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.97f)
+        while (Owner.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.97f)
         {
             yield return null;
         }
@@ -55,7 +57,7 @@ public class SwordSkill : WeaponSkill
     private void PerformSectorAttack()
     {
         Vector3 playerPosition = transform.position;
-        Vector3 forward = player.transform.forward;
+        Vector3 forward = Owner.transform.forward;
         float attackRange = GetAttackRange();
 
         Collider[] hitColliders = Physics.OverlapSphere(playerPosition, attackRange, targetLayer);
@@ -67,18 +69,20 @@ public class SwordSkill : WeaponSkill
 
             if (angle <= attackAngle / 2)
             {
-                if (collider.TryGetComponent<Monster>(out Monster monster))
+                if (!collider.TryGetComponent<Unit>(out Unit targetUnit))
+                    return;
+
+                if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
                 {
-                    float totalDamage = GetPlayerDamage();
-                    monster.TakeDamage(totalDamage);
+                    targetUnit.TakeDamage(GetDamage());
                 }
             }
         }
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (player == null) return;
+        if (Owner == null) return;
 
         Vector3 position = transform.position;
         Vector3 forward = transform.forward;
@@ -102,4 +106,5 @@ public class SwordSkill : WeaponSkill
             previousPoint = currentPoint;
         }
     }
+#endif
 }

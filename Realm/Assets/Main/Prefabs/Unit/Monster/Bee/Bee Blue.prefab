@@ -169,7 +169,6 @@ GameObject:
   - component: {fileID: 8201177862018282165}
   - component: {fileID: 7523341016101668123}
   - component: {fileID: 5080485614689284288}
-  - component: {fileID: 1512408844822826317}
   - component: {fileID: 327701000812414323}
   - component: {fileID: 921161076407042927}
   - component: {fileID: 3536307650667608862}
@@ -244,7 +243,7 @@ MonoBehaviour:
   M_Animator: {fileID: 1079972265488870627}
   monsterDieParticle: {fileID: 556242054917982096, guid: 968fc987636c3b84786d8f6d6c2045ec, type: 3}
   monsterType: 0
-  monsterSkill: {fileID: 1512408844822826317}
+  monsterSkill: {fileID: 0}
 --- !u!114 &5080485614689284288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,25 +281,6 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
---- !u!114 &1512408844822826317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 375403760396118557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6218653006781444080ccf28817bab00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 327701000812414323}
-  skillStat: {fileID: 0}
-  animaClip: {fileID: 0}
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  attackOffset: 1
 --- !u!114 &327701000812414323
 MonoBehaviour:
   m_ObjectHideFlags: 0

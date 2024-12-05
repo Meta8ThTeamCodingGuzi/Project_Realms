@@ -71,7 +71,7 @@ public class Monster : Unit
 
         transform.localScale *= sizeMultiplier;
         
-        monsterSkill.Initialize(this);
+        monsterSkill?.Initialize(this);
 
     }
     public void targetMove(Unit unit)
@@ -99,13 +99,13 @@ public class Monster : Unit
             {
                 if (player.IsAlive)
                 {
-                    this.player = player;
+                    this.Target = player;
                     return true;
                 }
             }
         }
         StopAttack();
-        this.player = null;
+        this.Target = null;
         return false;
     }
 

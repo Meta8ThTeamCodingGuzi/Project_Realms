@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Buffers;
 
-public abstract class WeaponSkill : Skill
+public abstract class DefaultSkill : Skill
 {
     protected WeaponHolder weaponHolder;
-    protected Player player;
-    protected ICharacterStats playerStats;
+    protected ICharacterStats OwnerStats;
     protected bool isAttackInProgress = false;
 
     [Header("Weapon Settings")]
@@ -16,12 +15,12 @@ public abstract class WeaponSkill : Skill
     public override void Initialize(Unit owner)
     {
         base.Initialize(owner);
-        player = GetComponentInParent<Player>();
-        if (player != null)
+        OwnerStats = Owner.GetComponent<ICharacterStats>();
+        if (Owner.TryGetComponent<WeaponHolder>(out WeaponHolder WeaponHolder)) 
         {
-            playerStats = player.GetComponent<ICharacterStats>();
-            weaponHolder = player.GetComponent<WeaponHolder>();
+            weaponHolder = WeaponHolder;
         }
+
     }
 
     public override bool TryUseSkill()
@@ -34,11 +33,11 @@ public abstract class WeaponSkill : Skill
 
     protected virtual bool CanUseSkill()
     {
-        if (player == null || !player.IsAlive) return false;
+        if (Owner == null || !Owner.IsAlive) return false;
 
         if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
         {
-            return player.TargetMonster != null;
+            return Owner.Target != null;
         }
 
         return true;
@@ -53,24 +52,24 @@ public abstract class WeaponSkill : Skill
         return 0.3f;
     }
 
-    protected float GetPlayerDamage()
+    protected float GetDamage()
     {
-        return playerStats?.GetStatValue(StatType.Damage) ?? 0f;
+        return OwnerStats?.GetStatValue(StatType.Damage) ?? 0f;
     }
 
     protected float GetPlayerAttackSpeed()
     {
-        return playerStats?.GetStatValue(StatType.AttackSpeed) ?? 1f;
+        return OwnerStats?.GetStatValue(StatType.AttackSpeed) ?? 1f;
     }
 
     protected float GetAttackRange()
     {
-        return playerStats?.GetStatValue(StatType.AttackRange) ?? 2f;
+        return OwnerStats?.GetStatValue(StatType.AttackRange) ?? 2f;
     }
 
     protected void OnAttackComplete()
     {
         isSkillInProgress = false;
-        player.Animator.SetTrigger("Idle");
+        Owner.Animator.SetTrigger("Idle");
     }
 }

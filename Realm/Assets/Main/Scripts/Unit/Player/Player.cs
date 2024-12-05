@@ -32,8 +32,7 @@ public class Player : Unit
     private PlayerStateHandler playerHandler;
     public PlayerStateHandler PlayerHandler => playerHandler;
 
-    private Monster targetMonster;
-    public Monster TargetMonster => targetMonster;
+
 
     private Vector3 targetPos = Vector3.zero;
     public Vector3 TargetPos => targetPos;
@@ -325,7 +324,7 @@ public class Player : Unit
     }
     public void ClearTarget()
     {
-        targetMonster = null;
+        Target = null;
     }
 
 
@@ -338,21 +337,21 @@ public class Player : Unit
             StopCoroutine(manaRegenCoroutine);
     }
 
-    public void SetTarget(Monster monster)
+    public void SetTarget(Unit monster)
     {
-        targetMonster = monster;
+        Target = monster;
         targetPos = Vector3.zero;
     }
 
     public void SetDestination(Vector3 position)
     {
         targetPos = position;
-        targetMonster = null;
+        Target = null;
     }
 
     public override void MoveTo(Vector3 destination)
     {
-        if (targetMonster != null)
+        if (Target != null)
         {
             Vector3 directionToTarget = (destination - transform.position).normalized;
             float attackRange = characterStats.GetStatValue(StatType.AttackRange);
