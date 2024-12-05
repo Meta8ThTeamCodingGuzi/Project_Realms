@@ -31,7 +31,7 @@ public class MonsterAttackState : State<Monster>
             {
                 target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
             }
-            if (!target.wasAttacked || !target.CanAttack(target.targetPlayer))
+            if (!target.wasAttacked || !target.CanAttack(target.Target))
             {
                 target.M_Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new MonsterIdleState(target));

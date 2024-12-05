@@ -9,10 +9,6 @@ public class Monster : Unit
 {
     private MonsterStateHandler m_StateHandler;
 
-    private Player player;
-
-    public Player targetPlayer => player;
-
     [SerializeField]
     private Transform[] setPatrolTransforms;
 
@@ -22,7 +18,7 @@ public class Monster : Unit
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 nowTarget;
+    public Vector3 currentPatrolPoint;
 
     public Animator M_Animator;
     public MonsterStateHandler M_StateHandler => m_StateHandler;
@@ -57,7 +53,6 @@ public class Monster : Unit
         {
             monsterStat = (MonsterStat)characterStats;
         }
-        player = null;
 
         // 몬스터 타입에 따른 크기 조정
         float sizeMultiplier = monsterType switch
@@ -142,10 +137,10 @@ public class Monster : Unit
         if (patrolKey >= patrolPoint.Count)
         {
             patrolKey = 0;
-            nowTarget = patrolPoint[patrolKey];
+            currentPatrolPoint = patrolPoint[patrolKey];
             return;
         }
-        nowTarget = patrolPoint[patrolKey];
+        currentPatrolPoint = patrolPoint[patrolKey];
     }
     public void MonsterDie()
     {

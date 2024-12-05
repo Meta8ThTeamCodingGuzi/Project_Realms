@@ -112,14 +112,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
         {
             float damage = characterStats.GetStatValue(StatType.Damage);
             target.TakeDamage(damage);
-            OnAttackPerformed(target);
         }
-    }
-
-    protected virtual void OnAttackPerformed(Unit target)
-    {
-        // 여기에 공격 이펙트 , 애니메이션등 들어가면 될듯.
-        //Debug.Log($"{gameObject.name}이(가) {target.gameObject.name}을(를) 공격했습니다.");
     }
 
     public virtual void TakeDamage(float damage)
