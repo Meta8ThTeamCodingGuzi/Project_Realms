@@ -10,7 +10,9 @@ public class Dragon : Monster
 
     private bool FlyState = false;
 
-    protected override void Initialize()
+    public float dragonHp => this.characterStats.GetStatValue(StatType.Health);
+
+    public override void Initialize()
     {
         base.Initialize();
 
@@ -42,6 +44,5 @@ public class Dragon : Monster
     {
         currentSkill = GetSkill(skillID);
     }
-
 
 }
