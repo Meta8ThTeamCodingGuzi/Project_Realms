@@ -14,7 +14,11 @@ public class MonsterAttackState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.GetSkill(SkillID.MonsterSkill).TryUseSkill();
+        if (target.CurrentSkill == null) 
+        {
+            target.GetSkill(SkillID.MonsterSkill);
+        }
+        target.CurrentSkill.TryUseSkill();
     }
 
     public override void OnExit()

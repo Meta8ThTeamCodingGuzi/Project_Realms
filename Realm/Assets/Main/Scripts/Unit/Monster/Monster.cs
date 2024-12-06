@@ -33,6 +33,9 @@ public class Monster : Unit
 
     [SerializeField]private List<Skill> skills;
     public List<Skill> Skills { get => skills; set => skills = value; }
+
+    private Skill currentSkill;
+    public Skill CurrentSkill => currentSkill;
     
     public override void Initialize()
     {
@@ -98,7 +101,20 @@ public class Monster : Unit
         {
             if (skill.data.skillID == id)
             {
-                return skill;
+                Skill pickedSkill = null;
+                if (currentSkill == null)
+                {
+                    pickedSkill = Instantiate(skill, transform);
+                    currentSkill = pickedSkill;
+                }
+                else 
+                {
+                    currentSkill = null;
+                    Destroy(currentSkill);
+                    pickedSkill = Instantiate(skill, transform);
+                    currentSkill = pickedSkill;
+                }
+                return pickedSkill;
             }
         }
         return null;
@@ -196,7 +212,6 @@ public class Monster : Unit
     {
         float baseExpDrop = characterStats.GetStatValue(StatType.DropExp);
 
-        // 몬스터 타입에 따른 경험치 보정
         float expMultiplier = monsterType switch
         {
             MonsterType.Elite => 2f,
@@ -224,6 +239,7 @@ public class Monster : Unit
     private void OnDisable()
     {
         patrolPoint.Clear();
+        currentSkill = null;
     }
 
 
