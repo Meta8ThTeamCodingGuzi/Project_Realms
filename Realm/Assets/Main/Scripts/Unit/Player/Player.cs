@@ -56,7 +56,7 @@ public class Player : Unit
         Initialize();
     }
 
-    protected override void Initialize()
+    public override void Initialize()
     {
 
         if (characterStats == null)

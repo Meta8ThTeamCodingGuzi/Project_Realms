@@ -9,6 +9,7 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
     public void SpawnMob() 
     {
-        PoolManager.Instance.Spawn<Monster>(monsterPrefab.gameObject, spawnpos.position, Quaternion.identity);
+        Monster monster = PoolManager.Instance.Spawn<Monster>(monsterPrefab.gameObject, spawnpos.position, Quaternion.identity);
+        monster.Initialize();
     }
 }

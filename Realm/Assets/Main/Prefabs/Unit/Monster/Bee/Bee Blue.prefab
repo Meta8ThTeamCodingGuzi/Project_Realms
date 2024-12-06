@@ -240,6 +240,8 @@ MonoBehaviour:
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
   monsterDieParticle: {fileID: 556242054917982096, guid: 968fc987636c3b84786d8f6d6c2045ec, type: 3}
   monsterType: 0
+  skills:
+  - {fileID: 3975096110099039202}
 --- !u!114 &5080485614689284288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,7 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillIcon: {fileID: 21300000, guid: 76cd48fc9228b4d4294e0059fd3546cc, type: 3}
-  skillID: 7
+  skillID: 2
 --- !u!114 &3975096110099039202
 MonoBehaviour:
   m_ObjectHideFlags: 0

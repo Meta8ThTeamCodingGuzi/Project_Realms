@@ -16,7 +16,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
     public Animator Animator { get; set; }
 
     private bool isDashing = false;
-    public bool IsDashing { get; set; }
+    public bool IsDashing { get => isDashing; set => isDashing = value; }
 
     public ICharacterStats CharacterStats => characterStats;
 
@@ -29,7 +29,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
 
 
-    protected virtual void Initialize()
+    public virtual void Initialize()
     {
         agent = GetComponent<NavMeshAgent>();
 

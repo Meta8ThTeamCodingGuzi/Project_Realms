@@ -34,14 +34,13 @@ public class Monster : Unit
     [SerializeField]private List<Skill> skills;
     public List<Skill> Skills { get => skills; set => skills = value; }
     
-    protected override void Initialize()
+    public override void Initialize()
     {
         base.Initialize();
 
         GetRequiredComponents();
-
-        InitializeMonster();
-
+        
+        InitializeMonster();        
     }
 
     private void InitializeMonster()
@@ -75,20 +74,32 @@ public class Monster : Unit
 
         monsterStat.SetMonsterLevel(adjustedLevel);
 
-        foreach (Skill skill in skills)
+        if (skills.Count > 0) 
         {
-            skill.Initialize(this);
-            skill.SetLevel(adjustedLevel);
+            foreach (Skill skill in skills)
+            {
+                skill.Initialize(this);
+                if (skill is not DefaultSkill) 
+                {
+                    skill.SetLevel(adjustedLevel);
+                }                
+            }
         }
 
+
         transform.localScale *= sizeMultiplier;
+
+        m_StateHandler.Initialize();
     }
 
     public virtual Skill GetSkill(SkillID id)
     {
         foreach (Skill skill in skills)
         {
-            if(skill.data.skillID == id) return skill;
+            if (skill.data.skillID == id)
+            {
+                return skill;
+            }
         }
         return null;
     }
@@ -99,7 +110,7 @@ public class Monster : Unit
         {
             m_StateHandler = new MonsterStateHandler(this);
         }
-        m_StateHandler.Initialize();
+        
 
         Animator = GetComponentInChildren<Animator>();
 
