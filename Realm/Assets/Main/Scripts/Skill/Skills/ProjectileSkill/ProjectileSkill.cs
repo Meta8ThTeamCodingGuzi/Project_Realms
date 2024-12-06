@@ -20,10 +20,10 @@ public class ProjectileSkill : Skill
             Debug.LogError($"{gameObject.name}: projectilePrefab이 할당되지 않았습니다!");
         }
 
+        firePoint = Owner.transform?.Find("FirePoint");
 
         if (firePoint == null)
         {
-            firePoint = GameObject.Find("FirePoint")?.transform;
             // firePoint가 없으면 자동으로 생성
             GameObject firePointObj = new GameObject("FirePoint");
             firePoint = firePointObj.transform;
