@@ -58,22 +58,22 @@ public abstract class Skill : MonoBehaviour
                 return false;
             }
 
-            if (owner.CharacterStats.GetStatValue(StatType.Mana) < costmana)
+            if (owner is Player)
             {
-                return false;
+                if (owner.CharacterStats.GetStatValue(StatType.Mana) < costmana)
+                {
+                    return false;
+                }
+
+                owner.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
+
+                owner.Animator.SetFloat("AttackSpeed", 3f);
             }
 
-            owner.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
-            if(owner is Player) 
+            if (animaClip != null)
             {
-                if (animaClip != null)
-                {
-                    GameManager.Instance.player.AnimController.Clipchange(animaClip);
-                }
-            }            
-            //TODO : 마이크로컨트롤
-            owner.Animator.SetFloat("AttackSpeed",
-                3f);
+                owner.AnimController.Clipchange(animaClip);
+            }
         }
 
         UseSkill();
@@ -142,10 +142,14 @@ public abstract class Skill : MonoBehaviour
     {
         return type switch
         {
-            SkillStatType.SkillLevel => $"{(int)value}",
+            SkillStatType.SkillLevel => value is float floatValue
+                ? $"{Mathf.RoundToInt(floatValue)}"
+                : value.ToString(),
             SkillStatType.Cooldown or
             SkillStatType.Duration or
-            SkillStatType.Damage => $"{(float)value:F2}",
+            SkillStatType.Damage => value is float floatValue
+                ? $"{floatValue:F2}"
+                : value.ToString(),
             _ => value.ToString()
         };
     }

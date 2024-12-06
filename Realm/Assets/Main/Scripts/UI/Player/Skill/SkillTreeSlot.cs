@@ -6,35 +6,34 @@ public class SkillTreeSlot : MonoBehaviour
 {
     [SerializeField] private Image skillIcon;
     [SerializeField] private TextMeshProUGUI levelText;
-    [SerializeField] private Button levelUpButton;
-    [SerializeField] private Skill skillPrefab;  // 이 슬롯에 해당하는 스킬 프리팹
+    [SerializeField] private Button button;
+    private Skill skill;
 
-    public SkillID skillID => skillPrefab.data.skillID;
-
-    private void Start()
+    public void Initialize(Skill skill)
     {
-        Initialize();
-    }
+        this.skill = skill;
 
-    private void Initialize()
-    {
-        if (skillPrefab != null && skillPrefab.data != null)
+        if (this.skill != null && this.skill.data != null)
         {
-            skillIcon.sprite = skillPrefab.data.skillIcon;
+            skillIcon.sprite = this.skill.data.skillIcon;
         }
 
-        levelUpButton.onClick.AddListener(OnLevelUpButtonClicked);
-        UpdateLevel(0);  // 초기 레벨 표시
+        button.onClick.AddListener(OnButtonClicked);
+        UpdateLevel(0);
     }
 
     public void UpdateLevel(int level)
     {
-        levelText.text = $"Lv.{level}";
+        levelText.text = level.ToString();
     }
 
-    private void OnLevelUpButtonClicked()
+    private void OnButtonClicked()
     {
-        // SkillTreeUI에서 설정할 이벤트
-        GetComponentInParent<SkillTreeUI>()?.OnSkillSlotClicked(skillPrefab);
+        GetComponentInParent<SkillTreeUI>()?.OnSkillSlotClicked(skill);
+    }
+
+    private void OnDestroy()
+    {
+        button.onClick.RemoveListener(OnButtonClicked);
     }
 }

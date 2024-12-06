@@ -12,8 +12,10 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     private Player player;
     private Inventory inventory;
     private PlayerStateUI playerStateUI;
+    private SkillTreeUI skillTreeUI;
 
     private bool isInventoryVisible = false;
+    private bool isSkillTreeVisible = false;
 
     protected override void Awake()
     {
@@ -34,7 +36,8 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     {
         yield return new WaitUntil(() =>
             GameManager.instance != null &&
-            GameManager.instance.IsInitialized);
+            GameManager.instance.IsInitialized && 
+            SkillManager.instance != null);
 
         player = GameManager.instance.player;
 
@@ -70,6 +73,7 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         skillBarUI = GetComponentInChildren<SkillBarUI>();
         inventory = GetComponentInChildren<Inventory>();
         playerStateUI = GetComponentInChildren<PlayerStateUI>();
+        skillTreeUI = GetComponentInChildren<SkillTreeUI>();
     }
 
     private void Update()
@@ -82,6 +86,10 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         {
             ToggleInventoryAndStatUI();
         }
+        if (Input.GetKeyDown(KeyCode.S)) 
+        {
+            ToggleSkillTreeUI();
+        }
     }
 
     private void ToggleInventoryAndStatUI()
@@ -93,5 +101,19 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
             playerUI.ShowStatUI();
         else
             playerUI.HideStatUI();
+    }
+    private void ToggleSkillTreeUI() 
+    {
+        isSkillTreeVisible = !isSkillTreeVisible;
+        skillTreeUI.gameObject.SetActive(isSkillTreeVisible);
+        if (isSkillTreeVisible)
+        {
+            playerUI.ShowSkillTreeUI();
+        }
+        else 
+        {
+            playerUI.HideSkillTreeUI();
+        }
+
     }
 }

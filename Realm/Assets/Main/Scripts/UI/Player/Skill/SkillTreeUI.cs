@@ -3,20 +3,42 @@ using UnityEngine;
 
 public class SkillTreeUI : MonoBehaviour
 {
-    [SerializeField] private SkillController skillController;
-    [SerializeField] private List<SkillTreeSlot> skillSlots;  // 각 스킬의 UI 슬롯
+    private Player player;
+    private SkillController skillController;
+    [SerializeField] private SkillTreeSlot skillSlotPrefab;
+    [SerializeField] private Transform SkillTreeViewPort;
     [SerializeField] private int availableSkillPoints = 0;
 
-    private void Start()
+    private Dictionary<SkillID, SkillTreeSlot> skillSlots = new Dictionary<SkillID, SkillTreeSlot>();
+
+    public void Initialize(Player player)
     {
+        this.player = player;
+        skillController = player.GetComponent<SkillController>();
         skillController.OnSkillLevelChanged += UpdateSkillSlotUI;
+
+        CreateSkillSlots();
+    }
+
+    private void CreateSkillSlots()
+    {
+        foreach (Transform child in SkillTreeViewPort)
+        {
+            Destroy(child.gameObject);
+        }
+        skillSlots.Clear();
+
+        foreach (Skill skillPrefab in SkillManager.Instance.allSkillsPrefabs)
+        {
+            SkillTreeSlot slot = Instantiate(skillSlotPrefab, SkillTreeViewPort);
+            slot.Initialize(skillPrefab);
+            skillSlots.Add(skillPrefab.data.skillID, slot);
+        }
     }
 
     private void UpdateSkillSlotUI(Skill skill)
     {
-        // 해당 스킬의 UI 슬롯 찾기
-        var slot = skillSlots.Find(s => s.skillID == skill.data.skillID);
-        if (slot != null)
+        if (skillSlots.TryGetValue(skill.data.skillID, out SkillTreeSlot slot))
         {
             slot.UpdateLevel(skill.skillStat.GetStatValue<int>(SkillStatType.SkillLevel));
         }

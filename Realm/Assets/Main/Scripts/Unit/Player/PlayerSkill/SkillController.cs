@@ -1,4 +1,4 @@
-using UnityEngine;
+癤퓎sing UnityEngine;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using System.Linq;
@@ -14,7 +14,7 @@ public class SkillController : MonoBehaviour
     private SkillBarUI skillBarUI;
     public KeyCode skillActivated;
 
-    // 현재 사용 중인 스킬을 추적하기 위한 프로퍼티 추가
+    //   킬 歐티 煞
     private Skill currentSkill;
     public Skill CurrentSkill => currentSkill;
 
@@ -48,7 +48,7 @@ public class SkillController : MonoBehaviour
     {
         if (skillSlots.TryGetValue(KeyCode.Mouse0, out Skill skill) && skill != null)
         {
-            print("마우스클릭호출");
+            print("肄뵀�호");
             currentSkill = skill;
             currentSkill.TryUseSkill();
         }
@@ -64,14 +64,14 @@ public class SkillController : MonoBehaviour
         return false;
     }
 
-    public void AddSkill(Skill skill)
+    public void AddSkill(Skill skillPrefab)
     {
-        if (!availableSkillPrefabs.Contains(skill))
+        if (!initializedSkills.ContainsKey(skillPrefab.data.skillID))
         {
-            Skill instance = Instantiate(skill, transform);
+            Skill instance = Instantiate(skillPrefab, transform);
             instance.Initialize(player);
             availableSkillPrefabs.Add(instance);
-            initializedSkills[skill.data.skillID] = instance;
+            initializedSkills[skillPrefab.data.skillID] = instance;
         }
     }
 
@@ -137,7 +137,7 @@ public class SkillController : MonoBehaviour
             Skill skillToRemove = skillSlots[slot];
             activeSkills.Remove(skillToRemove);
 
-            // 무기 스킬인 경우 완전히 제거
+            //  킬 
             if (skillToRemove is DefaultSkill)
             {
                 if (initializedSkills.ContainsKey(skillToRemove.data.skillID))
@@ -169,13 +169,28 @@ public class SkillController : MonoBehaviour
     {
         if (!initializedSkills.TryGetValue(skillPrefab.data.skillID, out Skill existingSkill))
         {
-            AddSkill(skillPrefab);
-            existingSkill = initializedSkills[skillPrefab.data.skillID];
+            Skill instance = Instantiate(skillPrefab, transform);
+            instance.Initialize(player);
+
+            if (instance.skillStat != null)
+            {
+                instance.skillStat.InitializeStats();
+                instance.SetLevel(1);
+            }
+
+            availableSkillPrefabs.Add(instance);
+            initializedSkills[skillPrefab.data.skillID] = instance;
+            existingSkill = instance;
+
+            OnSkillLevelChanged?.Invoke(existingSkill);
+            return true;
         }
 
-        existingSkill.SetLevel(skillPrefab.skillStat.GetStatValue<int>(SkillStatType.SkillLevel) + 1);
-
-        OnSkillLevelChanged?.Invoke(existingSkill);
+        if (existingSkill.skillStat != null)
+        {
+            existingSkill.LevelUp();
+            OnSkillLevelChanged?.Invoke(existingSkill);
+        }
 
         return true;
     }
