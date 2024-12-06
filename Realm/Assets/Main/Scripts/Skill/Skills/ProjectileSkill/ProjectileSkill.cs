@@ -20,10 +20,10 @@ public class ProjectileSkill : Skill
             Debug.LogError($"{gameObject.name}: projectilePrefab이 할당되지 않았습니다!");
         }
 
-        firePoint = GameObject.Find("FirePoint")?.transform;
 
         if (firePoint == null)
         {
+            firePoint = GameObject.Find("FirePoint")?.transform;
             // firePoint가 없으면 자동으로 생성
             GameObject firePointObj = new GameObject("FirePoint");
             firePoint = firePointObj.transform;
@@ -84,7 +84,14 @@ public class ProjectileSkill : Skill
                        projectileStats.GetStatValue<int>(SkillStatType.HomingLevel) ? false : true,
             HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange),
         };
-        Owner.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
+        if (Owner is Player)
+        {
+            Owner.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
+        }
+        else 
+        {
+            Owner.transform.LookAt(Owner.Target.transform);
+        }
 
         for (int i = 0; i < projectileCount; i++)
         {
@@ -108,7 +115,7 @@ public class ProjectileSkill : Skill
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
+         
         if (groundPlane.Raycast(ray, out float distance))
         {
             Vector3 targetPoint = ray.GetPoint(distance);

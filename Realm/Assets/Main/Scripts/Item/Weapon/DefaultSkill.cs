@@ -14,8 +14,8 @@ public abstract class DefaultSkill : Skill
 
     public override void Initialize(Unit owner)
     {
-        base.Initialize(owner);
-        OwnerStats = Owner.GetComponent<ICharacterStats>();
+        base.Initialize(owner);     
+        OwnerStats = Owner.GetComponent<ICharacterStats>();        
         if (Owner.TryGetComponent<WeaponHolder>(out WeaponHolder WeaponHolder)) 
         {
             weaponHolder = WeaponHolder;
@@ -45,9 +45,9 @@ public abstract class DefaultSkill : Skill
 
     protected virtual float GetAttackDelay()
     {
-        if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack)
+        if (data.skillID == SkillID.BasicSwordAttack || data.skillID == SkillID.BasicBowAttack || data.skillID == SkillID.MonsterSkill)
         {
-            return 1f / GetPlayerAttackSpeed();
+            return 1f / GetAttackSpeed();
         }
         return 0.3f;
     }
@@ -57,7 +57,7 @@ public abstract class DefaultSkill : Skill
         return OwnerStats?.GetStatValue(StatType.Damage) ?? 0f;
     }
 
-    protected float GetPlayerAttackSpeed()
+    protected float GetAttackSpeed()
     {
         return OwnerStats?.GetStatValue(StatType.AttackSpeed) ?? 1f;
     }

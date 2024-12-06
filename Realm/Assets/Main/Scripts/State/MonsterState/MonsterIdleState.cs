@@ -30,25 +30,35 @@ public class MonsterIdleState : State<Monster>
         if (!target.IsAlive)
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+            return;
         }
         if (target.wasAttacked)
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+            return; 
         }
-        var currentAnimatorState = target.M_Animator.GetCurrentAnimatorStateInfo(0);
+        var currentAnimatorState = target.Animator.GetCurrentAnimatorStateInfo(0);
         if (currentAnimatorState.IsName("Idle"))
         {
             if (target.CanAttack(target.Target))
             {
                 target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
+                return;
             }
-            if (target.FindPlayer(10f))
+            if (target.Target !=null)
             {
                 target.M_StateHandler.TransitionTo(new FollowState(target));
+                return;
+            }
+            else if (target.FindPlayer(Mathf.Max(target.CharacterStats.GetStatValue(StatType.AttackRange),10f)))
+            {
+                target.M_StateHandler.TransitionTo(new FollowState(target));
+                return;
             }
             if (patrolTime > 5f)
             {
                 target.M_StateHandler.TransitionTo(new MonsterMoveState(target));
+                return;
             }
         }
     }

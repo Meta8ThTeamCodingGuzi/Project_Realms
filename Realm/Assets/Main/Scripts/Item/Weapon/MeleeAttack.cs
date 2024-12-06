@@ -8,6 +8,8 @@ public class MeleeAttack : DefaultSkill
 
     protected override void UseSkill()
     {
+        if (isSkillInProgress == true) return;
+
         isOwnerPlayer = Owner is Player;
         Unit target = Owner.Target;
         if (target != null)
@@ -20,7 +22,7 @@ public class MeleeAttack : DefaultSkill
                 Owner.StopMoving();
                 Owner.transform.LookAt(target.transform);
 
-                float attackSpeed = GetPlayerAttackSpeed();
+                float attackSpeed = GetAttackSpeed();
                 Owner.Animator.SetFloat("AttackSpeed", attackSpeed);
                 Owner.Animator.SetTrigger("Attack");
 
@@ -50,6 +52,8 @@ public class MeleeAttack : DefaultSkill
         {
             yield return null;
         }
+        
+        yield return new WaitForSeconds(GetAttackDelay());
 
         OnAttackComplete();
     }

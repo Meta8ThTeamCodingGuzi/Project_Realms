@@ -13,8 +13,7 @@ public class MonsterAttackState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
-        target?.Monsterskill?.TryUseSkill();
-        //target.Attack(target.targetPlayer);
+        target.GetSkill(SkillID.MonsterSkill).TryUseSkill();
     }
 
     public override void OnExit()
@@ -24,7 +23,7 @@ public class MonsterAttackState : State<Monster>
 
     public override void OnUpdate()
     {
-        var currentAnimatorState = target.M_Animator.GetCurrentAnimatorStateInfo(0);
+        var currentAnimatorState = target.Animator.GetCurrentAnimatorStateInfo(0);
         if (currentAnimatorState.normalizedTime >= 1f)
         {
             if (target.wasAttacked)
@@ -33,10 +32,10 @@ public class MonsterAttackState : State<Monster>
             }
             if (!target.wasAttacked || !target.CanAttack(target.Target))
             {
-                target.M_Animator.SetTrigger("Idle");
+                target.Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
             }
-            target.M_Animator.SetTrigger("Idle");
+            target.Animator.SetTrigger("Idle");
         }
     }
 

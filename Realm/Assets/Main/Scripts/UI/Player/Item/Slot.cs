@@ -84,7 +84,7 @@ public class Slot : MonoBehaviour
                         _player.skillController.DirectEquipSkill(defaultSkill, KeyCode.Mouse0);
                     }
 
-                    _player.AnimController.AnimatorChange(_item.ItemType);
+                    _player.AnimController.PlayerAnimatorChange(_item.ItemType);
                 }
             }
         }
@@ -106,7 +106,7 @@ public class Slot : MonoBehaviour
             if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
             {
                 _player.skillController.RemoveAllWeaponSkills();
-                _player.AnimController.AnimatorChange(ItemType.None);
+                _player.AnimController.PlayerAnimatorChange(ItemType.None);
                 weaponHolder.UnequipCurrentWeapon();
             }
         }

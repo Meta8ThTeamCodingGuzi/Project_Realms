@@ -1,39 +1,62 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum UnitState
+{
+    None,
+    Fly,
+    Ground,
+}
+[Serializable]
+public class AnimaState
+{
+    public UnitState UnitState;
+    public ItemType ItemType;
+    public RuntimeAnimatorController AnimaController;
+}
+
+
 public class AnimatorController : MonoBehaviour
 {
-    [SerializeField] private RuntimeAnimatorController none;
-    [SerializeField] private RuntimeAnimatorController knightControllers;
-    [SerializeField] private RuntimeAnimatorController archerControllers;
+    private Unit owner;
+
+    [SerializeField] private List<AnimaState> animaStates = new List<AnimaState>();
 
     private AnimatorOverrideController currentController;
 
+    public void Initialize(Unit owner)
+    {
+       this.owner = owner;
+    }
+
     private AnimatorOverrideController SetupOverrideController()
     {
-        RuntimeAnimatorController Controller = GameManager.Instance.player.Animator.runtimeAnimatorController;
+        RuntimeAnimatorController Controller = owner.Animator.runtimeAnimatorController;
         AnimatorOverrideController overrideController = new AnimatorOverrideController(Controller);
-        GameManager.Instance.player.Animator.runtimeAnimatorController = overrideController;
+        owner.Animator.runtimeAnimatorController = overrideController;
         return overrideController;
     }
 
-
-    public void AnimatorChange(ItemType itemType)
+    public void PlayerAnimatorChange(ItemType itemType)
     {
-        switch (itemType)
+        foreach(AnimaState state in animaStates)
         {
-            case ItemType.None:
-                GameManager.Instance.player.ChangeAnimController(none);
-                break;
-            case ItemType.Sword:
-                GameManager.Instance.player.ChangeAnimController(knightControllers);
-                break;
-            case ItemType.Bow:
-                GameManager.Instance.player.ChangeAnimController(archerControllers);
-                break;
-            default:
-                return;
+            if(state.ItemType == itemType)
+            {
+                owner.ChangeAnimController(state.AnimaController);
+            }
+        }
+    }
+
+    public void DragonAnimatorChange(UnitState unitState)
+    {
+
+        foreach(AnimaState state in animaStates)
+        {
+            owner.ChangeAnimController(state.AnimaController);
         }
     }
 
@@ -41,7 +64,7 @@ public class AnimatorController : MonoBehaviour
     public void Clipchange(AnimationClip animationClip)
     {
         if (currentController == null ||
-            currentController.runtimeAnimatorController != GameManager.Instance.player.Animator.runtimeAnimatorController)
+            currentController.runtimeAnimatorController != owner.Animator.runtimeAnimatorController)
         {
             currentController = SetupOverrideController();
         }

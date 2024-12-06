@@ -40,7 +40,7 @@ public class BowSkill : DefaultSkill
 
     protected override void UseSkill()
     {
-        if (Time.time - lastFireTime >= 1f / GetPlayerAttackSpeed() && !isDrawing)
+        if (Time.time - lastFireTime >= 1f / GetAttackSpeed() && !isDrawing)
         {
             if (drawRoutine != null)
                 StopCoroutine(drawRoutine);

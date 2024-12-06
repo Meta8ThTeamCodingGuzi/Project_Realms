@@ -3442,11 +3442,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1276356603850641267}
   - component: {fileID: 3993120601059748256}
-  - component: {fileID: 1277533238191318732}
+  - component: {fileID: 2798790848391492987}
   - component: {fileID: 1158549471176475299}
-  - component: {fileID: -1351099529939597856}
-  - component: {fileID: 169412264327545519}
-  - component: {fileID: 3166569135238804625}
+  - component: {fileID: 298667809172851007}
+  - component: {fileID: -6472777804048102829}
   - component: {fileID: 6102507406504879975}
   - component: {fileID: 7648872008552318114}
   m_Layer: 7
@@ -3483,10 +3482,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1372625422
   m_Radius: 0.2
-  m_Speed: 3.5
-  m_Acceleration: 2000
+  m_Speed: 4
+  m_Acceleration: 3000
   avoidancePriority: 50
-  m_AngularSpeed: 2000
+  m_AngularSpeed: 3000
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -3495,7 +3494,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1277533238191318732
+--- !u!114 &2798790848391492987
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3504,23 +3503,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8372143632925090849}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
+  m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wasAttacked: 0
-  setPatrolTransforms:
-  - {fileID: 6749294856859559959}
-  - {fileID: 2811884321649162627}
-  - {fileID: 308854323280911157}
-  - {fileID: 245660380009314491}
-  - {fileID: 3770346983317340875}
-  isattacked: 1
+  setPatrolTransforms: []
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
-  nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 5828352603561494906}
   monsterDieParticle: {fileID: 198475560534896312, guid: d61b742e329cf58468e2c16c35be0ce4, type: 3}
   monsterType: 0
-  monsterSkill: {fileID: -1351099529939597856}
 --- !u!114 &1158549471176475299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3547,10 +3536,10 @@ MonoBehaviour:
     BaseValue: 20
     PointIncrease: 3
   - Type: 10
-    BaseValue: 2
+    BaseValue: 0.25
     PointIncrease: 0
   - Type: 11
-    BaseValue: 10
+    BaseValue: 1.5
     PointIncrease: 0
   - Type: 7
     BaseValue: 50
@@ -3558,7 +3547,7 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
---- !u!114 &-1351099529939597856
+--- !u!114 &298667809172851007
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3567,84 +3556,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8372143632925090849}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4f2ada121f7b0c4c81cfef7ba652cba, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d8c43196c863c54eb272c7b5117bf05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 3166569135238804625}
-  skillStat: {fileID: 169412264327545519}
+  data: {fileID: -6472777804048102829}
+  skillStat: {fileID: 0}
   animaClip: {fileID: 0}
-  projectilePrefab: {fileID: 8378067300321673947, guid: 72dd260434a371d48963f0e7f1d48db5, type: 3}
-  firePoint: {fileID: 1276356603850641267}
---- !u!114 &169412264327545519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8372143632925090849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc02b0968c63bf046af20fa56bb8ccf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialStats:
-  - Type: 0
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 1
-    BaseValue: 0
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 5
-    BaseValue: 0
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 2
-    BaseValue: 10
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 6
-    BaseValue: 3
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 7
-    BaseValue: 10
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 13
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 10
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 12
-    BaseValue: 0
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 15
-    BaseValue: 0.1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 14
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 9
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 11
-    BaseValue: 0
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 4
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
---- !u!114 &3166569135238804625
+  attackAngle: 60
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &-6472777804048102829
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3656,7 +3578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d63cb37ddeb1f4086d92b2f68e5387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillIcon: {fileID: 0}
+  skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
   skillID: 7
 --- !u!136 &6102507406504879975
 CapsuleCollider:
