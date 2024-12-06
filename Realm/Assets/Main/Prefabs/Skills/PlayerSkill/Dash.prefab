@@ -78,7 +78,7 @@ MonoBehaviour:
   initialStats:
   - Type: 0
     BaseValue: 1
-    GrowthValue: 0
+    GrowthValue: 1
     growthPercent: 0
   - Type: 1
     BaseValue: 0
@@ -90,5 +90,5 @@ MonoBehaviour:
     growthPercent: 0
   - Type: 24
     BaseValue: 4.5
-    GrowthValue: 0
+    GrowthValue: 1
     growthPercent: 0

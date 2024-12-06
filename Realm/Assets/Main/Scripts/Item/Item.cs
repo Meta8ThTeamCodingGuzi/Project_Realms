@@ -13,6 +13,7 @@ public class Item : MonoBehaviour
     public Sprite Icon => itemData.Icon;
     public IReadOnlyList<ItemData.ItemStat> Stats => instanceData.Stats;
     public ItemData ItemData => itemData;
+    public ItemInstanceData InstanceData => instanceData;
 
     public void Initialize(ItemData template, ItemInstanceData instance)
     {
@@ -43,6 +44,4 @@ public class Item : MonoBehaviour
             characterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
         }
     }
-
-    public virtual string GetTooltip() => instanceData.GetTooltip();
 }

@@ -97,4 +97,17 @@ public class LevelableStat : Stat
 
         lastValue = isInteger ? Mathf.RoundToInt(finalValue) : finalValue;
     }
+
+    public void SetBaseValue(object newBaseValue)
+    {
+        if (isInteger && newBaseValue is int intValue)
+        {
+            baseValue = intValue;
+        }
+        else if (!isInteger && newBaseValue is float floatValue)
+        {
+            baseValue = floatValue;
+        }
+        isDirty = true;
+    }
 }

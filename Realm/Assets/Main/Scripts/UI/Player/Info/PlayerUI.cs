@@ -12,6 +12,7 @@ public class PlayerUI : MonoBehaviour
     public Slider playerExp;
     public TextMeshProUGUI playerLevelText;
     public StatUI statUI;
+    public SkillTreeUI skillTreeUI;
 
     public void Initialize(Player player)
     {
@@ -19,6 +20,19 @@ public class PlayerUI : MonoBehaviour
         statUI = GetComponentInChildren<StatUI>();
         statUI.Initialize(player);
         statUI.gameObject.SetActive(false);
+        skillTreeUI = GetComponentInChildren<SkillTreeUI>();
+        skillTreeUI.Initialize(player);
+        skillTreeUI.gameObject.SetActive(false);
+    }
+
+    public void ShowSkillTreeUI() 
+    {
+        skillTreeUI.gameObject.SetActive(true);
+    }
+
+    public void HideSkillTreeUI() 
+    {
+        skillTreeUI.gameObject.SetActive(false); 
     }
 
     public void ShowStatUI()
