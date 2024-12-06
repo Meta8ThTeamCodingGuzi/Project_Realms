@@ -33,7 +33,7 @@ public class FollowState : State<Monster>
             {
                 target.M_StateHandler.TransitionTo(new DragonAttackState(dragon, dragon.currentSkill.data.skillID));
             }
-            if (!target.FindPlayer(20f))
+            if (!target.FindPlayer(15f))
             {
                 target.Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new DragonIdleState(dragon));
