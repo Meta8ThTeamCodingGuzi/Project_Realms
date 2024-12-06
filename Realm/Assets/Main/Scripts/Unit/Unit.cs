@@ -55,16 +55,6 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
     #region 전투관련
     public virtual bool IsAlive => characterStats.GetStatValue(StatType.Health) > 0;
 
-    public virtual bool CanAttack(Unit target)
-    {
-        if (target == null || !target.IsAlive || !IsAlive) return false;
-
-        float attackRange = characterStats.GetStatValue(StatType.AttackRange);
-        float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-
-        return distanceToTarget <= attackRange;
-    }
-
 
     public virtual void TakeDamage(float damage)
     {

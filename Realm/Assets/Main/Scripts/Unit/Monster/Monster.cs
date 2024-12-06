@@ -33,6 +33,9 @@ public class Monster : Unit
 
     [SerializeField]private List<Skill> skills;
     public List<Skill> Skills { get => skills; set => skills = value; }
+
+    private Skill currentSkill;
+    public Skill CurrentSkill => currentSkill;
     
     public override void Initialize()
     {
@@ -90,6 +93,8 @@ public class Monster : Unit
         transform.localScale *= sizeMultiplier;
 
         m_StateHandler.Initialize();
+
+        GetSkill(SkillID.MonsterSkill);
     }
 
     public virtual Skill GetSkill(SkillID id)
@@ -98,7 +103,22 @@ public class Monster : Unit
         {
             if (skill.data.skillID == id)
             {
-                return skill;
+                Skill pickedSkill = null;
+                if (currentSkill == null)
+                {
+                    pickedSkill = Instantiate(skill, transform);
+                    pickedSkill.Initialize(this);
+                    currentSkill = pickedSkill;
+                }
+                else 
+                {
+                    currentSkill = null;
+                    Destroy(currentSkill);
+                    pickedSkill = Instantiate(skill, transform);
+                    pickedSkill.Initialize(this);
+                    currentSkill = pickedSkill;
+                }
+                return pickedSkill;
             }
         }
         return null;
@@ -154,6 +174,29 @@ public class Monster : Unit
         return false;
     }
 
+    public virtual bool CanAttack(Unit target)
+    {
+        if (target == null || !target.IsAlive || !IsAlive) return false;
+
+        float attackRange = 0f;
+        float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+       
+        if (CurrentSkill is DefaultSkill)
+        {
+            attackRange = characterStats.GetStatValue(StatType.AttackRange);
+        }
+        else if (CurrentSkill is ProjectileSkill)
+        {
+            attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
+        }
+        else 
+        {
+            attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.SpawnRange);
+        }
+
+        return distanceToTarget <= attackRange;
+    }
+
     public void nextPatrol()
     {
         patrolKey++;
@@ -196,7 +239,6 @@ public class Monster : Unit
     {
         float baseExpDrop = characterStats.GetStatValue(StatType.DropExp);
 
-        // 몬스터 타입에 따른 경험치 보정
         float expMultiplier = monsterType switch
         {
             MonsterType.Elite => 2f,
@@ -224,6 +266,7 @@ public class Monster : Unit
     private void OnDisable()
     {
         patrolPoint.Clear();
+        currentSkill = null;
     }
 
 
