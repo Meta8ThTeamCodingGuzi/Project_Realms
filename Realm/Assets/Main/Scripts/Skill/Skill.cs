@@ -50,7 +50,7 @@ public abstract class Skill : MonoBehaviour
 
     public virtual bool TryUseSkill()
     {
-        if (data.skillID != SkillID.BasicSwordAttack || data.skillID != SkillID.BasicBowAttack)
+        if (data.skillID != SkillID.BasicSwordAttack || data.skillID != SkillID.BasicBowAttack || data.skillID != SkillID.MonsterSkill)
         {
             float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
             if (IsOnCooldown)

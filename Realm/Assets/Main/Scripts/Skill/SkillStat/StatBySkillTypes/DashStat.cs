@@ -8,7 +8,7 @@ public class DashStat : SkillStat
     [Header("대쉬 스킬 스탯")]
     [SerializeField]
     private StatInitializer[] initialStats = new StatInitializer[]
-{
+    {
         new StatInitializer()
         {
             Type = SkillStatType.SkillLevel,
@@ -25,18 +25,10 @@ public class DashStat : SkillStat
         {
             Type= SkillStatType.DashDistance,
         }
-};
-
-
-
+    };
 
     protected override StatInitializer[] GetInitialStats()
     {
-        Debug.Log($"initialStats count: {initialStats.Length}");
-        foreach (var stat in initialStats)
-        {
-            Debug.Log($"Stat: {stat.Type}, BaseValue: {stat.BaseValue}");
-        }
         return initialStats;
     }
 }

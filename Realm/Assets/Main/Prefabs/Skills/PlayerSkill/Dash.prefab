@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillIcon: {fileID: 21300000, guid: edeb3b01fa4dca646b25f956c1a045f4, type: 3}
-  skillID: 6
+  skillID: 8
 --- !u!114 &2231799589029441109
 MonoBehaviour:
   m_ObjectHideFlags: 0

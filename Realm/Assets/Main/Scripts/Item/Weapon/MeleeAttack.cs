@@ -9,7 +9,6 @@ public class MeleeAttack : DefaultSkill
     protected override void UseSkill()
     {
         if (isSkillInProgress == true) return;
-
         isOwnerPlayer = Owner is Player;
         Unit target = Owner.Target;
         if (target != null)
@@ -23,15 +22,18 @@ public class MeleeAttack : DefaultSkill
                 Owner.transform.LookAt(target.transform);
 
                 float attackSpeed = GetAttackSpeed();
-                Owner.Animator.SetFloat("AttackSpeed", attackSpeed);
+                if (isOwnerPlayer) 
+                {
+                    Owner.Animator.SetFloat("AttackSpeed", attackSpeed);
+                }
                 Owner.Animator.SetTrigger("Attack");
 
-                StartCoroutine(SwordAttackRoutine());
+                StartCoroutine(MeleeAttackRoutine());
             }
         }
     }
 
-    private IEnumerator SwordAttackRoutine()
+    private IEnumerator MeleeAttackRoutine()
     {
         isSkillInProgress = true;
 

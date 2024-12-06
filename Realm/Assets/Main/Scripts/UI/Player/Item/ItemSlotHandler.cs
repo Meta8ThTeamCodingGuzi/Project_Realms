@@ -39,20 +39,16 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         var dragHolder = inventory.DragHolder;
         if (!dragHolder.IsDragging) return;
 
-        // 현재 슬롯이 드래그된 아이템을 받을 수 있는지 확인
         if (slot.CanAcceptItem(dragHolder.DraggedItem))
         {
             if (slot.IsEmpty())
             {
-                // 빈 슬롯인 경우 그냥 아이템 배치
                 dragHolder.SetTargetSlot(slot);
             }
             else
             {
-                // 아이템이 있는 경우, 두 슬롯의 아이템을 교환
                 Slot sourceSlot = dragHolder.SourceSlot;
 
-                // 원본 슬롯이 대상 아이템을 받을 수 있는지 확인
                 if (sourceSlot.CanAcceptItem(slot.Item))
                 {
                     // 현재 슬롯의 아이템 임시 저장

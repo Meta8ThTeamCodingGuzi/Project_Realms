@@ -492,7 +492,7 @@ GameObject:
   - component: {fileID: 5625240033743907933}
   - component: {fileID: 1454916364905421915}
   m_Layer: 5
-  m_Name: ToolTop
+  m_Name: ToolTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
