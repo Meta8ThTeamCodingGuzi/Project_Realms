@@ -78,7 +78,10 @@ public class Monster : Unit
         foreach (Skill skill in skills)
         {
             skill.Initialize(this);
-            skill.SetLevel(adjustedLevel);
+            if (skill is not DefaultSkill)
+            {
+                skill.SetLevel(adjustedLevel);
+            }
         }
 
         transform.localScale *= sizeMultiplier;
@@ -209,6 +212,7 @@ public class Monster : Unit
             particle.SetExpAmount(expPerParticle);
         }
     }
+
 
     private void OnDisable()
     {

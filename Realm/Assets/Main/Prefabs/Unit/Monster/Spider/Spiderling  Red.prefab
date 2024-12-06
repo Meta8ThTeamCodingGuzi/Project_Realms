@@ -1226,6 +1226,8 @@ MonoBehaviour:
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
   monsterDieParticle: {fileID: 198475560534896312, guid: d61b742e329cf58468e2c16c35be0ce4, type: 3}
   monsterType: 0
+  skills:
+  - {fileID: 6395210052899753488}
 --- !u!114 &8225396155627949911
 MonoBehaviour:
   m_ObjectHideFlags: 0

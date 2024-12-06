@@ -23,18 +23,38 @@ public class FollowState : State<Monster>
 
     public override void OnUpdate()
     {
-        if (target.wasAttacked)
+        if (target is Dragon dragon)
         {
-            target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+            if (target.wasAttacked)
+            {
+                target.M_StateHandler.TransitionTo(new DragonTakeDamageState(dragon));
+            }
+            if (target.CanAttack(target.Target))
+            {
+                target.M_StateHandler.TransitionTo(new DragonAttackState(dragon, dragon.currentSkill.data.skillID));
+            }
+            if (!target.FindPlayer(20f))
+            {
+                target.Animator.SetTrigger("Idle");
+                target.M_StateHandler.TransitionTo(new DragonIdleState(dragon));
+            }
+
         }
-        if (target.CanAttack(target.Target))
+        else
         {
-            target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
-        }
-        if (!target.FindPlayer(10f))
-        {
-            target.Animator.SetTrigger("Idle");
-            target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+            if (target.wasAttacked)
+            {
+                target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+            }
+            if (target.CanAttack(target.Target))
+            {
+                target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
+            }
+            if (!target.FindPlayer(10f))
+            {
+                target.Animator.SetTrigger("Idle");
+                target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+            }
         }
         if (target.Target != null&&!target.CanAttack(target.Target)) target.targetMove(target.Target);
     }

@@ -11,7 +11,10 @@ public class MonsterStateHandler : StateHandler<Monster>
 
     public override void Initialize()
     {
-        CurrentState = new MonsterIdleState(target);
+        if (target is Dragon dragon )
+        { CurrentState = new DragonIdleState(dragon); }
+        else 
+        { CurrentState = new MonsterIdleState(target); }
         CurrentState.OnEnter();
         base.Initialize();
     }
