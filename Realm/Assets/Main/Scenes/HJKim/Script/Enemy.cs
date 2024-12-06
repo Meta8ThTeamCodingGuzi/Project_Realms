@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int enemyHp;
+    public float enemyHp;
     public bool isDead;
 
     public void Start()
@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
         isDead = false;
 
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         print("¾Æ¾ß");
         enemyHp -= damage;

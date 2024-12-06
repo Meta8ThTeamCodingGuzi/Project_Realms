@@ -1,97 +1,105 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Pet : MonoBehaviour
 {
-    public Transform playerTarget;  // 플레이어 목표
+    public Transform playerTarget;  // 플레이어를 따라가는 목표
     private Transform enemyTarget;  // 적 목표
-    NavMeshAgent agent;
-    public string targetTag = "Enemy";  // "Enemy" 태그를 가진 오브젝트를 추적
+    public string targetTag = "Enemy";  // 적 태그 설정
+    public GameObject pouBallPrefab;  // 투사체 프리팹
+    public Transform attackPoint;  // 투사체 발사 위치
+    private bool canAttack = true;
+    private NavMeshAgent agent;
     private Animator animator;
-    private bool isMoving;
 
+    // 마지막 스킬 발사 시간
 
-    public void Start()
+    void Start()
     {
-        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        agent.stoppingDistance = 8;
+        animator = GetComponent<Animator>();
 
+        agent.stoppingDistance = 8;  // 플레이어와의 멈춤 거리
     }
 
-    public void Update()
+    void Update()
     {
         Move();
         SetAnim();
+
     }
 
-    // 펫의 이동 관련 로직
-    // 1. 주변에 적이 없으면 플레이어를 따라간다.
-    // 2. 주변에 적이 있으면 적을 따라간다.
+    // 이동 로직: 적이 있으면 적 추적, 없으면 플레이어 추적
     private void Move()
     {
-        //if (agent.remainingDistance <= agent.stoppingDistance)
-        //{
-        //    animator.SetBool("isrunning", false);  // 애니메이션 멈춤
-        //}
-        if (enemyTarget != null)  // 적이 감지되었으면 적을 추적
+        if (enemyTarget != null)  // 적이 감지되었으면
         {
-            agent.stoppingDistance = 5;
+            agent.stoppingDistance = 14;
             agent.SetDestination(enemyTarget.position);
-            //animator.SetBool("isRunning", true);
         }
-        else if (playerTarget != null)  // 적이 없다면 플레이어를 추적
+        else if (playerTarget != null)  // 적이 없으면 플레이어 추적
         {
-            agent.stoppingDistance = 8;
+            agent.stoppingDistance = 15;
             agent.SetDestination(playerTarget.position);
-            //animator.SetBool("isRunning", true);
         }
     }
 
-    // 펫의 애니메이션 관련 로직
-    // 1. 목표지점의 특정 범위에 도달하면 IDLE
-    // 2. 목표를 추적하며 이동하고 있으면 MOVE
+    // 애니메이션 설정: 움직임에 따라 애니메이션 변경
     private void SetAnim()
     {
-        // 나와 목표지점까지의 길이 <= 내가 멈춰야하는 길이 
-        if (agent.velocity.sqrMagnitude < 0.01f)
+        if (agent.velocity.sqrMagnitude < 0.01f)  // 이동하지 않을 때
         {
-            // IDLE 애니메이션            
-            animator.SetBool("isRunning", false);  // 애니메이션 멈춤
+            animator.SetBool("isRunning", false);  // IDLE 애니메이션
         }
-        else
+        else  // 이동 중일 때
         {
-            // MOVE 애니메이션
-            animator.SetBool("isRunning", true);
+            animator.SetBool("isRunning", true);  // RUNNING 애니메이션
         }
     }
 
-    private void AttackAnim()
+    // 스킬 발사 로직
+    private void FireSkill()
     {
-        animator.SetInteger("Attack", true);
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(targetTag))  // 적 태그를 가진 오브젝트가 콜라이더에 들어오면
+        if (attackPoint != null)
         {
-            enemyTarget = other.transform;  // target을 적으로 설정
-            agent.SetDestination(enemyTarget.position);  // 적을 추적하기 시작
+            // 투사체 생성 및 목표 설정
+            GameObject pouBall = Instantiate(pouBallPrefab, attackPoint.position, Quaternion.identity);
+            pouBall.GetComponent<PouBall>().SetTarget(enemyTarget.position);  // 목표 설정
+            Debug.Log("히히발싸~!");
         }
-
-
     }
 
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag(targetTag) && canAttack)  // 공격 가능할 때만 발사
+        {
+            enemyTarget = other.transform;  // 적을 추적 대상으로 설정
+            FireSkill();  // 공격 발사
+            canAttack = false;  // 공격 불가능
+
+            // 쿨타임 대기
+            StartCoroutine(SkillCooldown());  // 쿨타임 대기
+        }
+    }
+
+    // 쿨타임 대기 코루틴
+    private IEnumerator SkillCooldown()
+    {
+        yield return new WaitForSeconds(1);
+        canAttack = true;  // 쿨타임 종료 후 공격 가능
+        Debug.Log("쿨타임 끝, 다시 공격 가능!");
+    }
+
+
+    // 적이 범위를 벗어났을 때
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(targetTag))  // 적이 범위에서 벗어나면
+        if (other.CompareTag(targetTag))
         {
             enemyTarget = null;  // 적 추적 중지
         }
     }
-
-
-
 }

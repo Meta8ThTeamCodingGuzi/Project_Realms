@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class PetAttack : MonoBehaviour
 {
-    public int damage;//펫의 공격력을 의미함
+    public float damage;//펫의 공격력을 의미함
     public bool canAttack;
     private Coroutine Attack;
     public Animator animator;
@@ -16,7 +16,7 @@ public class PetAttack : MonoBehaviour
 
     public void Start()
     {
-        damage = 250
+        damage = 25;
         animator = GetComponent<Animator>();
     }
 
