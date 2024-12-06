@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
+public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private Slot slot;
     private bool isInventorySlot;
@@ -51,14 +51,11 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
                 if (sourceSlot.CanAcceptItem(slot.Item))
                 {
-                    // 현재 슬롯의 아이템 임시 저장
                     Item tempItem = slot.Item;
 
-                    // 현재 슬롯을 비우고 드래그된 아이템 배치
                     slot.ClearSlot();
                     dragHolder.SetTargetSlot(slot);
 
-                    // 원본 슬롯에 임시 저장된 아이템 배치
                     sourceSlot.PlaceItem(tempItem);
                 }
             }
@@ -72,7 +69,6 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         if (IsInventorySlot)
         {
-            // 인벤토리 슬롯 클릭 시 - 장비 장착 로직
             foreach (Slot equipSlot in inventory.EquipmentSlots)
             {
                 if (equipSlot.CanAcceptItem(slot.Item))
@@ -102,14 +98,34 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
         else
         {
-            // 장비 슬롯 클릭 시 - 장비 해제 로직
             if (inventory.HasFreeInventorySpace())
             {
-                Item unequippedItem = slot.Item;  // 먼저 아이템 참조를 저장
-                slot.ClearSlot();                 // 슬롯 비우기
-                inventory.TryAddItem(unequippedItem);  // 저장해둔 아이템 참조 사용
+                Item unequippedItem = slot.Item;  
+                slot.ClearSlot();                 
+                inventory.TryAddItem(unequippedItem);  
                 inventory.CompactInventory();
             }
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (slot.IsEmpty() || !gameObject.activeInHierarchy) return;
+
+        var itemInstance = slot.Item.InstanceData;
+        TooltipWindow.Instance.ShowTooltip(
+            itemInstance.GetItemName(),
+            itemInstance.GetRarity(),
+            itemInstance.GetItemType(),
+            itemInstance.GetDescription(),
+            itemInstance.GetStatsTooltip(),
+            slot.Item.Icon,
+            eventData.position.x
+        );
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        TooltipWindow.Instance.HideTooltip();
     }
 }

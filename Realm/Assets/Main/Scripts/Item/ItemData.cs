@@ -1,4 +1,4 @@
-using UnityEngine;
+癤퓎sing UnityEngine;
 using System.Collections.Generic;
 using System;
 
@@ -35,7 +35,7 @@ public class ItemData : ScriptableObject
     [SerializeField] private Color nameColor = Color.white;
 
     [Header("Weapon Skill")]
-    [SerializeField] private Skill defaultWeaponSkill; // 무기의 기본 스킬
+    [SerializeField] private Skill defaultWeaponSkill; // 羞� 킬
     public Skill DefaultWeaponSkill => defaultWeaponSkill;
 
     public ItemID ItemID => itemID;
@@ -49,19 +49,31 @@ public class ItemData : ScriptableObject
     public string ItemName => itemName;
     public Color NameColor => nameColor;
 
-    public string GetTooltip()
+    public string GetItemName()
     {
-        string tooltip = $"<color=#{ColorUtility.ToHtmlStringRGB(nameColor)}>[{rarity}] {itemID}</color>\n";
-        tooltip += $"{description}\n\n";
+        return $"[{rarity}] {itemName}";
+    }
 
-        // 레어도에 따른 스탯 표시 색상 설정
+    public string GetItemType()
+    {
+        return itemType.ToString();
+    }
+
+    public string GetDescription() 
+    {
+        return description;
+    }
+
+    public string GetStatsTooltip()
+    {
+        string tooltip = "";
         string statColor = rarity switch
         {
-            ItemRarity.Common => "#FFFFFF",    // 흰색
-            ItemRarity.Uncommon => "#1EFF00",  // 초록색
-            ItemRarity.Rare => "#0070DD",      // 파란색
-            ItemRarity.Epic => "#A335EE",      // 보라색
-            ItemRarity.Legendary => "#FF8000", // 주황색
+            ItemRarity.Common => "#FFFFFF",
+            ItemRarity.Uncommon => "#1EFF00",
+            ItemRarity.Rare => "#0070DD",
+            ItemRarity.Epic => "#A335EE",
+            ItemRarity.Legendary => "#FF8000",
             _ => "#FFFFFF"
         };
 
@@ -73,7 +85,6 @@ public class ItemData : ScriptableObject
         return tooltip.TrimEnd('\n');
     }
 
-    // 무기 타입별 기본 스킬 프리팹 가져오기
     public Skill GetDefaultSkillForWeapon()
     {
         if (itemType != ItemType.Sword && itemType != ItemType.Bow)

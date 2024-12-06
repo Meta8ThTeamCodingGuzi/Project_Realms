@@ -10,17 +10,18 @@ public class SkillBarUI : MonoBehaviour
         public SkillSlotUI slotUI;
     }
 
-    [SerializeField] private SkillController skillController;
+    private SkillController skillController;
     [SerializeField] private List<SkillSlotMapping> skillSlots;
     [SerializeField] private GameObject skillSelectUIPrefab;
-     
+
     public void Initialize(Player player)
     {
-        skillController = GameManager.Instance.player.skillController;  
-        
+        skillController = player.skillController;
+
         skillController.SetSkillBarUI(this);
 
-        SkillSelectUI skillSelectUI = Instantiate(skillSelectUIPrefab,transform).GetComponent<SkillSelectUI>();
+        SkillSelectUI skillSelectUI = Instantiate(skillSelectUIPrefab, transform).GetComponent<SkillSelectUI>();
+        UIManager.Instance.RegisterSkillSelectUI(skillSelectUI);
 
         InitializeSlots(skillSelectUI);
     }

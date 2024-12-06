@@ -16,7 +16,7 @@ MonoBehaviour:
   itemType: 3
   rarity: 0
   itemName: Bow
-  description: 
+  description: Just A Bow
   icon: {fileID: 21300000, guid: e2716e5920328714587eabc2bed3f88d, type: 3}
   stats: []
   itemPrefab: {fileID: 6814424255600208067, guid: 92ffab7b2fabbfa4c8ce6f187bf2a2f3, type: 3}
