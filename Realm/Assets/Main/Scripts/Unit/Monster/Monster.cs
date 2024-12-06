@@ -31,17 +31,70 @@ public class Monster : Unit
     [SerializeField] private MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
 
-    private Skill monsterSkill;
-    public Skill Monsterskill { get => monsterSkill; set => monsterSkill = value; }
-
+    [SerializeField]private List<Skill> skills;
+    public List<Skill> Skills { get => skills; set => skills = value; }
+    
     protected override void Initialize()
     {
         base.Initialize();
+
+        GetRequiredComponents();
+
+        InitializeMonster();
+
+    }
+
+    private void InitializeMonster()
+    {
         foreach (Transform setPatrolTransform in setPatrolTransforms)
         {
             patrolPoint.Add(setPatrolTransform.position);
         }
 
+        float sizeMultiplier = monsterType switch
+        {
+            MonsterType.Elite => 1.2f,
+            MonsterType.MiniBoss => 1.5f,
+            MonsterType.Boss => 2f,
+            MonsterType.Unique => 1.8f,
+            _ => 1f // Normal
+        };
+
+        float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
+
+        float levelMultiplier = monsterType switch
+        {
+            MonsterType.Elite => 1.5f,
+            MonsterType.MiniBoss => 2f,
+            MonsterType.Boss => 3f,
+            MonsterType.Unique => 2.5f,
+            _ => 1f // Normal
+        };
+
+        int adjustedLevel = Mathf.RoundToInt(playerLevel * levelMultiplier);
+
+        monsterStat.SetMonsterLevel(adjustedLevel);
+
+        foreach (Skill skill in skills)
+        {
+            skill.Initialize(this);
+            skill.SetLevel(adjustedLevel);
+        }
+
+        transform.localScale *= sizeMultiplier;
+    }
+
+    public virtual Skill GetSkill(SkillID id)
+    {
+        foreach (Skill skill in skills)
+        {
+            if(skill.data.skillID == id) return skill;
+        }
+        return null;
+    }
+
+    private void GetRequiredComponents()
+    {
         if (m_StateHandler == null)
         {
             m_StateHandler = new MonsterStateHandler(this);
@@ -54,23 +107,6 @@ public class Monster : Unit
         {
             monsterStat = (MonsterStat)characterStats;
         }
-
-        // 몬스터 타입에 따른 크기 조정
-        float sizeMultiplier = monsterType switch
-        {
-            MonsterType.Elite => 1.2f,
-            MonsterType.MiniBoss => 1.5f,
-            MonsterType.Boss => 2f,
-            MonsterType.Unique => 1.8f,
-            _ => 1f // Normal
-        };
-
-        transform.localScale *= sizeMultiplier;
-
-        monsterSkill = GetComponent<Skill>();
-
-        monsterSkill.Initialize(this);
-
     }
 
     public void targetMove(Unit unit)
@@ -173,25 +209,7 @@ public class Monster : Unit
             particle.SetExpAmount(expPerParticle);
         }
     }
-    private void OnEnable()
-    {
-        Initialize(); 
-        float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
 
-        // 몬스터 타입에 따른 레벨 보정
-        float levelMultiplier = monsterType switch
-        {
-            MonsterType.Elite => 1.5f,
-            MonsterType.MiniBoss => 2f,
-            MonsterType.Boss => 3f,
-            MonsterType.Unique => 2.5f,
-            _ => 1f // Normal
-        };
-
-        int adjustedLevel = Mathf.RoundToInt(playerLevel * levelMultiplier);
-        monsterStat.SetMonsterLevel(adjustedLevel);
-        this.monsterSkill.SetLevel(adjustedLevel);
-    }
     private void OnDisable()
     {
         patrolPoint.Clear();
