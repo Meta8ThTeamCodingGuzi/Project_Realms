@@ -12,6 +12,10 @@ public class DragonTakeDamageState : State<Dragon>
     public override void OnEnter()
     {
         target.Animator.SetTrigger("TakeDamage");
+        if (target.dragonHp < target.CharacterStats.GetStatValue(StatType.MaxHealth) / 2f)
+        {
+            target.DragonFormChange();
+        }
     }
 
     public override void OnExit()

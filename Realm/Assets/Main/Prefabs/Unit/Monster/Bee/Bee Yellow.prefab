@@ -2121,8 +2121,6 @@ GameObject:
   - component: {fileID: 8692036342158060929}
   - component: {fileID: 3060220770797521091}
   - component: {fileID: 5160237862136158189}
-  - component: {fileID: 5903817691821773618}
-  - component: {fileID: 5376598021612247349}
   - component: {fileID: 7035118218481515173}
   - component: {fileID: 5388806325952756284}
   m_Layer: 7
@@ -2188,7 +2186,7 @@ MonoBehaviour:
   monsterDieParticle: {fileID: 198325895038918106, guid: 7e6767444726b234c868079dec6d7ae0, type: 3}
   monsterType: 0
   skills:
-  - {fileID: 5903817691821773618}
+  - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
 --- !u!114 &5160237862136158189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2226,39 +2224,6 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
---- !u!114 &5903817691821773618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5432848196177168347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d8c43196c863c54eb272c7b5117bf05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 5376598021612247349}
-  skillStat: {fileID: 0}
-  animaClip: {fileID: 0}
-  attackAngle: 60
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 64
---- !u!114 &5376598021612247349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5432848196177168347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d63cb37ddeb1f4086d92b2f68e5387, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
-  skillID: 7
 --- !u!136 &7035118218481515173
 CapsuleCollider:
   m_ObjectHideFlags: 0

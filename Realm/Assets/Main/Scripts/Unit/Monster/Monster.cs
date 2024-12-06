@@ -108,6 +108,7 @@ public class Monster : Unit
                 {
                     pickedSkill = Instantiate(skill, transform);
                     pickedSkill.Initialize(this);
+                    pickedSkill.transform.localPosition = Vector3.zero;
                     currentSkill = pickedSkill;
                 }
                 else 
@@ -116,6 +117,7 @@ public class Monster : Unit
                     Destroy(currentSkill);
                     pickedSkill = Instantiate(skill, transform);
                     pickedSkill.Initialize(this);
+                    pickedSkill.transform.localPosition = Vector3.zero;
                     currentSkill = pickedSkill;
                 }
                 return pickedSkill;

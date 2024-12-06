@@ -3307,9 +3307,9 @@ NavMeshAgent:
   m_AgentTypeID: -1372625422
   m_Radius: 1
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 3000
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 3000
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -3337,10 +3337,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 1.3746996
+  m_Height: 3.1351562
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.42660236, z: 0.26073933}
 --- !u!54 &3063157428814360070
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3387,10 +3387,11 @@ MonoBehaviour:
   - {fileID: 2653977202537174558}
   - {fileID: 2042931731142807654}
   - {fileID: 2737272608895282454}
-  expParticle: {fileID: 0}
-  monsterDieParticle: {fileID: 0}
+  expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
+  monsterDieParticle: {fileID: 653421466076763080, guid: fbceba87eaaff394c85109357ad20b83, type: 3}
   monsterType: 2
-  skills: []
+  skills:
+  - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
 --- !u!114 &7816935094953554586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3408,25 +3409,25 @@ MonoBehaviour:
     BaseValue: 1
     PointIncrease: 0
   - Type: 9
-    BaseValue: 4
+    BaseValue: 5.5
     PointIncrease: 0.2
   - Type: 8
-    BaseValue: 10
+    BaseValue: 50
     PointIncrease: 2
   - Type: 13
-    BaseValue: 20
+    BaseValue: 200
     PointIncrease: 3
   - Type: 10
-    BaseValue: 1.5
+    BaseValue: 1
     PointIncrease: 0
   - Type: 11
-    BaseValue: 2.5
+    BaseValue: 5
     PointIncrease: 0
   - Type: 7
-    BaseValue: 50
+    BaseValue: 350
     PointIncrease: 20
   - Type: 1
-    BaseValue: 250
+    BaseValue: 2000
     PointIncrease: 50
 --- !u!114 &849956713771243756
 MonoBehaviour:
@@ -3440,6 +3441,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ccd76c2db6b08c4497096802c9683c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animaStates:
+  - UnitState: 2
+    ItemType: 0
+    AnimaController: {fileID: 9100000, guid: bbb83ed42c049fb49b87e24178164982, type: 2}
+  - UnitState: 1
+    ItemType: 0
+    AnimaController: {fileID: 9100000, guid: fa783049a78eb574f82eac7ff1084bb2, type: 2}
 --- !u!1 &6829377404759826966
 GameObject:
   m_ObjectHideFlags: 0

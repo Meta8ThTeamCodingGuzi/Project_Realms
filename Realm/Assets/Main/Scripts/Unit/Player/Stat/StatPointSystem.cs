@@ -17,6 +17,7 @@ public class StatPointSystem : MonoBehaviour
     public void AddStatPoints(int points)
     {
         AvailablePoints += points;
+
     }
 
     public bool TryInvestPoint(StatType statType)

@@ -6,8 +6,6 @@ public class Dragon : Monster
 {
     public UnitState dragonState { get; set; } = UnitState.Ground;
 
-    public Skill currentSkill { get; set; }
-
     private bool FlyState = false;
 
     public float dragonHp => this.characterStats.GetStatValue(StatType.Health);
@@ -16,9 +14,10 @@ public class Dragon : Monster
     {
         base.Initialize();
 
-        currentSkill = Skills[0];
-
         AnimController = gameObject.GetComponent<AnimatorController>();
+        AnimController.Initialize(this);
+
+        GetSkill(SkillID.DragonBite);
     }
 
 
@@ -40,9 +39,4 @@ public class Dragon : Monster
         FlyState = true;
 
     }
-    public void DragonSKillChange(SkillID skillID)
-    {
-        currentSkill = GetSkill(skillID);
-    }
-
 }

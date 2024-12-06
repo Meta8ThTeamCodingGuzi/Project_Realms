@@ -28,34 +28,41 @@ public class FollowState : State<Monster>
             if (target.wasAttacked)
             {
                 target.M_StateHandler.TransitionTo(new DragonTakeDamageState(dragon));
+                return;
             }
             if (target.CanAttack(target.Target))
             {
-                target.M_StateHandler.TransitionTo(new DragonAttackState(dragon, dragon.currentSkill.data.skillID));
+                target.M_StateHandler.TransitionTo(new DragonAttackState(dragon, dragon.CurrentSkill.data.skillID));
+                return;
             }
             if (!target.FindPlayer(15f))
             {
                 target.Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new DragonIdleState(dragon));
+                return;
             }
-
         }
         else
         {
             if (target.wasAttacked)
             {
                 target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+                return;
             }
+            Debug.Log($"{this} CanAttack 준비");
             if (target.CanAttack(target.Target))
             {
+                Debug.Log($"{this} CanAttack 호출");
                 target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
+                return;
             }
             if (!target.FindPlayer(10f))
             {
                 target.Animator.SetTrigger("Idle");
-                target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+                target.M_StateHandler.TransitionTo(new MonsterIdleState(target));return;
             }
         }
         if (target.Target != null&&!target.CanAttack(target.Target)) target.targetMove(target.Target);
+        return;
     }
 }

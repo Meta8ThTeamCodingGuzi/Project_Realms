@@ -27,10 +27,11 @@ public enum SkillID
     DragonBite,
     DragonNova,
     TestSkill,
-    Test1,
-    Test2,
-    Test3,
-    Test4,
+    FireBall,
+    FireRain,
+    MagicChain,
+    Dash,
+    Nuclear,
 
 
 

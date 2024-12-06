@@ -6,13 +6,14 @@ using UnityEditor;
 public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializable
 {
     protected NavMeshAgent agent;
-    public NavMeshAgent Agent { get=>agent; set => agent = value; }
+    public NavMeshAgent Agent { get => agent; set => agent = value; }
 
     protected ICharacterStats characterStats;
     private Animator animator;
 
-    private Unit target;
-    public Unit Target { get; set; }
+    private Unit target = null;
+    public Unit Target { get => target; set => target = value; }
+
     public Animator Animator { get; set; }
 
     private bool isDashing = false;
@@ -22,7 +23,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
     public AnimatorController AnimController { get; set; }
     public bool IsInitialized { get; private set; }
-    public bool wasAttacked { get; set; }  = false;
+    public bool wasAttacked { get; set; } = false;
 
     protected float lastAttackTime;
     protected Coroutine attackCoroutine;
@@ -88,9 +89,13 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
     public virtual void MoveTo(Vector3 destination)
     {
-        if (agent != null && agent.isActiveAndEnabled && IsAlive)
+        if (agent == null || !agent.isActiveAndEnabled || !IsAlive)
+            return;
+
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(destination, out hit, 100f, NavMesh.AllAreas))
         {
-            agent.SetDestination(destination);
+            agent.SetDestination(hit.position);
         }
     }
 
@@ -111,23 +116,24 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
     }
     public virtual bool HasReachedDestination()
     {
-        // 경로가 없거나 에이전트가 비활성화된 경우
-        if (agent == null || !agent.isActiveAndEnabled) return false;
+        
+        if (agent == null || !agent.isActiveAndEnabled)
+            return false;
 
-        // 경로가 유효하지 않은 경우
-        if (agent.pathStatus == NavMeshPathStatus.PathInvalid) return false;
+        
+        if (agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathPending)
+            return false;
 
-        // 남은 거리가 거의 없고 경로가 유효한 경우
-        if (!agent.pathPending)
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            if (agent.remainingDistance <= agent.stoppingDistance)
+
+            if (agent.velocity.sqrMagnitude < 0.01f && !agent.pathPending)
             {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
+                return true;
             }
         }
+
         return false;
     }
 

@@ -6,6 +6,8 @@ public class DragonAttackState : State<Dragon>
 {
     private SkillID skillId;
 
+
+
     public DragonAttackState(Dragon target, SkillID skillID) : base(target)
     {
         this.target = target;
@@ -15,12 +17,16 @@ public class DragonAttackState : State<Dragon>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.GetSkill(skillId).TryUseSkill();
+        target.CurrentSkill.TryUseSkill();
+
     }
 
     public override void OnExit()
     {
-
+        if (target.dragonHp < target.CharacterStats.GetStatValue(StatType.MaxHealth) / 2f)
+        {
+            target.DragonFormChange();
+        }
     }
 
     public override void OnUpdate()

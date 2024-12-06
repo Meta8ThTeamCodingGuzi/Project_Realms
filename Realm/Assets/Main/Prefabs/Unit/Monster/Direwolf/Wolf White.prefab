@@ -1284,8 +1284,6 @@ GameObject:
   - component: {fileID: -4271505619204185316}
   - component: {fileID: 75094576440711549}
   - component: {fileID: 2693932084577508542}
-  - component: {fileID: -7728674905062149137}
-  - component: {fileID: 8767062942378284426}
   m_Layer: 0
   m_Name: Wolf White
   m_TagString: Untagged
@@ -1399,7 +1397,7 @@ MonoBehaviour:
   monsterDieParticle: {fileID: 198112793686261236, guid: 3845c058642164c4aa72204c65011e98, type: 3}
   monsterType: 0
   skills:
-  - {fileID: 8767062942378284426}
+  - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
 --- !u!114 &2693932084577508542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1437,39 +1435,6 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
---- !u!114 &-7728674905062149137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5642600776820439909}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d63cb37ddeb1f4086d92b2f68e5387, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
-  skillID: 7
---- !u!114 &8767062942378284426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5642600776820439909}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d8c43196c863c54eb272c7b5117bf05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: -7728674905062149137}
-  skillStat: {fileID: 0}
-  animaClip: {fileID: 0}
-  attackAngle: 90
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!1 &5708529625742247025
 GameObject:
   m_ObjectHideFlags: 0

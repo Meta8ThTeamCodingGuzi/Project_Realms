@@ -25,20 +25,24 @@ public class MonsterMoveState : State<Monster>
     public override void OnUpdate()
     {
         MoveStateTime += Time.deltaTime;
+
         if (target is Dragon dragon)
         {
             if (target.wasAttacked)
             {
                 target.M_StateHandler.TransitionTo(new DragonTakeDamageState(dragon));
+                return;
             }
             if (target.FindPlayer(15f))
             {
                 target.M_StateHandler.TransitionTo(new FollowState(dragon));
+                return;
             }
-            if (target.HasReachedDestination() || MoveStateTime > 15f)
+            if (MoveStateTime > 5f)
             {
                 target.Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new DragonIdleState(dragon));
+                return;
             }
 
         }
@@ -47,22 +51,25 @@ public class MonsterMoveState : State<Monster>
             if (target.wasAttacked)
             {
                 target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+                return;
             }
             if (target.FindPlayer(6f))
             {
                 target.M_StateHandler.TransitionTo(new FollowState(target));
                 return;
             }
-            if (target.HasReachedDestination() || MoveStateTime > 15f)
+            if (MoveStateTime > 5f)
             {
                 target.Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+                return;
             }
         }
-        if (!target.IsMoving && target.Target == null && !target.CanAttack(target.Target))
+        if (!target.IsMoving)
         {
             target.Animator.SetBool("Move", true);
             target.MoveTo(target.currentPatrolPoint);
+            return;
         }
     }
 }
