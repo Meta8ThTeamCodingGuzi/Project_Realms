@@ -13,7 +13,6 @@ public class MonsterMoveState : State<Monster>
     public override void OnEnter()
     {
         target.StopMoving();
-        target.Animator.SetBool("Move", true);
         MoveStateTime = 0f;
     }
 
@@ -26,24 +25,51 @@ public class MonsterMoveState : State<Monster>
     public override void OnUpdate()
     {
         MoveStateTime += Time.deltaTime;
-        if (target.wasAttacked)
+
+        if (target is Dragon dragon)
         {
-            target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+            if (target.wasAttacked)
+            {
+                target.M_StateHandler.TransitionTo(new DragonTakeDamageState(dragon));
+                return;
+            }
+            if (target.FindPlayer(15f))
+            {
+                target.M_StateHandler.TransitionTo(new FollowState(dragon));
+                return;
+            }
+            if (MoveStateTime > 5f)
+            {
+                target.Animator.SetTrigger("Idle");
+                target.M_StateHandler.TransitionTo(new DragonIdleState(dragon));
+                return;
+            }
+
         }
-        if (target.FindPlayer(6f))
+        else
         {
-            Debug.Log($"타킷  : {target.Target} , 몬스터 팔로우스테이트 진입 ");
-            target.M_StateHandler.TransitionTo(new FollowState(target));
-            return;
+            if (target.wasAttacked)
+            {
+                target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+                return;
+            }
+            if (target.FindPlayer(6f))
+            {
+                target.M_StateHandler.TransitionTo(new FollowState(target));
+                return;
+            }
+            if (MoveStateTime > 5f)
+            {
+                target.Animator.SetTrigger("Idle");
+                target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+                return;
+            }
         }
-        if (!target.IsMoving &&target.Target ==null &&!target.CanAttack(target.Target))
-        { 
+        if (!target.IsMoving)
+        {
+            target.Animator.SetBool("Move", true);
             target.MoveTo(target.currentPatrolPoint);
-        }
-        if (target.HasReachedDestination()|| MoveStateTime>15f)
-        {
-            target.Animator.SetTrigger("Idle");
-            target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
+            return;
         }
     }
 }

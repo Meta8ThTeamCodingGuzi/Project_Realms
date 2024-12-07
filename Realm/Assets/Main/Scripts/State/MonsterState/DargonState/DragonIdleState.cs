@@ -17,14 +17,13 @@ public class DragonIdleState : State<Dragon>
         target.nextPatrol();
         if ( target.dragonHp < target.CharacterStats.GetStatValue(StatType.MaxHealth)/2f)
         {
-
+            target.DragonFormChange();
         }
     }
 
     public override void OnExit()
     {
         patrolTime = 0;
-        base.OnExit();
     }
 
     public override void OnUpdate()
@@ -44,8 +43,8 @@ public class DragonIdleState : State<Dragon>
         if (currentAnimatorState.IsName("Idle"))
         {
             if (target.CanAttack(target.Target))
-            {
-                target.M_StateHandler.TransitionTo(new DragonAttackState(target,target.currentSkill.data.skillID));
+            {              
+                target.M_StateHandler.TransitionTo(new DragonAttackState(target,target.CurrentSkill.data.skillID));
                 return;
             }
             if (target.Target != null)

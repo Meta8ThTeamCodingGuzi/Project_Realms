@@ -2094,8 +2094,6 @@ GameObject:
   - component: {fileID: -6690229813171171340}
   - component: {fileID: 5930656859773786735}
   - component: {fileID: 226339407140534893}
-  - component: {fileID: 7268686369555578603}
-  - component: {fileID: 5936097539037463217}
   m_Layer: 0
   m_Name: Spiderling  Magenta
   m_TagString: Untagged
@@ -2214,7 +2212,7 @@ MonoBehaviour:
   monsterDieParticle: {fileID: 198279028075486306, guid: 7ae1d86c2db118940a3a5a8f8e59a43d, type: 3}
   monsterType: 0
   skills:
-  - {fileID: 5936097539037463217}
+  - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
 --- !u!114 &226339407140534893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2252,39 +2250,6 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 250
     PointIncrease: 50
---- !u!114 &7268686369555578603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7376213967543614698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d63cb37ddeb1f4086d92b2f68e5387, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
-  skillID: 7
---- !u!114 &5936097539037463217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7376213967543614698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d8c43196c863c54eb272c7b5117bf05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 7268686369555578603}
-  skillStat: {fileID: 0}
-  animaClip: {fileID: 0}
-  attackAngle: 60
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!1 &7423111861201856031
 GameObject:
   m_ObjectHideFlags: 0

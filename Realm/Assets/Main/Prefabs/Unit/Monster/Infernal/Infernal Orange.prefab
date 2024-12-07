@@ -15665,9 +15665,6 @@ GameObject:
   - component: {fileID: 6399598175212036719}
   - component: {fileID: -3358152287414979064}
   - component: {fileID: 5717602224374005872}
-  - component: {fileID: 3265450985943059881}
-  - component: {fileID: 8533591315002856524}
-  - component: {fileID: 6081629873349169351}
   m_Layer: 0
   m_Name: Infernal Orange
   m_TagString: Untagged
@@ -15787,7 +15784,8 @@ MonoBehaviour:
   monsterDieParticle: {fileID: 198475560534896312, guid: d61b742e329cf58468e2c16c35be0ce4, type: 3}
   monsterType: 0
   skills:
-  - {fileID: 6081629873349169351}
+  - {fileID: 0}
+  - {fileID: 6177470303933401633, guid: 19eacbdcca5ce56489a150e4f2dea4b7, type: 3}
 --- !u!114 &5717602224374005872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15825,102 +15823,6 @@ MonoBehaviour:
   - Type: 1
     BaseValue: 200
     PointIncrease: 50
---- !u!114 &3265450985943059881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8221012645217549540}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d63cb37ddeb1f4086d92b2f68e5387, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillIcon: {fileID: 21300000, guid: 18edabe7d38f9f44490d91ae11b5757a, type: 3}
-  skillID: 7
---- !u!114 &8533591315002856524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8221012645217549540}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc02b0968c63bf046af20fa56bb8ccf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialStats:
-  - Type: 0
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 1
-    BaseValue: 0
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 5
-    BaseValue: 0
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 2
-    BaseValue: 20
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 6
-    BaseValue: 7
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 7
-    BaseValue: 15
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 13
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 10
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 12
-    BaseValue: 3
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 15
-    BaseValue: 0.7
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 14
-    BaseValue: 0.7
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 9
-    BaseValue: 1
-    GrowthValue: 0
-    growthPercent: 0
-  - Type: 11
-    BaseValue: 0
-    GrowthValue: 0
-    growthPercent: 0
---- !u!114 &6081629873349169351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8221012645217549540}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb5be5fa1a3703f45a240cd6af0fa4db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 3265450985943059881}
-  skillStat: {fileID: 8533591315002856524}
-  animaClip: {fileID: 0}
-  projectilePrefab: {fileID: -6513845039715445785, guid: 82bf9ea283043f84aa03a6e4e12c4796, type: 3}
-  firePoint: {fileID: 8517247248377266215}
 --- !u!1 &8616583266408257806
 GameObject:
   m_ObjectHideFlags: 0

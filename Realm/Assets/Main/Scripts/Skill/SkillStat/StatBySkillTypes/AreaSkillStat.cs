@@ -9,7 +9,10 @@ public class AreaSkillStat : SkillStat
     [SerializeField]
     private StatInitializer[] initialStats = new StatInitializer[]
     {
-
+        new StatInitializer
+        {
+            Type = SkillStatType.SkillLevel,
+        },
         new StatInitializer
         {
             Type = SkillStatType.Damage,
@@ -46,6 +49,10 @@ public class AreaSkillStat : SkillStat
         {
             Type = SkillStatType.IsSpawnAtEnemy,
         },
+        new StatInitializer
+        {
+            Type = SkillStatType.Cooldown,
+        }
 
     };
 

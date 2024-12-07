@@ -21,7 +21,6 @@ public class MonsterIdleState : State<Monster>
     public override void OnExit()
     {
         patrolTime = 0;
-        base.OnExit();
     }
 
     public override void OnUpdate()
@@ -40,6 +39,7 @@ public class MonsterIdleState : State<Monster>
         var currentAnimatorState = target.Animator.GetCurrentAnimatorStateInfo(0);
         if (currentAnimatorState.IsName("Idle"))
         {
+            Debug.Log($"{this} CanAttack ¡ÿ∫Ò");
             if (target.CanAttack(target.Target))
             {
                 target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
@@ -55,11 +55,12 @@ public class MonsterIdleState : State<Monster>
                 target.M_StateHandler.TransitionTo(new FollowState(target));
                 return;
             }
-            if (patrolTime > 5f)
+            if (patrolTime > 2f)
             {
                 target.M_StateHandler.TransitionTo(new MonsterMoveState(target));
                 return;
             }
+            return;
         }
     }
 

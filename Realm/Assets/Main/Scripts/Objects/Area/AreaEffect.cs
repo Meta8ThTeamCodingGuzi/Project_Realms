@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class AreaEffect : MonoBehaviour
 {
-    private AreaEffectData areaData;
-    private float durationTime;
-    private Coroutine attackCoroutine;
+    protected AreaEffectData areaData;
+    protected float durationTime;
+    protected Coroutine attackCoroutine;
 
-    public void Initialize(AreaEffectData Data)
+    public virtual void Initialize(AreaEffectData Data)
     {
         this.areaData = Data;
         transform.localScale = Vector3.one * areaData.areaScale;
@@ -36,7 +36,7 @@ public class AreaEffect : MonoBehaviour
         }
     }
 
-    private IEnumerator AttackRoutine()
+    public virtual IEnumerator AttackRoutine()
     {
         bool isOwnerPlayer = areaData.owner is Player;
 

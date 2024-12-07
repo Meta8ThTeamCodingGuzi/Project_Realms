@@ -23,13 +23,15 @@ public enum SkillID
     BasicSwordAttack,
     BasicBowAttack,
     MonsterSkill,
-    DragonCry,
-    
+    DragonBreath,
+    DragonBite,
+    DragonNova,
     TestSkill,
-    Test1,
-    Test2,
-    Test3,
-    Test4,
+    FireBall,
+    FireRain,
+    MagicChain,
+    Dash,
+    Nuclear,
 
 
 

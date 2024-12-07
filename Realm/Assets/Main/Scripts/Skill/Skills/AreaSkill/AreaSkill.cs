@@ -8,7 +8,7 @@ using UnityEngine;
 public class AreaSkill : Skill
 {
     [SerializeField] private AreaEffect areaPrefab;
-    [SerializeField] private Vector3 spawnPoint;
+    private Vector3 spawnPoint;
     private AreaSkillStat areaSkillStat;
 
     public override void Initialize(Unit owner)

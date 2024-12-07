@@ -23,7 +23,7 @@ public class AnimatorController : MonoBehaviour
 {
     private Unit owner;
 
-    [SerializeField] public List<AnimaState> animaStates { get; set; } = new List<AnimaState>();
+    [SerializeField] public List<AnimaState> animaStates = new List<AnimaState>();
 
     private AnimatorOverrideController currentController;
 
