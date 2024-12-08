@@ -113,7 +113,6 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
         SpawnEliteMonster(currentCheckpoint);
 
-        // 게이지 초기화
         currentGauge = 0f;
     }
 

@@ -24,6 +24,8 @@ public class PlayerUI : MonoBehaviour
     {
         this.player = player;
 
+        monsterGaugeUI = Instantiate(monsterGaugeUI, transform);
+        monsterGaugeUI.Initialize();
 
         statUI = Instantiate(statUI, transform);
         statUI.Initialize(player);
@@ -46,8 +48,6 @@ public class PlayerUI : MonoBehaviour
         playerPortrait = Instantiate(playerPortrait, transform);
         this.playerLevelText = playerPortrait.playerLevelText;
 
-        monsterGaugeUI = Instantiate(monsterGaugeUI, transform);
-        monsterGaugeUI.Initialize();
         
         tooltipWindow = Instantiate(tooltipWindow, transform);
     }
