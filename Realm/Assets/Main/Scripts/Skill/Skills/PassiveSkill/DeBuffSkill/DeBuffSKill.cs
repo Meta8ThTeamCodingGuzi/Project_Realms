@@ -5,11 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class DebuffSKill : Skill
 {
+    [SerializeField]private Debuff DebuffPrefab;
+    private Debuff DebuffParticle;
     private DeBuffSkillStat deBuffSkillStat;
     private List<Monster> monsters = new List<Monster>();
     [SerializeField] protected StatType statType;
     [SerializeField] protected StatModifierType modifierType;
-    private bool isSkillActive = true;
+    private bool isSkillActive = false;
+    private bool clickDelay = true;
 
 
     public override void Initialize(Unit owner)
@@ -23,46 +26,101 @@ public class DebuffSKill : Skill
     protected override void UseSkill()
     {
         Owner.Animator.SetTrigger("Attack");
+        if (clickDelay == false) return;
         if (!isSkillActive)
         {
+            DebuffParticle = PoolManager.Instance.Spawn<Debuff>(DebuffPrefab.gameObject,Owner.transform.position,Quaternion.Euler(90,0,0));
+            DebuffParticle.transform.SetParent(Owner.transform);
+            DebuffParticle.transform.localPosition = Vector3.zero;
+            DebuffParticle.Initialize(Owner, deBuffSkillStat);
             isSkillActive = true;
         }
         else if (isSkillActive)
         {
+            PoolManager.Instance.Despawn<Debuff>(DebuffParticle);
             isSkillActive = false;
         }
         Owner.Animator.SetTrigger("Idle");
+        StartCoroutine(ClickRoutine());
+    }
+    private IEnumerator ClickRoutine()
+    {
+        clickDelay = false;
+        yield return new WaitForSeconds(0.1f);
+        clickDelay = true;
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (!isSkillActive || other == null) return;
-        if (Owner.TryGetComponent<Monster>(out Monster monster)) 
+        //OnDebuff();
+    }
+
+    private void OnDebuff()
+    {
+        if (!isSkillActive) return;
+        Collider[] colliders = Physics.OverlapSphere(Owner.transform.position, deBuffSkillStat.GetStatValue<float>(SkillStatType.DeBuffAreaScale));
+
+        if (Owner.TryGetComponent<Monster>(out Monster monster))
         {
-            if (other.TryGetComponent<Player>(out Player player)) 
+            foreach (var collider in colliders)
             {
-                if (player != null) 
+
+                if (collider.TryGetComponent<Player>(out Player player))
                 {
-                    SetDeBuff(player,statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
-                    print("몬스터가 플레이어에게 디버프 적용");
+                    if (player != null)
+                    {
+                        SetDeBuff(player, statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
+                        print("몬스터가 플레이어에게 디버프 적용");
+                    }
                 }
             }
         }
         if (Owner.TryGetComponent<Player>(out Player Player))
         {
-            if (other.TryGetComponent<Monster>(out Monster Monster)) 
+            foreach (var collider in colliders)
             {
-                if (monster != null && !monsters.Contains(monster))
+                if (collider.TryGetComponent<Monster>(out Monster Monster))
                 {
-                    monsters.Add(monster);
-                    SetDeBuff(monster, statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
-                    print("플레이어가 몬스터에게 디버프 적용");
+                    if (monster != null && !monsters.Contains(monster))
+                    {
+                        monsters.Add(monster);
+                        SetDeBuff(monster, statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
+                        print("플레이어가 몬스터에게 디버프 적용");
+                    }
                 }
             }
         }
 
     }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!isSkillActive || other == null) return;
+    //    if (Owner.TryGetComponent<Monster>(out Monster monster)) 
+    //    {
+    //        if (other.TryGetComponent<Player>(out Player player)) 
+    //        {
+    //            if (player != null) 
+    //            {
+    //                SetDeBuff(player,statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
+    //                print("몬스터가 플레이어에게 디버프 적용");
+    //            }
+    //        }
+    //    }
+    //    if (Owner.TryGetComponent<Player>(out Player Player))
+    //    {
+    //        if (other.TryGetComponent<Monster>(out Monster Monster)) 
+    //        {
+    //            if (monster != null && !monsters.Contains(monster))
+    //            {
+    //                monsters.Add(monster);
+    //                SetDeBuff(monster, statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
+    //                print("플레이어가 몬스터에게 디버프 적용");
+    //            }
+    //        }
+    //    }
+
+    //}
     private void OnTriggerExit(Collider other)
     {
         if (Owner.TryGetComponent<Monster>(out Monster monster))
@@ -92,6 +150,11 @@ public class DebuffSKill : Skill
 
     protected virtual void OnDisable()
     {
+        if (DebuffParticle != null)
+        {
+            PoolManager.Instance.Despawn<Debuff>(DebuffParticle);
+        }
+
         foreach (Monster monster in monsters)
         {
             RemoveDeBuff(monster, statType);

@@ -36,6 +36,8 @@ public class Monster : Unit
 
     private Skill currentSkill;
     public Skill CurrentSkill => currentSkill;
+
+    private bool isPlayerNullRoutine = true;
     
     public override void Initialize()
     {
@@ -172,8 +174,22 @@ public class Monster : Unit
                 }
             }
         }
-        this.Target = null;
+        if (isPlayerNullRoutine)
+        {
+            StartCoroutine(PlayerNullRoutine());
+        }
+        if (this.Target != null)
+        {
+            return true;
+        }
         return false;
+    }
+    private IEnumerator PlayerNullRoutine()
+    {
+        isPlayerNullRoutine = false;
+        yield return new WaitForSeconds(3f);
+        this.Target = null;
+        isPlayerNullRoutine = true;
     }
 
     public virtual bool CanAttack(Unit target)

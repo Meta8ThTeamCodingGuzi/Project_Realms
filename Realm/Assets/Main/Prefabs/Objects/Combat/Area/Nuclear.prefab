@@ -122980,7 +122980,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ca9b5817caaa4341abafae51e4ca076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AreaDelay: 4.5
+  isMainDamage: 1
+  mainDamageDelay: 4.5
+  MainDamageScale: 1.2
+  MainDamageMultiplier: 1
+  isAfterShock: 1
+  afterShockScale: 1
+  afterShockDelay: 1
+  afterShockMultiplier: 0.5
 --- !u!1 &8107139512371875392
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BuffSkill : Skill
 {
+    [SerializeField] private Buff BuffPrefab;
+    private Buff buffParticle;
     private BuffSkillStat buffSkillStat;
     private Coroutine BuffCoroutine;
     [SerializeField]protected StatType statType;
@@ -20,11 +22,16 @@ public class BuffSkill : Skill
     
     protected override void UseSkill()
     {
+        Owner.Animator.SetTrigger("Attack");
         if (BuffCoroutine != null)
         {
            StopBuff();
         }
+        buffParticle = PoolManager.Instance.Spawn<Buff>(BuffPrefab.gameObject,Owner.transform.position,Quaternion.Euler(90,0,0));
+        buffParticle.transform.SetParent(Owner.transform);
+        buffParticle.transform.localPosition = Vector3.zero;
         BuffCoroutine = StartCoroutine(ApplyBuff());
+        Owner.Animator.SetTrigger("Idle");
     }
     protected virtual void StopSkill(){}
 
@@ -36,6 +43,7 @@ public class BuffSkill : Skill
             BuffCoroutine = null;
         }
         RemoveBuff(statType);
+
     }
 
     protected virtual IEnumerator ApplyBuff()
@@ -71,6 +79,10 @@ public class BuffSkill : Skill
 
     protected virtual void RemoveBuff(StatType statType)
     {
+        if (buffParticle != null)
+        {
+            PoolManager.Instance.Despawn(buffParticle);
+        }
         Owner.CharacterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
         Owner.UpdateMoveSpeed();
         print($"¹öÇÁ ºüÁü : {Owner.CharacterStats.GetStatValue(statType)}");
