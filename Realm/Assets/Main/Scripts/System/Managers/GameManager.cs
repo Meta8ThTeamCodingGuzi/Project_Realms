@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameManager : SingletonManager<GameManager>, IInitializable
 {
     private Player Player;
     public Player player { get => Player; set => Player = value; }
     public bool IsInitialized { get; private set; }
+    public List<Monster> monster;
 
     [SerializeField]
     private List<Checkpoint> checkpoints = new List<Checkpoint>();

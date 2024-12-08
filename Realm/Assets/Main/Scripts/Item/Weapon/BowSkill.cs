@@ -16,7 +16,6 @@ public class BowSkill : DefaultSkill
 
     public override void Initialize(Unit owner)
     {
-        print($"{owner} , {owner.Animator}");
         base.Initialize(owner);
         UpdateArrowSpawnPoint();
     }

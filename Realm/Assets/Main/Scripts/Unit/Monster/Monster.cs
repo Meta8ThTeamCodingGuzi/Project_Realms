@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : Unit
+public class Monster : Unit , IPoolable
 {
     private MonsterStateHandler m_StateHandler;
 
@@ -18,7 +18,7 @@ public class Monster : Unit
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 currentPatrolPoint { get; set ; }
+    public Vector3 currentPatrolPoint { get; set; }
 
     public MonsterStateHandler M_StateHandler => m_StateHandler;
 
@@ -31,19 +31,21 @@ public class Monster : Unit
     [SerializeField] private MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
 
-    [SerializeField]private List<Skill> skills;
+    [SerializeField] private List<Skill> skills;
     public List<Skill> Skills { get => skills; set => skills = value; }
 
     private Skill currentSkill;
     public Skill CurrentSkill => currentSkill;
-    
+
+    public static event System.Action<Monster> OnMonsterDeath;
+
     public override void Initialize()
     {
         base.Initialize();
 
         GetRequiredComponents();
-        
-        InitializeMonster();        
+
+        InitializeMonster();
     }
 
     private void InitializeMonster()
@@ -77,15 +79,15 @@ public class Monster : Unit
 
         monsterStat.SetMonsterLevel(adjustedLevel);
 
-        if (skills.Count > 0) 
+        if (skills.Count > 0)
         {
             foreach (Skill skill in skills)
             {
                 skill.Initialize(this);
-                if (skill is not DefaultSkill) 
+                if (skill is not DefaultSkill)
                 {
                     skill.SetLevel(adjustedLevel);
-                }                
+                }
             }
         }
 
@@ -111,7 +113,7 @@ public class Monster : Unit
                     pickedSkill.transform.localPosition = Vector3.zero;
                     currentSkill = pickedSkill;
                 }
-                else 
+                else
                 {
                     currentSkill = null;
                     Destroy(currentSkill);
@@ -132,7 +134,7 @@ public class Monster : Unit
         {
             m_StateHandler = new MonsterStateHandler(this);
         }
-        
+
 
         Animator = GetComponentInChildren<Animator>();
 
@@ -182,7 +184,7 @@ public class Monster : Unit
 
         float attackRange = 0f;
         float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-       
+
         if (CurrentSkill is DefaultSkill)
         {
             attackRange = characterStats.GetStatValue(StatType.AttackRange);
@@ -191,7 +193,7 @@ public class Monster : Unit
         {
             attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
         }
-        else 
+        else
         {
             attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.SpawnRange);
         }
@@ -212,6 +214,7 @@ public class Monster : Unit
     }
     public void MonsterDie()
     {
+        OnMonsterDeath?.Invoke(this);
         StartCoroutine(DieRoutine());
     }
 
@@ -233,6 +236,7 @@ public class Monster : Unit
         ItemManager.Instance.GenerateRandomItem(monsterType, transform.position);
         ParticleSystem mdp = PoolManager.Instance.Spawn<ParticleSystem>(monsterDieParticle.gameObject, transform.position, Quaternion.identity);
         mdp.Play();
+        MonsterManager.Instance.currentMonsters.Remove(this);
         PoolManager.Instance.Despawn(mdp, 1f);
         PoolManager.Instance.Despawn(this);
     }
@@ -271,6 +275,12 @@ public class Monster : Unit
         currentSkill = null;
     }
 
+    public void OnSpawnFromPool()
+    {
+        MonsterManager.Instance.currentMonsters.Add(this);
+    }
 
-
+    public void OnReturnToPool()
+    {
+    }
 }

@@ -18,13 +18,12 @@ public class PlayerUI : MonoBehaviour
     public SkillTreeUI skillTreeUI;
     public MonsterTargetUI monsterTargetUI;
     public PlayerPortrait playerPortrait;
+    public MobGauge monsterGaugeUI;
 
     public void Initialize(Player player)
     {
         this.player = player;
 
-        // UI 컴포넌트들을 순서대로 초기화
-        tooltipWindow = Instantiate(tooltipWindow, transform);
 
         statUI = Instantiate(statUI, transform);
         statUI.Initialize(player);
@@ -46,6 +45,11 @@ public class PlayerUI : MonoBehaviour
         monsterTargetUI = Instantiate(monsterTargetUI, transform);
         playerPortrait = Instantiate(playerPortrait, transform);
         this.playerLevelText = playerPortrait.playerLevelText;
+
+        monsterGaugeUI = Instantiate(monsterGaugeUI, transform);
+        monsterGaugeUI.Initialize();
+        
+        tooltipWindow = Instantiate(tooltipWindow, transform);
     }
 
     public void ShowSkillTreeUI()
