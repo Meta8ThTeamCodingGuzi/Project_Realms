@@ -17,7 +17,6 @@ public class SkillTreeUI : MonoBehaviour
         this.player = player;
         skillController = player.GetComponent<SkillController>();
         skillController.OnSkillLevelChanged += UpdateSkillSlotUI;
-
         skillSelectUI = UIManager.Instance.SkillSelectUI;
 
         CreateSkillSlots();

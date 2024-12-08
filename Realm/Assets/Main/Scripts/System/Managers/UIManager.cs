@@ -49,11 +49,9 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         skillBarUI.Initialize(player);
 
         playerUI.Initialize(player);
+        skillTreeUI = playerUI.skillTreeUI;
         inventory.Initialize(player, playerUI);
         playerStateUI.Initialize(player);
-
-        skillTreeUI.Initialize(player);
-
         SetInitialUIState();
 
         if (player != null)
@@ -80,7 +78,6 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         skillBarUI = GetComponentInChildren<SkillBarUI>();
         inventory = GetComponentInChildren<Inventory>();
         playerStateUI = GetComponentInChildren<PlayerStateUI>();
-        skillTreeUI = GetComponentInChildren<SkillTreeUI>();
     }
 
     private void Update()

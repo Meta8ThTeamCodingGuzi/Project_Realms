@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     private Player player;
+    public TooltipWindow tooltipWindow;
     public OrbUI mpOrb;
     public OrbUI hpOrb;
     public Slider playerExp;
@@ -20,9 +21,10 @@ public class PlayerUI : MonoBehaviour
         statUI = GetComponentInChildren<StatUI>();
         statUI.Initialize(player);
         statUI.gameObject.SetActive(false);
-        skillTreeUI = GetComponentInChildren<SkillTreeUI>();
+        skillTreeUI = Instantiate(skillTreeUI, transform);
         skillTreeUI.Initialize(player);
         skillTreeUI.gameObject.SetActive(false);
+        tooltipWindow = Instantiate(tooltipWindow, transform);
     }
 
     public void ShowSkillTreeUI() 
@@ -47,6 +49,22 @@ public class PlayerUI : MonoBehaviour
         statUI.gameObject.SetActive(false);
     }
 
+    public void UpdatePlayerLevel(int level)
+    {
+        playerLevelText.text = level.ToString();
+    }
+
+    public void UpdateOrbs(float manaAmount, float hpAmount)
+    {
+        hpOrb.ChangeOrbValue(hpAmount);
+        mpOrb.ChangeOrbValue(manaAmount);
+    }
+
+    public void UpdatePlayerEXP(float amount)
+    {
+        playerExp.value = amount;
+    }
+
     public void UpdatePlayerInfo()
     {
         float maxHealth = player.CharacterStats.GetStatValue(StatType.MaxHealth);
@@ -67,21 +85,5 @@ public class PlayerUI : MonoBehaviour
         UpdatePlayerLevel(level);
 
         UpdatePlayerEXP(expAmount);
-    }
-
-    public void UpdatePlayerLevel(int level)
-    {
-        playerLevelText.text = level.ToString();
-    }
-
-    public void UpdateOrbs(float manaAmount, float hpAmount)
-    {
-        hpOrb.ChangeOrbValue(hpAmount);
-        mpOrb.ChangeOrbValue(manaAmount);
-    }
-
-    public void UpdatePlayerEXP(float amount)
-    {
-        playerExp.value = amount;
     }
 }
