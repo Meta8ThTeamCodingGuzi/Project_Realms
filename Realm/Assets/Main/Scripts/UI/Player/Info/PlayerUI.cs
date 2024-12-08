@@ -7,34 +7,55 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     private Player player;
+    private OrbUI mpOrb;
+    private OrbUI hpOrb;
+    private Slider playerExp;
+    private TextMeshProUGUI playerLevelText;
+    public PlayerBarUI playerBarUI;
     public TooltipWindow tooltipWindow;
-    public OrbUI mpOrb;
-    public OrbUI hpOrb;
-    public Slider playerExp;
-    public TextMeshProUGUI playerLevelText;
+    public InventoryUI inventoryUI;
     public StatUI statUI;
     public SkillTreeUI skillTreeUI;
+    public MonsterTargetUI monsterTargetUI;
+    public PlayerPortrait playerPortrait;
 
     public void Initialize(Player player)
     {
         this.player = player;
-        statUI = GetComponentInChildren<StatUI>();
+
+        // UI 컴포넌트들을 순서대로 초기화
+        tooltipWindow = Instantiate(tooltipWindow, transform);
+
+        statUI = Instantiate(statUI, transform);
         statUI.Initialize(player);
         statUI.gameObject.SetActive(false);
+
+        inventoryUI = Instantiate(inventoryUI, transform);
+        inventoryUI.Initialize(player, this);
+
         skillTreeUI = Instantiate(skillTreeUI, transform);
         skillTreeUI.Initialize(player);
         skillTreeUI.gameObject.SetActive(false);
-        tooltipWindow = Instantiate(tooltipWindow, transform);
+
+        playerBarUI = Instantiate(playerBarUI, transform);
+        playerBarUI.Initialize(player);
+        this.mpOrb = playerBarUI.mpOrb;
+        this.hpOrb = playerBarUI.hpOrb;
+        this.playerExp = playerBarUI.playerExpBar;
+
+        monsterTargetUI = Instantiate(monsterTargetUI, transform);
+        playerPortrait = Instantiate(playerPortrait, transform);
+        this.playerLevelText = playerPortrait.playerLevelText;
     }
 
-    public void ShowSkillTreeUI() 
+    public void ShowSkillTreeUI()
     {
         skillTreeUI.gameObject.SetActive(true);
     }
 
-    public void HideSkillTreeUI() 
+    public void HideSkillTreeUI()
     {
-        skillTreeUI.gameObject.SetActive(false); 
+        skillTreeUI.gameObject.SetActive(false);
     }
 
     public void ShowStatUI()

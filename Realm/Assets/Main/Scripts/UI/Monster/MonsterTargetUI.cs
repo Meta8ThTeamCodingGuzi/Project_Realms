@@ -10,13 +10,11 @@ public class MonsterTargetUI : MonoBehaviour
     private TextMeshProUGUI monsterName;
     private Monster targetMonster;
 
-    // UI 오브젝트를 저장할 변수 추가
     [SerializeField] private GameObject targetUI;
 
     private void Start()
     {
         Initialize();
-        // 시작할 때는 UI를 숨김
         if (targetUI != null)
             targetUI.SetActive(false);
     }
@@ -31,7 +29,6 @@ public class MonsterTargetUI : MonoBehaviour
     {
         SelectTarget();
         
-        // 타겟이 있다면 정보 업데이트
         if (targetMonster != null)
         {
             UpdateTargetInfo();

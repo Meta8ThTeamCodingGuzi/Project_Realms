@@ -17,7 +17,6 @@ public class StatPointSystem : MonoBehaviour
     public void AddStatPoints(int points)
     {
         AvailablePoints += points;
-
     }
 
     public bool TryInvestPoint(StatType statType)
@@ -28,7 +27,7 @@ public class StatPointSystem : MonoBehaviour
         if (stat == null) return false;
 
         float increaseAmount = playerStat.GetPointIncreaseAmount(statType);
-        if (increaseAmount <= 0) return false;  // 투자 불가능한 스탯
+        if (increaseAmount <= 0) return false; 
 
         stat.InvestPoint(increaseAmount);
         owner.UpdateMoveSpeed();

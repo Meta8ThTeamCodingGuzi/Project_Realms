@@ -28,6 +28,8 @@ public class Player : Unit
 
     private StatPointSystem statPoint;
 
+    public StatPointSystem statPointSystem => statPoint;
+
 
     private PlayerStateHandler playerHandler;
     public PlayerStateHandler PlayerHandler => playerHandler;

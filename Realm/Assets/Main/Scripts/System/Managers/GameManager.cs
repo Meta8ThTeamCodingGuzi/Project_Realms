@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,12 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
     private Player Player;
     public Player player { get => Player; set => Player = value; }
     public bool IsInitialized { get; private set; }
+
+    [SerializeField]
+    private List<Checkpoint> checkpoints = new List<Checkpoint>();
+    private int currentCheckpointId = -1;
+
+    public event Action<int> OnCheckpointReached;
 
     protected override void Awake()
     {
@@ -25,6 +32,9 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
 
     private IEnumerator InitializeRoutine()
     {
+        Checkpoint[] foundCheckpoints = FindObjectsOfType<Checkpoint>();
+        checkpoints.AddRange(foundCheckpoints);
+
         yield return new WaitUntil(() => CheckRequiredComponents());
 
         IsInitialized = true;
@@ -38,4 +48,40 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
 
         return true;
     }
+
+    #region Checkpoint System
+
+    public void TriggerCheckpoint(int checkpointId)
+    {
+        currentCheckpointId = checkpointId;
+        OnCheckpointReached?.Invoke(checkpointId);
+        SaveCheckpoint();
+    }
+
+    public void ResetAllCheckpoints()
+    {
+        currentCheckpointId = -1;
+        foreach (var checkpoint in checkpoints)
+        {
+            checkpoint.ResetCheckpoint();
+        }
+    }
+
+    public int GetCurrentCheckpointId()
+    {
+        return currentCheckpointId;
+    }
+
+    private void SaveCheckpoint()
+    {
+        PlayerPrefs.SetInt("LastCheckpoint", currentCheckpointId);
+        PlayerPrefs.Save();
+    }
+
+    public void LoadCheckpoint()
+    {
+        currentCheckpointId = PlayerPrefs.GetInt("LastCheckpoint", -1);
+    }
+
+    #endregion
 }

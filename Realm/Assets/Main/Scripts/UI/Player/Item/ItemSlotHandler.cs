@@ -5,11 +5,11 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 {
     private Slot slot;
     private bool isInventorySlot;
-    private Inventory inventory;
+    private InventoryUI inventory;
 
     public bool IsInventorySlot { get => isInventorySlot; set => isInventorySlot = value; }
 
-    public void InitializeSlotHandler(Inventory inventoryRef)
+    public void InitializeSlotHandler(InventoryUI inventoryRef)
     {
         if (slot == null)
             slot = GetComponent<Slot>();

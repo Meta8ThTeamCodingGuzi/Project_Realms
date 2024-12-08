@@ -17,7 +17,7 @@ public class Slot : MonoBehaviour
     public Item Item => _item;
     public ItemType? AllowedItemType => allowedItemType;
 
-    public void Initialize(Player player, Inventory inventory, StatUI statUI)
+    public void Initialize(Player player, InventoryUI inventory, StatUI statUI)
     {
         _player = player;
         itemIcon.gameObject.SetActive(false);
@@ -30,7 +30,7 @@ public class Slot : MonoBehaviour
         }
     }
 
-    private void InitializeSlotHandler(Inventory inventory)
+    private void InitializeSlotHandler(InventoryUI inventory)
     {
         slotHandler.IsInventorySlot = !isEquipSlot;
 

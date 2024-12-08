@@ -18,14 +18,14 @@ public class StatUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI availablePointsText;
 
     private Player player;
-    private UnitStats unitStats;
+    private PlayerStat unitStats;
     private StatPointSystem statPointSystem;
 
     public void Initialize(Player player)
     {
         this.player = player;
-        unitStats = player.GetComponent<UnitStats>();
-        statPointSystem = player.GetComponent<StatPointSystem>();
+        unitStats = (PlayerStat)player.CharacterStats;
+        statPointSystem = player.statPointSystem;
 
         InitializeUI();
     }
@@ -46,7 +46,7 @@ public class StatUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        // 사용 가능한 포인트 표시
+        //사용 가능한 포인트 표시
         if (availablePointsText != null)
         {
             availablePointsText.text = $"{statPointSystem.AvailablePoints}";

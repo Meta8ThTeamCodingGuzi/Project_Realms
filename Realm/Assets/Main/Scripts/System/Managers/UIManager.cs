@@ -10,10 +10,11 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     private PlayerUI playerUI;
     private SkillBarUI skillBarUI;
     private Player player;
-    private Inventory inventory;
+    private InventoryUI inventory;
     private PlayerStateUI playerStateUI;
     private SkillTreeUI skillTreeUI;
     private SkillSelectUI skillSelectUI;
+    private StatUI statUI;
 
     public SkillSelectUI SkillSelectUI => skillSelectUI;
 
@@ -46,11 +47,10 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
 
         GetReferences();
 
-        skillBarUI.Initialize(player);
-
         playerUI.Initialize(player);
         skillTreeUI = playerUI.skillTreeUI;
-        inventory.Initialize(player, playerUI);
+        inventory = playerUI.inventoryUI;
+        skillBarUI = playerUI.playerBarUI.skillBarUI;
         playerStateUI.Initialize(player);
         SetInitialUIState();
 
@@ -75,8 +75,7 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     private void GetReferences()
     {
         playerUI = GetComponentInChildren<PlayerUI>();
-        skillBarUI = GetComponentInChildren<SkillBarUI>();
-        inventory = GetComponentInChildren<Inventory>();
+        inventory = GetComponentInChildren<InventoryUI>();
         playerStateUI = GetComponentInChildren<PlayerStateUI>();
     }
 
