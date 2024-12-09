@@ -50,7 +50,7 @@ MonoBehaviour:
   skillStat: {fileID: 5725962534121321458}
   animaClip: {fileID: -203655887218126122, guid: fd356cff275d3b341bd67e292fe7cae9, type: 3}
   BuffPrefab: {fileID: -1878307011323631047, guid: cdad0128a5bac8445ae434ac3b45ed61, type: 3}
-  statType: 1
+  statType: 2
   modifierType: 0
 --- !u!114 &5725962534121321458
 MonoBehaviour:
@@ -78,8 +78,12 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 3
-    BaseValue: 20
+    BaseValue: 30
     GrowthValue: 0
+    growthPercent: 0
+  - Type: 0
+    BaseValue: 1
+    GrowthValue: 1
     growthPercent: 0
 --- !u!114 &4701132285732781801
 MonoBehaviour:

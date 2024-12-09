@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
 public class Debuff : MonoBehaviour
 {
     private DeBuffSkillStat deBuffSkillStat;
-    private List<Monster> monsters = new List<Monster>();
+    private List<Unit> debuffTargets = new List<Unit>();
     [SerializeField] protected StatType statType;
     [SerializeField] protected StatModifierType modifierType;
+    private bool isOwnerPlayer = false;
     private Unit owner;
 
     public void Initialize(Unit owner,SkillStat skillStat)
@@ -17,80 +19,63 @@ public class Debuff : MonoBehaviour
         deBuffSkillStat = (DeBuffSkillStat)skillStat;
         deBuffSkillStat.InitializeStats();
         this.transform.localScale = Vector3.one * deBuffSkillStat.GetStatValue<float>(SkillStatType.DeBuffAreaScale);
+        isOwnerPlayer = owner is Player;
     }
 
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent<Monster>(out Monster mon))
+        print("시발 진짜");
+        if (other.TryGetComponent<Unit>(out Unit targetUnit))
         {
-            print("몬스터 닿음");        }
-
-        if (owner.TryGetComponent<Monster>(out Monster monster)) 
-        {
-            if (other.TryGetComponent<Player>(out Player player)) 
+            print("시발 진짜2");
+            if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
             {
-                if (player != null) 
-                {
-                    SetDeBuff(player,statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
-                    print("몬스터가 플레이어에게 디버프 적용");
-                }
+                print("시발 진짜3");
+                debuffTargets.Add(targetUnit);
+                SetDeBuff(targetUnit, statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
+                print($"{targetUnit} 에게 디버프 적용");
+                print($"{targetUnit.CharacterStats.GetStatValue(statType)} 디버프후 스탯");
             }
-        }
-        if (owner.TryGetComponent<Player>(out Player Player))
-        {
-            if (other.TryGetComponent<Monster>(out Monster Monster)) 
-            {
-                if (monster != null && !monsters.Contains(monster))
-                {
-                    monsters.Add(monster);
-                    SetDeBuff(monster, statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
-                    print("플레이어가 몬스터에게 디버프 적용");
-                }
-            }
-        }
-
+        }  
     }
+
     private void OnTriggerExit(Collider other)
     {
-        if (owner.TryGetComponent<Monster>(out Monster monster))
+        print("시발 진짜4");
+        if (other.TryGetComponent<Unit>(out Unit targetUnit))
         {
-            if (other.TryGetComponent<Player>(out Player player))
+            print("시발 진짜5");
+            if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
             {
-                if (player != null)
+                print("시발 진짜6");
+                RemoveDeBuff(targetUnit, statType);
+                if (debuffTargets.Contains(targetUnit))
                 {
-                    RemoveDeBuff(player, statType);
-                    print("플레이어 디버프 해제");
+                    debuffTargets.Remove(targetUnit);
                 }
-            }
-        }
-        if (owner.TryGetComponent<Player>(out Player Player))
-        {
-            if (other != null && other.TryGetComponent<Monster>(out Monster Monster))
-            {
-                if (Monster != null && monsters.Contains(Monster))
-                {
-                    RemoveDeBuff(Monster, statType);
-                    monsters.Remove(Monster);
-                }
+                print($"{targetUnit} 에게 디버프 해제");
             }
         }
     }
 
     protected virtual void OnDisable()
     {
-        foreach (Monster monster in monsters)
+        foreach (Unit debuffTarget in debuffTargets)
         {
-            RemoveDeBuff(monster, statType);
+            if (debuffTargets != null)
+            {
+                RemoveDeBuff(debuffTarget, statType);
+            }
         }
-        monsters.Clear();
+        debuffTargets.Clear();
     }
 
 
     protected virtual void SetDeBuff(Unit target, StatType statType, float value, StatModifierType modType)
     {
-        StatModifier statModifier = new StatModifier(value, modType, this, SourceType.Debuff);
+        StatModifier statModifier = new StatModifier(-value, modType, this, SourceType.Debuff);
         target.CharacterStats.AddModifier(statType, statModifier);
         target.UpdateMoveSpeed();
     }
@@ -99,6 +84,6 @@ public class Debuff : MonoBehaviour
     {
         target.CharacterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
         target.UpdateMoveSpeed();
-        print("디버프 해제");
+        print($"{target.CharacterStats.GetStatValue(statType)} 디버프제거후 스탯");
     }
 }

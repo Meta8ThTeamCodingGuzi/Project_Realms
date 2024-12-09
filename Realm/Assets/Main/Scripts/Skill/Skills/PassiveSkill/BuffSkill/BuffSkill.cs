@@ -22,16 +22,12 @@ public class BuffSkill : Skill
     
     protected override void UseSkill()
     {
-        Owner.Animator.SetTrigger("Attack");
         if (BuffCoroutine != null)
         {
            StopBuff();
-        }
-        buffParticle = PoolManager.Instance.Spawn<Buff>(BuffPrefab.gameObject,Owner.transform.position,Quaternion.Euler(90,0,0));
-        buffParticle.transform.SetParent(Owner.transform);
-        buffParticle.transform.localPosition = Vector3.zero;
+        }     
         BuffCoroutine = StartCoroutine(ApplyBuff());
-        Owner.Animator.SetTrigger("Idle");
+
     }
     protected virtual void StopSkill(){}
 
@@ -48,7 +44,12 @@ public class BuffSkill : Skill
 
     protected virtual IEnumerator ApplyBuff()
     {
+        Owner.Animator.SetTrigger("Attack");
+        buffParticle = PoolManager.Instance.Spawn<Buff>(BuffPrefab.gameObject, Owner.transform.position, Quaternion.Euler(90, 0, 0));
+        buffParticle.transform.SetParent(Owner.transform);
+        buffParticle.transform.localPosition = Vector3.zero;
         SetBuff(statType, buffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
+        Owner.Animator.SetTrigger("Idle");
         yield return new WaitForSeconds(buffSkillStat.GetStatValue<float>(SkillStatType.Duration));
         RemoveBuff(statType);
         BuffCoroutine = null;
