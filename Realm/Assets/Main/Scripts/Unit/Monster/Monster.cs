@@ -228,7 +228,7 @@ public class Monster : Unit
         }
         currentPatrolPoint = patrolPoint[patrolKey];
     }
-    public void MonsterDie()
+    public virtual void MonsterDie()
     {
         OnMonsterDeath?.Invoke(this);
         StartCoroutine(DieRoutine());

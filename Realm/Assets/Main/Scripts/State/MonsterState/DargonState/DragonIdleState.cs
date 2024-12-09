@@ -15,7 +15,7 @@ public class DragonIdleState : State<Dragon>
     {
         target.StopMoving();
         target.nextPatrol();
-        if ( target.dragonHp < target.CharacterStats.GetStatValue(StatType.MaxHealth)/2f)
+        if (target.dragonHp < target.CharacterStats.GetStatValue(StatType.MaxHealth) / 2f)
         {
             target.DragonFormChange();
         }

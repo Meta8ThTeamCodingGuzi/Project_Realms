@@ -14,7 +14,8 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     private PlayerStateUI playerStateUI;
     private SkillTreeUI skillTreeUI;
     private SkillSelectUI skillSelectUI;
-    private StatUI statUI;
+
+    public PlayerUI PlayerUI => playerUI;
 
     public SkillSelectUI SkillSelectUI => skillSelectUI;
 

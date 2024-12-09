@@ -6,7 +6,7 @@ using UnityEngine;
 public class DebuffSKill : Skill
 {
     [SerializeField]private Debuff DebuffPrefab;
-    private Debuff DebuffParticle;
+    private Debuff DebuffParticle = null;
     private DeBuffSkillStat deBuffSkillStat;
     private bool isSkillActive = false;
     private bool clickDelay = true;
@@ -34,7 +34,8 @@ public class DebuffSKill : Skill
         }
         else if (isSkillActive)
         {
-            PoolManager.Instance.Despawn<Debuff>(DebuffParticle);
+            PoolManager.Instance.Despawn(DebuffParticle);
+            DebuffParticle = null;
             isSkillActive = false;
         }
         Owner.Animator.SetTrigger("Idle");
@@ -47,6 +48,14 @@ public class DebuffSKill : Skill
         clickDelay = true;
     }
 
+    private void OnDisable()
+    {
+       if( DebuffParticle != null)
+        {
+            PoolManager.Instance.Despawn(DebuffParticle);
+            DebuffParticle = null;
+        }
+    }
 
-    
+
 }

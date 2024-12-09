@@ -26,13 +26,10 @@ public class Debuff : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("시발 진짜");
         if (other.TryGetComponent<Unit>(out Unit targetUnit))
         {
-            print("시발 진짜2");
             if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
             {
-                print("시발 진짜3");
                 debuffTargets.Add(targetUnit);
                 SetDeBuff(targetUnit, statType, deBuffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
                 print($"{targetUnit} 에게 디버프 적용");
@@ -43,13 +40,11 @@ public class Debuff : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        print("시발 진짜4");
         if (other.TryGetComponent<Unit>(out Unit targetUnit))
         {
-            print("시발 진짜5");
             if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
             {
-                print("시발 진짜6");
+
                 RemoveDeBuff(targetUnit, statType);
                 if (debuffTargets.Contains(targetUnit))
                 {
@@ -77,6 +72,7 @@ public class Debuff : MonoBehaviour
     {
         StatModifier statModifier = new StatModifier(-value, modType, this, SourceType.Debuff);
         target.CharacterStats.AddModifier(statType, statModifier);
+        UIManager.Instance.PlayerUI.statUI.UpdateUI();
         target.UpdateMoveSpeed();
     }
 
@@ -84,6 +80,7 @@ public class Debuff : MonoBehaviour
     {
         target.CharacterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
         target.UpdateMoveSpeed();
+        UIManager.Instance.PlayerUI.statUI.UpdateUI();
         print($"{target.CharacterStats.GetStatValue(statType)} 디버프제거후 스탯");
     }
 }
