@@ -2555,7 +2555,7 @@ MonoBehaviour:
     BaseValue: 0.5
     PointIncrease: 0
   - Type: 11
-    BaseValue: 10
+    BaseValue: 15
     PointIncrease: 0
   - Type: 7
     BaseValue: 50
