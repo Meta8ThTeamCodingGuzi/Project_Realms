@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class SkillController : MonoBehaviour
 {
@@ -180,6 +179,10 @@ public class SkillController : MonoBehaviour
 
             availableSkillPrefabs.Add(instance);
             initializedSkills[skillPrefab.data.skillID] = instance;
+            if (skillPrefab.data.skillID == SkillID.Dash) 
+            {
+                EquipSkill(instance,KeyCode.Space);
+            }
             existingSkill = instance;
 
             OnSkillLevelChanged?.Invoke(existingSkill);

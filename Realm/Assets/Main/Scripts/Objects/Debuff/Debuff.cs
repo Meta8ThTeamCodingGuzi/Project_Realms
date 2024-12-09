@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using TreeEditor;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class Debuff : MonoBehaviour
 {
