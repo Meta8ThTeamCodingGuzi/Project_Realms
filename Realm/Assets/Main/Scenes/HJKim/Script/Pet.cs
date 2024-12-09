@@ -102,4 +102,18 @@ public class Pet : MonoBehaviour
             enemyTarget = null;  // 적 추적 중지
         }
     }
+
+    public IEnumerator AttackDelay(Enemy enemy)
+    {
+        canAttack = false;
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Shoot"); // "Attack" 트리거 발동
+        }
+
+ 
+        yield return new WaitForSeconds(1);
+        canAttack = true;
+    }
 }

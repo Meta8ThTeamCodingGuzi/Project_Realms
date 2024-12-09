@@ -37,4 +37,8 @@ public class PouBall : MonoBehaviour
             Destroy(gameObject);  // 투사체 제거
         }
     }
+
+
+
+
 }
