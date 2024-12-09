@@ -76,6 +76,7 @@ public class ProjectileSkill : Skill
         ProjectileData projectileData = new ProjectileData
         {
             owner = Owner,
+            Scale = projectileStats.GetStatValue<float>(SkillStatType.ProjectileScale),
             Damage = projectileStats.GetStatValue<float>(SkillStatType.Damage),
             Speed = projectileStats.GetStatValue<float>(SkillStatType.ProjectileSpeed),
             Range = projectileStats.GetStatValue<float>(SkillStatType.ProjectileRange),
@@ -175,6 +176,7 @@ public class ProjectileSkill : Skill
 public struct ProjectileData
 {
     public Unit owner;
+    public float Scale;
     public float Damage;
     public float Speed;
     public float Range;
