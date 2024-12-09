@@ -14,6 +14,7 @@ public class SkillController : MonoBehaviour
     private SkillBarUI skillBarUI;
     public KeyCode skillActivated;
 
+    //   ų ϱƼ ߰
     private Skill currentSkill;
     public Skill CurrentSkill => currentSkill;
 
@@ -34,7 +35,6 @@ public class SkillController : MonoBehaviour
         {
             Skill instance = Instantiate(skillPrefab, transform);
             instance.Initialize(player);
-            instance.gameObject.SetActive(false);
             initializedSkills[skillPrefab.data.skillID] = instance;
         }
     }
@@ -104,17 +104,20 @@ public class SkillController : MonoBehaviour
 
         if (existingSlot != KeyCode.None)
         {
-            UnequipSkill(existingSlot);
+            skillSlots[existingSlot] = null;
+            if (skillBarUI != null)
+            {
+                skillBarUI.UpdateSkillSlot(existingSlot, null);
+            }
         }
 
         if (skillSlots[newSlot] != null)
         {
-            UnequipSkill(newSlot);
+            skillSlots[newSlot] = null;
         }
 
         Skill skillInstance = initializedSkills[skillPrefab.data.skillID];
         skillSlots[newSlot] = skillInstance;
-        skillInstance.gameObject.SetActive(true);
 
         if (!activeSkills.Contains(skillInstance))
         {
@@ -134,6 +137,7 @@ public class SkillController : MonoBehaviour
             Skill skillToRemove = skillSlots[slot];
             activeSkills.Remove(skillToRemove);
 
+            //  ų 
             if (skillToRemove is DefaultSkill)
             {
                 if (initializedSkills.ContainsKey(skillToRemove.data.skillID))
@@ -141,10 +145,6 @@ public class SkillController : MonoBehaviour
                     initializedSkills.Remove(skillToRemove.data.skillID);
                 }
                 Destroy(skillToRemove.gameObject);
-            }
-            else
-            {
-                skillToRemove.gameObject.SetActive(false);
             }
 
             skillSlots[slot] = null;
@@ -171,7 +171,6 @@ public class SkillController : MonoBehaviour
         {
             Skill instance = Instantiate(skillPrefab, transform);
             instance.Initialize(player);
-            instance.gameObject.SetActive(false);
 
             if (instance.skillStat != null)
             {

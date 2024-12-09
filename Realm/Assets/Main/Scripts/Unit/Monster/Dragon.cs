@@ -16,8 +16,11 @@ public class Dragon : Monster
 
         AnimController = gameObject.GetComponent<AnimatorController>();
         AnimController.Initialize(this);
-
+     
+        AnimController.DragonAnimatorChange(UnitState.Ground);
         GetSkill(SkillID.DragonBite);
+        dragonState = UnitState.Ground;
+        FlyState = false;
     }
 
 
@@ -34,9 +37,12 @@ public class Dragon : Monster
             dragonState = UnitState.Ground;
         }
 
+        GetSkill(SkillID.DragonNova).TryUseSkill();
         AnimController.DragonAnimatorChange(dragonState);
+        GetSkill(SkillID.DragonBreath);
 
         FlyState = true;
 
     }
+
 }

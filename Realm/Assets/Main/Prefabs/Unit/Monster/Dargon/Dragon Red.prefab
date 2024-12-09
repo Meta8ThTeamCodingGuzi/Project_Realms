@@ -699,6 +699,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3625378789529692845}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1111988289823148805
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3342811162899733322}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3342811162899733322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111988289823148805}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.006000519, y: 1, z: 2.36}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2617891538190094152}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1238292674044410420
 GameObject:
   m_ObjectHideFlags: 0
@@ -1461,6 +1492,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3342811162899733322}
   - {fileID: 6009051538964120563}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1560,6 +1592,8 @@ MonoBehaviour:
   monsterType: 2
   skills:
   - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
+  - {fileID: 6503323496141120415, guid: 115a43899dd5cae4386782532ca8fdb3, type: 3}
+  - {fileID: 8582521760243147514, guid: c1517b367ecd3794ea696d085f2aaa11, type: 3}
 --- !u!114 &1500165005283683662
 MonoBehaviour:
   m_ObjectHideFlags: 0

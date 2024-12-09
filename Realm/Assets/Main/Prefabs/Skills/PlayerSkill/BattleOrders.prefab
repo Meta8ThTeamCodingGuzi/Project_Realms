@@ -66,8 +66,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialStats:
   - Type: 22
-    BaseValue: 10000
-    GrowthValue: 0
+    BaseValue: 500
+    GrowthValue: 500
     growthPercent: 0
   - Type: 1
     BaseValue: 50
@@ -79,7 +79,7 @@ MonoBehaviour:
     growthPercent: 0
   - Type: 3
     BaseValue: 30
-    GrowthValue: 0
+    GrowthValue: 10
     growthPercent: 0
   - Type: 0
     BaseValue: 1

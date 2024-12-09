@@ -228,7 +228,7 @@ public class Monster : Unit
         }
         currentPatrolPoint = patrolPoint[patrolKey];
     }
-    public void MonsterDie()
+    public virtual void MonsterDie()
     {
         OnMonsterDeath?.Invoke(this);
         StartCoroutine(DieRoutine());
@@ -243,7 +243,7 @@ public class Monster : Unit
             yield return null;
         }
 
-        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.45f)
+        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
         {
             yield return null;
         }
