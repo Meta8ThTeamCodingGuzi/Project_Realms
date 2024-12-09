@@ -3361,7 +3361,7 @@ MonoBehaviour:
   monsterType: 2
   skills:
   - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
-  - {fileID: 6503323496141120415, guid: 115a43899dd5cae4386782532ca8fdb3, type: 3}
+  - {fileID: 6503323496141120415, guid: ff785eed7d9485547818fc7baa3c9bdb, type: 3}
   - {fileID: 8582521760243147514, guid: 8bc398b74f4e2e04b912db3d2e179b3d, type: 3}
 --- !u!114 &4710851983419400807
 MonoBehaviour:
