@@ -57,7 +57,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
         {
             return (float)stat.Value;
         }
-        Debug.LogWarning($" {statType} 이 없는데 접근하려 합니다."); 
+        //Debug.LogWarning($" {statType} 이 없는데 접근하려 합니다."); 
         return 0f;
     }
 
