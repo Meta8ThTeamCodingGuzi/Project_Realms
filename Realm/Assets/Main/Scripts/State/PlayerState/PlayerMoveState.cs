@@ -9,7 +9,7 @@ public class PlayerMoveState : State<Player>
 
     public override void OnEnter()
     {
-        target.Animator.SetFloat("MoveSpeed", target.CharacterStats.GetStatValue(StatType.MoveSpeed) / 4.5f);
+        target.Animator.SetFloat("MoveSpeed", target.CharacterStats.GetStatValue(StatType.MoveSpeed) / 6f);
         target.Animator.SetBool("Move", true);
     }
 
