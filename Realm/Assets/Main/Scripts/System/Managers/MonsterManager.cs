@@ -30,6 +30,7 @@ public class MonsterManager : SingletonManager<MonsterManager>
     [SerializeField] private float maxGauge = 100f;
     [SerializeField] private float currentGauge = 0f;
     [SerializeField] private float gaugePerKill = 10f;
+    [SerializeField] private float MaxSpawnCount = 100f;
 
     public List<Monster> currentMonsters = new List<Monster>();
 
@@ -127,7 +128,6 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
     private void SpawnEliteMonster(int checkpointId)
     {
-        print("엘리트 몬스터 스폰");
         var eliteMonsterData = eliteMonsterDataList.Find(data => data.checkpointId == checkpointId);
         if (eliteMonsterData != null && eliteMonsterData.eliteMonsterPrefab != null)
         {
@@ -161,7 +161,7 @@ public class MonsterManager : SingletonManager<MonsterManager>
         foreach (var spawnData in spawnDataList)
         {
             if (!spawnData.hasSpawned && spawnData.requiredCheckpointId <= currentCheckpoint)
-            {
+            {                
                 StartContinuousSpawn(spawnData);
             }
         }
@@ -181,16 +181,20 @@ public class MonsterManager : SingletonManager<MonsterManager>
     private IEnumerator ContinuousSpawnRoutine(MonsterSpawnData spawnData)
     {
         yield return new WaitForSeconds(spawnData.spawnDelay);
-
         while (currentEliteMonster == null)
         {
-            Monster monster = PoolManager.Instance.Spawn<Monster>(
+            if (currentMonsters.Count <= MaxSpawnCount) 
+            {
+                Monster monster = PoolManager.Instance.Spawn<Monster>(
                 spawnData.monsterPrefab.gameObject,
                 spawnData.spawnPoint.position,
                 Quaternion.identity
-            );
-            monster.Initialize();
+                );
+                monster.Initialize();
+                currentMonsters.Add(monster);
+                print($"Current Monster Count : {currentMonsters.Count}");
 
+            }
             yield return new WaitForSeconds(respawnDelay);
         }
     }

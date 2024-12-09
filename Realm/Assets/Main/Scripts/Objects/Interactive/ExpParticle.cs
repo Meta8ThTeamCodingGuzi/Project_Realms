@@ -28,16 +28,22 @@ public class ExpParticle : MonoBehaviour
     {
         if (player == null) return;
 
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        float expRange = player.CharacterStats.GetStatValue(StatType.ExpRange);
+
         // 둥둥 떠다니는 효과 적용
         if (!isAttracting)
         {
             floatTimer += Time.deltaTime;
             float yOffset = Mathf.Sin(floatTimer * floatFrequency) * floatAmplitude;
-            transform.position = startPosition + new Vector3(0f, yOffset, 0f);
-        }
+            Vector3 newPosition = startPosition + new Vector3(0f, yOffset, 0f);
 
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        float expRange = player.CharacterStats.GetStatValue(StatType.ExpRange);
+            // 위치 값이 유효한지 확인
+            if (!float.IsInfinity(newPosition.x) && !float.IsInfinity(newPosition.y) && !float.IsInfinity(newPosition.z))
+            {
+                transform.position = newPosition;
+            }
+        }
 
         // ExpRange 범위 안에 들어왔는지 체크
         if (distanceToPlayer <= expRange)
@@ -47,10 +53,18 @@ public class ExpParticle : MonoBehaviour
 
         if (isAttracting)
         {
-            currentSpeed = moveSpeed + (moveSpeed * accelerationRate * (1 - distanceToPlayer / expRange));
+            // 속도 계산 시 0으로 나누는 것을 방지
+            float speedMultiplier = expRange > 0.001f ? (1 - distanceToPlayer / expRange) : 1f;
+            currentSpeed = moveSpeed + (moveSpeed * accelerationRate * Mathf.Clamp01(speedMultiplier));
 
             Vector3 direction = (player.transform.position - transform.position).normalized;
-            transform.position += direction * currentSpeed * Time.deltaTime;
+            Vector3 movement = direction * currentSpeed * Time.deltaTime;
+
+            // 이동 벡터가 유효한지 확인
+            if (!float.IsInfinity(movement.x) && !float.IsInfinity(movement.y) && !float.IsInfinity(movement.z))
+            {
+                transform.position += movement;
+            }
 
             if (distanceToPlayer < 0.5f)
             {
