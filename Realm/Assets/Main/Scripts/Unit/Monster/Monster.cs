@@ -38,7 +38,9 @@ public class Monster : Unit
     public Skill CurrentSkill => currentSkill;
 
     private bool isPlayerNullRoutine = true;
-    
+
+    public static event System.Action<Monster> OnMonsterDeath;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -228,6 +230,7 @@ public class Monster : Unit
     }
     public void MonsterDie()
     {
+        OnMonsterDeath?.Invoke(this);
         StartCoroutine(DieRoutine());
     }
 
@@ -249,6 +252,7 @@ public class Monster : Unit
         ItemManager.Instance.GenerateRandomItem(monsterType, transform.position);
         ParticleSystem mdp = PoolManager.Instance.Spawn<ParticleSystem>(monsterDieParticle.gameObject, transform.position, Quaternion.identity);
         mdp.Play();
+        MonsterManager.Instance.currentMonsters.Remove(this);
         PoolManager.Instance.Despawn(mdp, 1f);
         PoolManager.Instance.Despawn(this);
     }
@@ -287,6 +291,10 @@ public class Monster : Unit
         currentSkill = null;
     }
 
+    public void OnSpawnFromPool()
+    {
+        MonsterManager.Instance.currentMonsters.Add(this);
+    }
 
 
 }
