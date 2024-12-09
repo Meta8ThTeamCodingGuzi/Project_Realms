@@ -45,4 +45,28 @@ public class Dragon : Monster
 
     }
 
+    public override IEnumerator DieRoutine()
+    {
+        Animator.SetTrigger("Die");
+
+        while (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        {
+            Animator.SetTrigger("Die");
+            yield return null;
+        }
+
+        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.75f)
+        {
+            yield return null;
+        }
+
+        DropExpParticle();
+        ItemManager.Instance.GenerateRandomItem(monsterType, transform.position);
+        ParticleSystem mdp = PoolManager.Instance.Spawn<ParticleSystem>(monsterDieParticle.gameObject, transform.position, Quaternion.identity);
+        mdp.Play();
+        MonsterManager.Instance.currentMonsters.Remove(this);
+        PoolManager.Instance.Despawn(mdp, 1f);
+        Destroy(this.gameObject);
+    }
+
 }

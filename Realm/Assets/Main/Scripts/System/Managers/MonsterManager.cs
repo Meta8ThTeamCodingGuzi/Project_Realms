@@ -127,15 +127,14 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
     private void SpawnEliteMonster(int checkpointId)
     {
-        print("엘리트 몬스터 스폰");
         var eliteMonsterData = eliteMonsterDataList.Find(data => data.checkpointId == checkpointId);
         if (eliteMonsterData != null && eliteMonsterData.eliteMonsterPrefab != null)
         {
-            currentEliteMonster = PoolManager.Instance.Spawn<Monster>(
+            currentEliteMonster = Instantiate(
                 eliteMonsterData.eliteMonsterPrefab.gameObject,
                 eliteMonsterData.spawnPoint.position,
                 Quaternion.identity
-            );
+            ).GetComponent<Monster>();
             currentEliteMonster.Initialize();
         }
     }

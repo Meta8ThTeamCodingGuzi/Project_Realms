@@ -28,7 +28,7 @@ public class Monster : Unit
 
     public ParticleSystem monsterDieParticle;
 
-    [SerializeField] private MonsterType monsterType = MonsterType.Normal;
+    [SerializeField] protected MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
 
     [SerializeField]private List<Skill> skills;
@@ -234,7 +234,7 @@ public class Monster : Unit
         StartCoroutine(DieRoutine());
     }
 
-    public IEnumerator DieRoutine()
+    public virtual IEnumerator DieRoutine()
     {
         Animator.SetTrigger("Die");
 
@@ -257,7 +257,7 @@ public class Monster : Unit
         PoolManager.Instance.Despawn(this);
     }
 
-    private void DropExpParticle()
+    protected void DropExpParticle()
     {
         float baseExpDrop = characterStats.GetStatValue(StatType.DropExp);
 

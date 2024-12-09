@@ -86,6 +86,20 @@ public class Slot : MonoBehaviour
 
                     _player.AnimController.PlayerAnimatorChange(_item.ItemType);
                 }
+                if (_item.ItemType == ItemType.Armor) 
+                {
+                    foreach (EquipmentIndex eIndex in _player.InventorySystem.equipmentIndices) 
+                    {
+                        if (eIndex.itemID == _item.ItemID) 
+                        {
+                            foreach (GameObject go in eIndex.objsToAcitve) 
+                            {
+                                go.SetActive(true);
+                            }
+                        }
+                    }
+                    
+                }
             }
         }
         else
@@ -109,7 +123,24 @@ public class Slot : MonoBehaviour
                 _player.AnimController.PlayerAnimatorChange(ItemType.None);
                 weaponHolder.UnequipCurrentWeapon();
             }
+
+            if (_item.ItemType == ItemType.Armor)
+            {
+                foreach (EquipmentIndex eIndex in _player.InventorySystem.equipmentIndices)
+                {
+                    if (eIndex.itemID == _item.ItemID)
+                    {
+                        foreach (GameObject go in eIndex.objsToAcitve)
+                        {
+                            go.SetActive(false);
+                        }
+                    }
+                }
+
+            }
+
         }
+
     }
 
     public void PlaceholdItem(Item item)

@@ -118,6 +118,7 @@ public enum ItemID
     Bow,
     Arrow,
     Ring,
+    Armor1,
 }
 
 public enum ItemType

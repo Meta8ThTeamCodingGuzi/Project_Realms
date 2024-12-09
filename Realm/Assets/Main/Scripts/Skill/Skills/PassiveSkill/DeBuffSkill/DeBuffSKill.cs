@@ -49,12 +49,17 @@ public class DebuffSKill : Skill
 
     private void OnDisable()
     {
-       if( DebuffParticle != null)
+        if (Owner is Player)
         {
-            PoolManager.Instance.Despawn(DebuffParticle);
-            DebuffParticle = null;
+            if (DebuffParticle != null)
+            {
+                PoolManager.Instance.Despawn(DebuffParticle);
+                DebuffParticle = null;
+            }
+        }
+        else 
+        {
+            Destroy(DebuffParticle);
         }
     }
-
-
 }

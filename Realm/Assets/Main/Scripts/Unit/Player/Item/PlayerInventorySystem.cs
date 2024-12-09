@@ -1,25 +1,25 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[Serializable]
+public class EquipmentIndex 
+{
+    public ItemID itemID;
+    public GameObject[] objsToAcitve;
+}
+
 public class PlayerInventorySystem : MonoBehaviour
 {
-    [Header("Test Settings")]
-    [SerializeField] private List<Item> initialItems = new List<Item>();  // 테스트용 초기 아이템
-
+    public List<EquipmentIndex> equipmentIndices = new List<EquipmentIndex>();
     private List<Item> items = new List<Item>();
     private Dictionary<ItemID, int> itemCounts = new Dictionary<ItemID, int>();
-    private InventoryUI inventoryUI;  // 인벤토리 UI 참조 추가
+    private InventoryUI inventoryUI;
 
     public void Initialize(InventoryUI inventory)
     {
         inventoryUI = inventory;
-
-        // 초기 아이템 추가
-        foreach (var item in initialItems)
-        {
-            AddItem(Instantiate(item));
-        }
     }
 
     public bool HasItem(ItemID itemID)
