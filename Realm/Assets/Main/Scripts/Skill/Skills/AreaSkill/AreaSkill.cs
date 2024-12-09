@@ -1,8 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using TreeEditor;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class AreaSkill : Skill
