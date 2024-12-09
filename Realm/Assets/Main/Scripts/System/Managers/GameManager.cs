@@ -39,6 +39,8 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
 
         yield return new WaitUntil(() => CheckRequiredComponents());
 
+        ItemManager.Instance.GiveDefaultItemsToPlayer();
+
         IsInitialized = true;
         Debug.Log("GameManager initialized successfully");
     }

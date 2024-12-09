@@ -6,6 +6,7 @@ public class ItemManager : SingletonManager<ItemManager>
 {
     [SerializeField] private ItemGenerationRuleSO itemGenerationRules;
     [SerializeField] private List<ItemData> itemDataTemplates;
+    [SerializeField] private List<ItemData> defaultPlayerItems;
 
     private List<Item> items = new List<Item>();
     private Dictionary<Item, ItemInstanceData> itemInstanceData = new Dictionary<Item, ItemInstanceData>();
@@ -24,7 +25,6 @@ public class ItemManager : SingletonManager<ItemManager>
         var itemTemplate = itemDataTemplates.Find(t => t.ItemType == randomItemType);
         if (itemTemplate == null) return null;
 
-        // 월드에 아이템 생성
         if (itemTemplate.WorldDropPrefab == null)
         {
             Debug.LogError($"WorldDropPrefab is missing for item: {itemTemplate.ItemID}");
@@ -35,12 +35,10 @@ public class ItemManager : SingletonManager<ItemManager>
         Item item = itemObj.GetComponent<Item>();
         if (item != null)
         {
-            // 아이템 인스턴스 데이터 생성
             var instanceData = new ItemInstanceData(itemTemplate);
             instanceData.SetRarity(raritySettings.rarity, raritySettings.itemNameColor);
             GenerateRandomStats(instanceData, dropRule, raritySettings);
 
-            // 아이템과 인스턴스 데이터 연결
             itemInstanceData[item] = instanceData;
             item.Initialize(itemTemplate, instanceData);
             items.Add(item);
@@ -68,7 +66,7 @@ public class ItemManager : SingletonManager<ItemManager>
             randomValue *= rarityMultiplier;
 
             itemInstance.AddStat(selectedStatType, randomValue, 0);
-        }        
+        }
     }
 
     private void ShuffleList<T>(List<T> list)
@@ -100,5 +98,36 @@ public class ItemManager : SingletonManager<ItemManager>
             return instance;
         }
         return null;
+    }
+
+    public void GiveDefaultItemsToPlayer()
+    {
+        if (defaultPlayerItems == null || defaultPlayerItems.Count == 0)
+        {
+            Debug.LogWarning("기본 아이템 목록이 비어있습니다.");
+            return;
+        }
+
+        var playerInventory = GameManager.Instance.player.InventorySystem;
+        if (playerInventory == null)
+        {
+            Debug.LogError("플레이어 인벤토리를 찾을 수 없습니다.");
+            return;
+        }
+
+        foreach (var itemTemplate in defaultPlayerItems)
+        {
+            GameObject itemObj = new GameObject(itemTemplate.ItemID.ToString());
+            Item item = itemObj.AddComponent<Item>();
+
+            var instanceData = new ItemInstanceData(itemTemplate);
+            instanceData.SetRarity(ItemRarity.Common, Color.white);
+
+            itemInstanceData[item] = instanceData;
+            item.Initialize(itemTemplate, instanceData);
+            items.Add(item);
+
+            playerInventory.AddItem(item);
+        }
     }
 }

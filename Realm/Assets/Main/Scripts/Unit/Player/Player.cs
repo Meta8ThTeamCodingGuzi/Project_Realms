@@ -34,6 +34,9 @@ public class Player : Unit
     private PlayerStateHandler playerHandler;
     public PlayerStateHandler PlayerHandler => playerHandler;
 
+    private int skillPoint;
+    public int SkillPoint { get => skillPoint; set => skillPoint = value; }
+
 
 
     private Vector3 targetPos = Vector3.zero;
@@ -116,13 +119,14 @@ public class Player : Unit
 
         base.Initialize();
 
-        // 리젠 코루틴 시작
         StartRegeneration();
 
         inputManager = gameObject.AddComponent<PlayerInputManager>();
         inputManager.Initialize(this);
 
         Debug.Log("Player initialized successfully");
+
+        skillPoint += 3;
     }
 
     private void Update()
@@ -137,7 +141,6 @@ public class Player : Unit
 
     public float ExpToNextLevel => CalculateRequiredExp(GetCurrentLevel());
 
-    // 현재 레벨에서의 경험치 비율 계산
     public float ExpPercentage
     {
         get
@@ -160,12 +163,10 @@ public class Player : Unit
 
         totalExp += amount;
 
-        // 레벨업 체크
         int oldLevel = CalculateLevelFromExp(oldExp);
 
         int newLevel = CalculateLevelFromExp(totalExp);
 
-        // 레벨업이 발생했다면
         if (newLevel > oldLevel)
         {
             for (int i = oldLevel + 1; i <= newLevel; i++)
@@ -175,7 +176,6 @@ public class Player : Unit
         }
     }
 
-    // 누적 경험치로 레벨 계산
     private int CalculateLevelFromExp(float exp)
     {
         int level = 1;
@@ -192,7 +192,6 @@ public class Player : Unit
         return level;
     }
 
-    // 특정 레벨까지 필요한 총 경험치 계산
     private float CalculateTotalExpForLevel(int level)
     {
         float total = 0f;
@@ -207,8 +206,7 @@ public class Player : Unit
 
     private float CalculateRequiredExp(int level)
     {
-        // 현재 레벨에 해당하는 증가율 찾기
-        float currentGrowthRate = levelData.growthRates[0];  // 기본 증가율
+        float currentGrowthRate = levelData.growthRates[0]; 
 
         for (int i = 0; i < levelData.levelBreakpoints.Length; i++)
         {
@@ -218,28 +216,25 @@ public class Player : Unit
             }
         }
 
-        // 레벨별 필요 경험치 계산
         return levelData.baseExpRequired * Mathf.Pow(currentGrowthRate, level - 1);
     }
 
     private void PerformLevelUp(int newLevel)
     {
-        // 레벨 증가
         StatModifier levelMod = new StatModifier(1f, StatModifierType.Flat, this);
 
         characterStats.AddModifier(StatType.Level, levelMod);
 
-        // 레벨업 보상
         statPoint.AddStatPoints(5);
+
+        skillPoint += 3; 
 
         OnLevelUp();
     }
 
     protected virtual void OnLevelUp()
     {
-        Debug.Log($"Level Up! Current Level: {GetCurrentLevel()}");
 
-        // 레벨업 이펙트, 사운드 등 추가
     }
 
     private int GetCurrentLevel()
@@ -260,13 +255,11 @@ public class Player : Unit
 
     private void StartRegeneration()
     {
-        // 기존 코루틴이 실행 중이라면 중지
         if (healthRegenCoroutine != null)
             StopCoroutine(healthRegenCoroutine);
         if (manaRegenCoroutine != null)
             StopCoroutine(manaRegenCoroutine);
 
-        // 새로운 코루틴 시작
         healthRegenCoroutine = StartCoroutine(HealthRegenCoroutine());
         manaRegenCoroutine = StartCoroutine(ManaRegenCoroutine());
     }
@@ -322,7 +315,6 @@ public class Player : Unit
         {
             yield return null;
         }
-        //플레이어 죽고나서 해야할거 해야할듯
     }
     public void ClearTarget()
     {
@@ -332,7 +324,6 @@ public class Player : Unit
 
     private void OnDisable()
     {
-        // 코루틴 정리
         if (healthRegenCoroutine != null)
             StopCoroutine(healthRegenCoroutine);
         if (manaRegenCoroutine != null)

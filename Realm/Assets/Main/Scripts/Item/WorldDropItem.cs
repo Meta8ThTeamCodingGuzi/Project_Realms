@@ -102,6 +102,7 @@ public class WorldDropItem : MonoBehaviour
 
     public void TryPickupItem()
     {
+        print($"트라이픽업 아이템호출 {player}");
         if (player == null) return;
 
         PlayerInventorySystem inventorySystem = player.InventorySystem;

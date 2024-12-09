@@ -37,8 +37,8 @@ public enum SkillID
     BattleOrders,
     BattleCry,
     Haste,
-    Manarigen,
-    Hprigen,
+    ManaRegen,
+    HpRegen,
 
 
 

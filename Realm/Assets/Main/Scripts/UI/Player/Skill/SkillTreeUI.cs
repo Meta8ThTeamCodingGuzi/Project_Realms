@@ -7,7 +7,6 @@ public class SkillTreeUI : MonoBehaviour
     private SkillController skillController;
     [SerializeField] private SkillTreeSlot skillSlotPrefab;
     [SerializeField] private Transform SkillTreeViewPort;
-    [SerializeField] private int availableSkillPoints = 0;
     private SkillSelectUI skillSelectUI;
 
     private Dictionary<SkillID, SkillTreeSlot> skillSlots = new Dictionary<SkillID, SkillTreeSlot>();
@@ -18,7 +17,6 @@ public class SkillTreeUI : MonoBehaviour
         skillController = player.GetComponent<SkillController>();
         skillController.OnSkillLevelChanged += UpdateSkillSlotUI;
         skillSelectUI = UIManager.Instance.SkillSelectUI;
-
         CreateSkillSlots();
     }
 
@@ -48,11 +46,12 @@ public class SkillTreeUI : MonoBehaviour
 
     public void OnSkillSlotClicked(Skill skillPrefab)
     {
-        if (availableSkillPoints > 0)
+ 
+        if (player.SkillPoint > 0)
         {
             if (skillController.TryLevelUpSkill(skillPrefab))
             {
-                availableSkillPoints--;
+                player.SkillPoint--;
 
                 if (skillSelectUI != null)
                 {
@@ -60,10 +59,5 @@ public class SkillTreeUI : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void AddSkillPoints(int amount)
-    {
-        availableSkillPoints += amount;
     }
 }
