@@ -47,7 +47,7 @@ public class Monster : Unit
 
         GetRequiredComponents();
         
-        InitializeMonster();        
+        InitializeMonster();
     }
 
     private void InitializeMonster()

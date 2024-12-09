@@ -1202,7 +1202,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setPatrolTransforms: []
+  setPatrolTransforms:
+  - {fileID: 5241530313266634744}
+  - {fileID: 8538442572672739759}
+  - {fileID: 3558064377136474465}
+  - {fileID: 3580021424796292657}
+  - {fileID: 979837537476820560}
   expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
   monsterDieParticle: {fileID: 2268233570459045565, guid: 05e83b04bef7fa54889fd6d5221474f7, type: 3}
   monsterType: 0
