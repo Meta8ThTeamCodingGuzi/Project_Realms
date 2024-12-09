@@ -9,11 +9,14 @@ public class WorldDropItem : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float interactionRadius = 2f;
+    [SerializeField] private float nameDisplayRadius = 5f;
     [SerializeField] private float floatingHeight = 0.5f;
     [SerializeField] private float bobSpeed = 1f;
     [SerializeField] private float bobAmount = 0.1f;
+    [SerializeField] private LayerMask mouseRaycastLayer;
 
     private Vector3 startPosition;
+    private bool isPlayerInRange;
     private Player player;
     private Camera mainCamera;
     private static WorldDropItem currentHoveredItem = null;
@@ -25,8 +28,19 @@ public class WorldDropItem : MonoBehaviour
     private float spawnStartTime;
     private bool isSpawning = true;
     private Vector3 originalRotation;
+    private Transform textTransform;
 
     public float InteractionRadius => interactionRadius;
+
+    private void Awake()
+    {
+        if (itemNameText != null)
+        {
+            textTransform = itemNameText.transform;
+            itemNameText.gameObject.SetActive(false);
+                UpdateItemNameText();
+        }
+    }
 
     private void Start()
     {
@@ -42,8 +56,10 @@ public class WorldDropItem : MonoBehaviour
 
         if (itemNameText != null)
         {
+            textTransform = itemNameText.transform;
             itemNameText.gameObject.SetActive(false);
             UpdateItemNameText();
+
             itemNameText.alignment = TextAlignmentOptions.Center;
             itemNameText.fontSize = 5;
         }
@@ -71,17 +87,16 @@ public class WorldDropItem : MonoBehaviour
     {
         if (currentHoveredItem == newHoveredItem) return;
 
-        if (currentHoveredItem != null && currentHoveredItem.itemNameText != null)
+        if (currentHoveredItem != null)
         {
-            currentHoveredItem.itemNameText.gameObject.SetActive(false);
+            currentHoveredItem.HideTooltip();
         }
 
         currentHoveredItem = newHoveredItem;
 
-        if (currentHoveredItem != null && currentHoveredItem.itemNameText != null)
+        if (currentHoveredItem != null)
         {
-            currentHoveredItem.itemNameText.gameObject.SetActive(true);
-            currentHoveredItem.UpdateTextRotation();
+            currentHoveredItem.ShowTooltip();
         }
     }
 
@@ -125,6 +140,9 @@ public class WorldDropItem : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, nameDisplayRadius);
     }
 
     private void UpdateSpawnAnimation()
@@ -152,6 +170,23 @@ public class WorldDropItem : MonoBehaviour
         );
     }
 
+    private void ShowTooltip()
+    {
+        if (itemNameText != null && !itemNameText.gameObject.activeSelf)
+        {
+            itemNameText.gameObject.SetActive(true);
+            UpdateTextRotation();
+        }
+    }
+
+    private void HideTooltip()
+    {
+        if (itemNameText != null)
+        {
+            itemNameText.gameObject.SetActive(false);
+        }
+    }
+
     private void UpdateItemNameText()
     {
         if (itemNameText != null && item != null)
@@ -159,22 +194,19 @@ public class WorldDropItem : MonoBehaviour
             ItemInstanceData instanceData = ItemManager.Instance.GetItemInstanceData(item);
             if (instanceData != null)
             {
-                Color textColor = instanceData.NameColor;
-                textColor.a = 1f;
-
                 string colorHex = ColorUtility.ToHtmlStringRGB(instanceData.NameColor);
-                itemNameText.text = $"<color=#{colorHex}>{item.ItemID}</color>";
-                itemNameText.color = textColor;
+                itemNameText.text = $"<color=#{colorHex}>[{instanceData.Rarity}] {item.ItemID}</color>";
+                itemNameText.color = instanceData.NameColor;
             }
         }
     }
 
     private void UpdateTextRotation()
     {
-        if (mainCamera != null)
+        if (itemNameText != null && mainCamera != null)
         {
-            transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.forward,
-                           mainCamera.transform.rotation * Vector3.up);
+            textTransform.LookAt(mainCamera.transform);
+            textTransform.Rotate(0, 180, 0);
         }
     }
 }

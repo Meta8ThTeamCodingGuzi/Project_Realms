@@ -84,59 +84,26 @@ public class PlayerInputManager : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        float sphereRadius = 1f;
-        RaycastHit[] hits = Physics.SphereCastAll(ray, sphereRadius, Mathf.Infinity);
-
-        WorldDropItem closestItem = null;
-        Monster closestMonster = null;
-        float closestItemDistance = float.MaxValue;
-        float closestMonsterDistance = float.MaxValue;
-        float maxScreenDistance = 100f;
+        RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
 
         foreach (RaycastHit hit in hits)
         {
-            Vector3 screenPoint = mainCamera.WorldToScreenPoint(hit.transform.position);
-            if (screenPoint.z < 0) continue;
-
-            float screenDistance = Vector2.Distance(
-                new Vector2(Input.mousePosition.x, Input.mousePosition.y),
-                new Vector2(screenPoint.x, screenPoint.y)
-            );
-
-            if (screenDistance > maxScreenDistance) continue;
-
             if (hit.collider.TryGetComponent<WorldDropItem>(out WorldDropItem dropItem))
             {
-                if (screenDistance < closestItemDistance)
-                {
-                    closestItemDistance = screenDistance;
-                    closestItem = dropItem;
-                }
+                HandleDropItemClick(dropItem);
+                return;
             }
-            else if (hit.collider.TryGetComponent<Monster>(out Monster monster))
+        }
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.TryGetComponent<Monster>(out Monster monster))
             {
-                if (screenDistance < closestMonsterDistance)
-                {
-                    closestMonsterDistance = screenDistance;
-                    closestMonster = monster;
-                }
+                HandleMonsterClick(monster);
+                return;
             }
         }
 
-        if (closestItem != null)
-        {
-            HandleDropItemClick(closestItem);
-            return;
-        }
-
-        // 몬스터 처리
-        if (closestMonster != null)
-        {
-            HandleMonsterClick(closestMonster);
-            return;
-        }
-
-        // 지형 처리
         if (Physics.Raycast(ray, out RaycastHit groundHit, Mathf.Infinity, player.GroundLayer))
         {
             HandleGroundClick(groundHit.point);
@@ -193,8 +160,7 @@ public class PlayerInputManager : MonoBehaviour
     public void CheckItemHover()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        float sphereRadius = 1f;
-        RaycastHit[] hits = Physics.SphereCastAll(ray, sphereRadius, Mathf.Infinity);
+        RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
 
         WorldDropItem closestItem = null;
         float closestDistance = float.MaxValue;
@@ -203,18 +169,10 @@ public class PlayerInputManager : MonoBehaviour
         {
             if (hit.collider.TryGetComponent<WorldDropItem>(out WorldDropItem dropItem))
             {
-                Vector3 screenPoint = mainCamera.WorldToScreenPoint(dropItem.transform.position);
-                if (screenPoint.z < 0) continue;
-
-                float screenDistance = Vector2.Distance(
-                    new Vector2(Input.mousePosition.x, Input.mousePosition.y),
-                    new Vector2(screenPoint.x, screenPoint.y)
-                );
-
-                float maxScreenDistance = 100f;
-                if (screenDistance < maxScreenDistance && screenDistance < closestDistance)
+                float distance = Vector3.Distance(hit.point, mainCamera.transform.position);
+                if (distance < closestDistance)
                 {
-                    closestDistance = screenDistance;
+                    closestDistance = distance;
                     closestItem = dropItem;
                 }
             }
