@@ -243,7 +243,7 @@ public class Monster : Unit
             yield return null;
         }
 
-        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.45f)
         {
             yield return null;
         }

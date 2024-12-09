@@ -2951,7 +2951,7 @@ MonoBehaviour:
     nameText: {fileID: 4691557866966382123}
     valueText: {fileID: 7562140305652646513}
     increaseButton: {fileID: 8679812777282988151}
-  - statType: 3
+  - statType: 4
     nameText: {fileID: 7389502493387613333}
     valueText: {fileID: 4761865472194077530}
     increaseButton: {fileID: 5339117829393319971}
