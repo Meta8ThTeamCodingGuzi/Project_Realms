@@ -5,26 +5,21 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : Unit, IPoolable
+public class Monster : Unit
 {
     private MonsterStateHandler m_StateHandler;
-
-    private Player player;
-
-    public Player targetPlayer => player;
 
     [SerializeField]
     private Transform[] setPatrolTransforms;
 
     private List<Vector3> patrolPoint = new List<Vector3>();
 
-    public bool isattacked = true;
+    public bool isattacked { set; get; } = true;
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 nowTarget;
+    public Vector3 currentPatrolPoint { get; set ; }
 
-    public Animator M_Animator;
     public MonsterStateHandler M_StateHandler => m_StateHandler;
 
     private MonsterStat MonsterStat;
@@ -36,27 +31,30 @@ public class Monster : Unit, IPoolable
     [SerializeField] private MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
 
-    protected override void Initialize()
+    [SerializeField]private List<Skill> skills;
+    public List<Skill> Skills { get => skills; set => skills = value; }
+
+    private Skill currentSkill;
+    public Skill CurrentSkill => currentSkill;
+
+    private bool isPlayerNullRoutine = true;
+    
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        GetRequiredComponents();
+        
+        InitializeMonster();        
+    }
+
+    private void InitializeMonster()
     {
         foreach (Transform setPatrolTransform in setPatrolTransforms)
         {
             patrolPoint.Add(setPatrolTransform.position);
         }
 
-        if (m_StateHandler == null)
-        {
-            m_StateHandler = new MonsterStateHandler(this);
-        }
-        m_StateHandler.Initialize();
-        base.Initialize();
-
-        if (characterStats != null)
-        {
-            monsterStat = (MonsterStat)characterStats;
-        }
-        player = null;
-
-        // 몬스터 타입에 따른 크기 조정
         float sizeMultiplier = monsterType switch
         {
             MonsterType.Elite => 1.2f,
@@ -66,8 +64,86 @@ public class Monster : Unit, IPoolable
             _ => 1f // Normal
         };
 
+        float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
+
+        float levelMultiplier = monsterType switch
+        {
+            MonsterType.Elite => 1.5f,
+            MonsterType.MiniBoss => 2f,
+            MonsterType.Boss => 3f,
+            MonsterType.Unique => 2.5f,
+            _ => 1f // Normal
+        };
+
+        int adjustedLevel = Mathf.RoundToInt(playerLevel * levelMultiplier);
+
+        monsterStat.SetMonsterLevel(adjustedLevel);
+
+        if (skills.Count > 0) 
+        {
+            foreach (Skill skill in skills)
+            {
+                skill.Initialize(this);
+                if (skill is not DefaultSkill) 
+                {
+                    skill.SetLevel(adjustedLevel);
+                }                
+            }
+        }
+
+
         transform.localScale *= sizeMultiplier;
+
+        m_StateHandler.Initialize();
+
+        GetSkill(SkillID.MonsterSkill);
     }
+
+    public virtual Skill GetSkill(SkillID id)
+    {
+        foreach (Skill skill in skills)
+        {
+            if (skill.data.skillID == id)
+            {
+                Skill pickedSkill = null;
+                if (currentSkill == null)
+                {
+                    pickedSkill = Instantiate(skill, transform);
+                    pickedSkill.Initialize(this);
+                    pickedSkill.transform.localPosition = Vector3.zero;
+                    currentSkill = pickedSkill;
+                }
+                else 
+                {
+                    currentSkill = null;
+                    Destroy(currentSkill);
+                    pickedSkill = Instantiate(skill, transform);
+                    pickedSkill.Initialize(this);
+                    pickedSkill.transform.localPosition = Vector3.zero;
+                    currentSkill = pickedSkill;
+                }
+                return pickedSkill;
+            }
+        }
+        return null;
+    }
+
+    private void GetRequiredComponents()
+    {
+        if (m_StateHandler == null)
+        {
+            m_StateHandler = new MonsterStateHandler(this);
+        }
+        
+
+        Animator = GetComponentInChildren<Animator>();
+
+        if (characterStats != null)
+        {
+            monsterStat = (MonsterStat)characterStats;
+        }
+    }
+
     public void targetMove(Unit unit)
     {
         if (unit != null && agent.isActiveAndEnabled && IsAlive)
@@ -93,53 +169,62 @@ public class Monster : Unit, IPoolable
             {
                 if (player.IsAlive)
                 {
-                    this.player = player;
+                    this.Target = player;
                     return true;
                 }
             }
         }
-        StopAttack();
-        this.player = null;
+        if (isPlayerNullRoutine)
+        {
+            StartCoroutine(PlayerNullRoutine());
+        }
+        if (this.Target != null)
+        {
+            return true;
+        }
         return false;
     }
-
-
-
-
-    protected override IEnumerator AttackRoutine(Unit target)
+    private IEnumerator PlayerNullRoutine()
     {
-        while (IsAlive && target != null && target.IsAlive)
-        {
-            if (CanAttack(target))
-            {
-                agent.ResetPath();
-                float currentTime = Time.time;
-                float attackSpeed = characterStats.GetStatValue(StatType.AttackSpeed);
-                float timeBetweenAttacks = 1f / attackSpeed;
+        isPlayerNullRoutine = false;
+        yield return new WaitForSeconds(3f);
+        this.Target = null;
+        isPlayerNullRoutine = true;
+    }
 
-                if (currentTime - lastAttackTime >= timeBetweenAttacks)
-                {
-                    M_Animator.SetTrigger("Attack");
-                    yield return new WaitForSeconds(0.7f);
-                    PerformAttack(target);
-                    lastAttackTime = currentTime;
-                }
-            }
-            yield return new WaitForSeconds(0.1f);
+    public virtual bool CanAttack(Unit target)
+    {
+        if (target == null || !target.IsAlive || !IsAlive) return false;
+
+        float attackRange = 0f;
+        float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+       
+        if (CurrentSkill is DefaultSkill)
+        {
+            attackRange = characterStats.GetStatValue(StatType.AttackRange);
+        }
+        else if (CurrentSkill is ProjectileSkill)
+        {
+            attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
+        }
+        else 
+        {
+            attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.SpawnRange);
         }
 
-        attackCoroutine = null;
+        return distanceToTarget <= attackRange;
     }
+
     public void nextPatrol()
     {
         patrolKey++;
         if (patrolKey >= patrolPoint.Count)
         {
             patrolKey = 0;
-            nowTarget = patrolPoint[patrolKey];
+            currentPatrolPoint = patrolPoint[patrolKey];
             return;
         }
-        nowTarget = patrolPoint[patrolKey];
+        currentPatrolPoint = patrolPoint[patrolKey];
     }
     public void MonsterDie()
     {
@@ -148,14 +233,14 @@ public class Monster : Unit, IPoolable
 
     public IEnumerator DieRoutine()
     {
-        M_Animator.SetTrigger("Die");
+        Animator.SetTrigger("Die");
 
-        while (!M_Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        while (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
         {
             yield return null;
         }
 
-        while (M_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
         {
             yield return null;
         }
@@ -172,7 +257,6 @@ public class Monster : Unit, IPoolable
     {
         float baseExpDrop = characterStats.GetStatValue(StatType.DropExp);
 
-        // 몬스터 타입에 따른 경험치 보정
         float expMultiplier = monsterType switch
         {
             MonsterType.Elite => 2f,
@@ -197,28 +281,12 @@ public class Monster : Unit, IPoolable
         }
     }
 
-    public void OnReturnToPool()
+    private void OnDisable()
     {
-
+        patrolPoint.Clear();
+        currentSkill = null;
     }
 
-    public void OnSpawnFromPool()
-    {
-        Initialize();
-        float playerLevel = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Level);
 
-        // 몬스터 타입에 따른 레벨 보정
-        float levelMultiplier = monsterType switch
-        {
-            MonsterType.Elite => 1.5f,
-            MonsterType.MiniBoss => 2f,
-            MonsterType.Boss => 3f,
-            MonsterType.Unique => 2.5f,
-            _ => 1f // Normal
-        };
-
-        int adjustedLevel = Mathf.RoundToInt(playerLevel * levelMultiplier);
-        monsterStat.SetMonsterLevel(adjustedLevel);
-    }
 
 }

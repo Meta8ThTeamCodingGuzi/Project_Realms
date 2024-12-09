@@ -1,7 +1,7 @@
-using UnityEngine;
-using System;
+癤퓎sing UnityEngine;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
+using System.Linq;
 
 public class SkillController : MonoBehaviour
 {
@@ -13,6 +13,11 @@ public class SkillController : MonoBehaviour
     private Dictionary<SkillID, Skill> initializedSkills = new Dictionary<SkillID, Skill>();
     private SkillBarUI skillBarUI;
     public KeyCode skillActivated;
+
+    //   킬 歐티 煞
+    private Skill currentSkill;
+    public Skill CurrentSkill => currentSkill;
+
 
     public void Initialize()
     {
@@ -29,7 +34,7 @@ public class SkillController : MonoBehaviour
         foreach (var skillPrefab in availableSkillPrefabs)
         {
             Skill instance = Instantiate(skillPrefab, transform);
-            instance.Initialize();
+            instance.Initialize(player);
             initializedSkills[skillPrefab.data.skillID] = instance;
         }
     }
@@ -39,52 +44,34 @@ public class SkillController : MonoBehaviour
         this.skillBarUI = skillBarUI;
     }
 
-    //private void Update()
-    //{
-    //    CheckSkillInputs();
-    //}
-
-    public bool CheckSkillInputs()
-    {
-        bool anySkillUsed = false;
-
-        foreach (var slot in skillSlots)
-        {
-            if (Input.GetKeyDown(slot.Key) && slot.Value != null)
-            {
-                if (slot.Key == KeyCode.Mouse0)
-                {
-                    continue;
-                }
-
-                if (slot.Value.TryUseSkill())
-                {
-                    anySkillUsed = true;
-                }
-            }
-        }
-        return anySkillUsed;
-    }
-
     public void OnMouseClick()
     {
-        if (Input.GetMouseButtonDown(0) && skillSlots.ContainsKey(KeyCode.Mouse0))
+        if (skillSlots.TryGetValue(KeyCode.Mouse0, out Skill skill) && skill != null)
         {
-            if (skillSlots[KeyCode.Mouse0] != null)
-            {
-                skillSlots[KeyCode.Mouse0].TryUseSkill();
-            }
+            print("肄뵀�호");
+            currentSkill = skill;
+            currentSkill.TryUseSkill();
         }
     }
 
-    public void AddSkill(Skill skill)
+    public bool TryUseSkillByKey(KeyCode keyCode)
     {
-        if (!availableSkillPrefabs.Contains(skill))
+        if (skillSlots.TryGetValue(keyCode, out Skill skill) && skill != null)
         {
-            Skill instance = Instantiate(skill, transform);
-            instance.Initialize();
+            currentSkill = skill;
+            return currentSkill.TryUseSkill();
+        }
+        return false;
+    }
+
+    public void AddSkill(Skill skillPrefab)
+    {
+        if (!initializedSkills.ContainsKey(skillPrefab.data.skillID))
+        {
+            Skill instance = Instantiate(skillPrefab, transform);
+            instance.Initialize(player);
             availableSkillPrefabs.Add(instance);
-            initializedSkills[skill.data.skillID] = instance;
+            initializedSkills[skillPrefab.data.skillID] = instance;
         }
     }
 
@@ -149,6 +136,17 @@ public class SkillController : MonoBehaviour
         {
             Skill skillToRemove = skillSlots[slot];
             activeSkills.Remove(skillToRemove);
+
+            //  킬 
+            if (skillToRemove is DefaultSkill)
+            {
+                if (initializedSkills.ContainsKey(skillToRemove.data.skillID))
+                {
+                    initializedSkills.Remove(skillToRemove.data.skillID);
+                }
+                Destroy(skillToRemove.gameObject);
+            }
+
             skillSlots[slot] = null;
 
             if (skillBarUI != null)
@@ -171,13 +169,28 @@ public class SkillController : MonoBehaviour
     {
         if (!initializedSkills.TryGetValue(skillPrefab.data.skillID, out Skill existingSkill))
         {
-            AddSkill(skillPrefab);
-            existingSkill = initializedSkills[skillPrefab.data.skillID];
+            Skill instance = Instantiate(skillPrefab, transform);
+            instance.Initialize(player);
+
+            if (instance.skillStat != null)
+            {
+                instance.skillStat.InitializeStats();
+                instance.SetLevel(1);
+            }
+
+            availableSkillPrefabs.Add(instance);
+            initializedSkills[skillPrefab.data.skillID] = instance;
+            existingSkill = instance;
+
+            OnSkillLevelChanged?.Invoke(existingSkill);
+            return true;
         }
 
-        existingSkill.SetLevel(skillPrefab.skillStat.GetStatValue<int>(SkillStatType.SkillLevel) + 1);
-
-        OnSkillLevelChanged?.Invoke(existingSkill);
+        if (existingSkill.skillStat != null)
+        {
+            existingSkill.LevelUp();
+            OnSkillLevelChanged?.Invoke(existingSkill);
+        }
 
         return true;
     }
@@ -191,7 +204,7 @@ public class SkillController : MonoBehaviour
         return 0;
     }
 
-    public event Action<Skill> OnSkillLevelChanged;
+    public event System.Action<Skill> OnSkillLevelChanged;
 
     public void DirectEquipSkill(Skill skillPrefab, KeyCode slot)
     {
@@ -204,7 +217,7 @@ public class SkillController : MonoBehaviour
         }
 
         Skill instance = Instantiate(skillPrefab, transform);
-        instance.Initialize();
+        instance.Initialize(player);
 
         activeSkills.Add(instance);
         initializedSkills[skillPrefab.data.skillID] = instance;
@@ -216,19 +229,36 @@ public class SkillController : MonoBehaviour
         }
     }
 
-    // 현재 활성화된 스킬들을 반환하는 메서드
-    public IEnumerable<Skill> GetCurrentSkills()
+    public void RemoveAllWeaponSkills()
     {
-        return activeSkills;
-    }
+        UnequipSkill(KeyCode.Mouse0);
 
-    // 특정 슬롯의 스킬을 가져오는 메서드 (필요한 경우)
-    public Skill GetSkillInSlot(KeyCode slot)
-    {
-        if (skillSlots.TryGetValue(slot, out Skill skill))
+        List<KeyCode> keysToUnequip = new List<KeyCode>();
+
+        foreach (var slot in skillSlots)
         {
-            return skill;
+            if (slot.Value != null && slot.Value is DefaultSkill)
+            {
+                keysToUnequip.Add(slot.Key);
+            }
         }
-        return null;
+
+        foreach (var key in keysToUnequip)
+        {
+            UnequipSkill(key);
+        }
+
+        var weaponSkillsToRemove = initializedSkills.Where(pair => pair.Value is DefaultSkill)
+                                                   .Select(pair => pair.Key)
+                                                   .ToList();
+
+        foreach (var skillID in weaponSkillsToRemove)
+        {
+            if (initializedSkills.TryGetValue(skillID, out Skill skill))
+            {
+                Destroy(skill.gameObject);
+                initializedSkills.Remove(skillID);
+            }
+        }
     }
 }

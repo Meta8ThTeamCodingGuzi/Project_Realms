@@ -17,7 +17,7 @@ public class Slot : MonoBehaviour
     public Item Item => _item;
     public ItemType? AllowedItemType => allowedItemType;
 
-    public void Initialize(Player player, Inventory inventory, StatUI statUI)
+    public void Initialize(Player player, InventoryUI inventory, StatUI statUI)
     {
         _player = player;
         itemIcon.gameObject.SetActive(false);
@@ -30,7 +30,7 @@ public class Slot : MonoBehaviour
         }
     }
 
-    private void InitializeSlotHandler(Inventory inventory)
+    private void InitializeSlotHandler(InventoryUI inventory)
     {
         slotHandler.IsInventorySlot = !isEquipSlot;
 
@@ -43,10 +43,8 @@ public class Slot : MonoBehaviour
     {
         if (item == null) return false;
 
-        // 장비 슬롯이면서 허용된 타입이 있는 경우
         if (isEquipSlot && allowedItemType.HasValue)
         {
-            // Weapon 타입 슬롯은 Sword와 Bow를 모두 허용
             if (allowedItemType.Value == ItemType.Weapon)
             {
                 return item.ItemType == ItemType.Sword || item.ItemType == ItemType.Bow;
@@ -55,7 +53,6 @@ public class Slot : MonoBehaviour
             return item.ItemType == allowedItemType.Value;
         }
 
-        // 인벤토리 슬롯은 모든 아이템 허용
         return true;
     }
 
@@ -63,21 +60,7 @@ public class Slot : MonoBehaviour
     {
         if (item != null && !CanAcceptItem(item)) return;
 
-        Item oldItem = _item;
-        _item = null;
-
-        if (isEquipSlot && oldItem != null && _player != null)
-        {
-            oldItem.RemoveStats(_player.GetComponent<ICharacterStats>());
-
-            if (oldItem.ItemType == ItemType.Sword || oldItem.ItemType == ItemType.Bow)
-            {
-                _player.skillController.UnequipSkill(KeyCode.Mouse0);
-                _player.PlayerAnimController.AnimatorChange(ItemType.None);
-
-                weaponHolder.UnequipCurrentWeapon();
-            }
-        }
+        RemoveCurrentItem();
 
         _item = item;
 
@@ -99,14 +82,9 @@ public class Slot : MonoBehaviour
                     if (defaultSkill != null)
                     {
                         _player.skillController.DirectEquipSkill(defaultSkill, KeyCode.Mouse0);
-
-                        if (defaultSkill is WeaponSkill weaponSkill)
-                        {
-                            weaponSkill.UpdateWeaponComponents();
-                        }
                     }
 
-                    _player.PlayerAnimController.AnimatorChange(_item.ItemType);
+                    _player.AnimController.PlayerAnimatorChange(_item.ItemType);
                 }
             }
         }
@@ -116,6 +94,22 @@ public class Slot : MonoBehaviour
         }
 
         statUI.UpdateUI();
+    }
+
+    private void RemoveCurrentItem()
+    {
+        if (_item != null && isEquipSlot && _player != null)
+        {
+            _item.RemoveStats(_player.GetComponent<ICharacterStats>());
+            _player.UpdateMoveSpeed();
+
+            if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
+            {
+                _player.skillController.RemoveAllWeaponSkills();
+                _player.AnimController.PlayerAnimatorChange(ItemType.None);
+                weaponHolder.UnequipCurrentWeapon();
+            }
+        }
     }
 
     public void PlaceholdItem(Item item)
@@ -129,23 +123,11 @@ public class Slot : MonoBehaviour
 
     public void ClearSlot()
     {
-        if (isEquipSlot && _item != null && _player != null)
-        {
-            _item.RemoveStats(_player.GetComponent<ICharacterStats>());
-
-            // 무기 타입인 경우 추가적인 처리
-            if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
-            {
-                _player.skillController.UnequipSkill(KeyCode.Mouse0);
-                _player.PlayerAnimController.AnimatorChange(ItemType.None);
-                weaponHolder.UnequipCurrentWeapon();
-            }
-
-            statUI.UpdateUI();
-        }
+        RemoveCurrentItem();
         _item = null;
         itemIcon.gameObject.SetActive(false);
         itemIcon.color = Color.white;
+        statUI.UpdateUI();
     }
 
     public void SetAsEquipmentSlot(ItemType type)

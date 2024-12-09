@@ -5,36 +5,33 @@ using UnityEngine;
 
 public class BuffSkill : Skill
 {
+    [SerializeField] private Buff BuffPrefab;
+    private Buff buffParticle;
     private BuffSkillStat buffSkillStat;
     private Coroutine BuffCoroutine;
     [SerializeField]protected StatType statType;
     [SerializeField]protected StatModifierType modifierType;
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
+        base.Initialize(owner);
         buffSkillStat = (BuffSkillStat)skillStat;
         buffSkillStat.InitializeStats();
 
     }
-    //지워야함
-    private void Start()
-    {
-        Initialize();
-    }
-    //지워야함
-    public void onskill()
-    {
-        UseSkill();
-    }
-
+    
     protected override void UseSkill()
     {
+        Owner.Animator.SetTrigger("Attack");
         if (BuffCoroutine != null)
         {
            StopBuff();
         }
+        buffParticle = PoolManager.Instance.Spawn<Buff>(BuffPrefab.gameObject,Owner.transform.position,Quaternion.Euler(90,0,0));
+        buffParticle.transform.SetParent(Owner.transform);
+        buffParticle.transform.localPosition = Vector3.zero;
         BuffCoroutine = StartCoroutine(ApplyBuff());
+        Owner.Animator.SetTrigger("Idle");
     }
     protected virtual void StopSkill(){}
 
@@ -45,14 +42,15 @@ public class BuffSkill : Skill
             StopCoroutine(BuffCoroutine);
             BuffCoroutine = null;
         }
-        PlayerRemoveBuff(statType);
+        RemoveBuff(statType);
+
     }
 
     protected virtual IEnumerator ApplyBuff()
     {
-        PlayerSetBuff(statType, buffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
+        SetBuff(statType, buffSkillStat.GetStatValue<float>(SkillStatType.BuffValue), modifierType);
         yield return new WaitForSeconds(buffSkillStat.GetStatValue<float>(SkillStatType.Duration));
-        PlayerRemoveBuff(statType);
+        RemoveBuff(statType);
         BuffCoroutine = null;
         yield break;
     }
@@ -70,20 +68,24 @@ public class BuffSkill : Skill
     }
 
     #region 플레이어 버프세팅 버프제거 로직
-    protected virtual void PlayerSetBuff(StatType statType,float value,StatModifierType modType) 
+    protected virtual void SetBuff(StatType statType,float value,StatModifierType modType) 
     {
-        print($"적용전 : {GameManager.Instance.player.CharacterStats.GetStatValue(statType)}");
+        print($"적용전 : {Owner.CharacterStats.GetStatValue(statType)}");
         StatModifier StatModifier = new StatModifier(value , modType, this,SourceType.Buff);
-        GameManager.Instance.player.CharacterStats.AddModifier(statType, StatModifier);
-        print($"적용후 : {GameManager.Instance.player.CharacterStats.GetStatValue(statType)}");
-        GameManager.Instance.player.UpdateMoveSpeed();       
+        Owner.CharacterStats.AddModifier(statType, StatModifier);
+        print($"적용후 : {Owner.CharacterStats.GetStatValue(statType)}");
+        Owner.UpdateMoveSpeed();       
     }
 
-    protected virtual void PlayerRemoveBuff(StatType statType)
+    protected virtual void RemoveBuff(StatType statType)
     {
-        GameManager.Instance.player.CharacterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
-        GameManager.Instance.player.UpdateMoveSpeed();
-        print($"버프 빠짐 : {GameManager.Instance.player.CharacterStats.GetStatValue(statType)}");
+        if (buffParticle != null)
+        {
+            PoolManager.Instance.Despawn(buffParticle);
+        }
+        Owner.CharacterStats.GetStat(statType)?.RemoveAllModifiersFromSource(this);
+        Owner.UpdateMoveSpeed();
+        print($"버프 빠짐 : {Owner.CharacterStats.GetStatValue(statType)}");
     }
     #endregion
 }

@@ -28,17 +28,13 @@ public class Player : Unit
 
     private StatPointSystem statPoint;
 
-    private Animator playerAnimator;
-    public Animator PlayerAnimator => playerAnimator;
+    public StatPointSystem statPointSystem => statPoint;
 
-    private PlayerAnimatorController playerAnimCon;
-    public PlayerAnimatorController PlayerAnimController => playerAnimCon;
 
     private PlayerStateHandler playerHandler;
     public PlayerStateHandler PlayerHandler => playerHandler;
 
-    private Monster targetMonster;
-    public Monster TargetMonster => targetMonster;
+
 
     private Vector3 targetPos = Vector3.zero;
     public Vector3 TargetPos => targetPos;
@@ -54,14 +50,16 @@ public class Player : Unit
     // groundLayerMask에 대한 getter 추가
     public LayerMask GroundLayer => groundLayerMask;
 
+    private PlayerInputManager inputManager;
+    public PlayerInputManager InputManager => inputManager;
+
     private void Start()
     {
         Initialize();
     }
 
-    protected override void Initialize()
+    public override void Initialize()
     {
-        Debug.Log("Player Initialize 시작");
 
         if (characterStats == null)
         {
@@ -98,18 +96,19 @@ public class Player : Unit
             inventorySystem = gameObject.AddComponent<PlayerInventorySystem>();
         }
 
-        playerAnimCon = GetComponent<PlayerAnimatorController>();
+        AnimController = GetComponent<AnimatorController>();
 
-        if (playerAnimCon == null)
+        if (AnimController == null)
         {
-            playerAnimCon = gameObject.AddComponent<PlayerAnimatorController>();
+            AnimController = gameObject.AddComponent<AnimatorController>();
         }
+        AnimController.Initialize(this);
 
-        playerAnimator = GetComponent<Animator>();
+        Animator = GetComponent<Animator>();
 
-        if (playerAnimator == null)
+        if (Animator == null)
         {
-            playerAnimator = gameObject.AddComponent<Animator>();
+            Animator = gameObject.AddComponent<Animator>();
         }
 
         playerHandler = new PlayerStateHandler(this);
@@ -120,6 +119,9 @@ public class Player : Unit
         // 리젠 코루틴 시작
         StartRegeneration();
 
+        inputManager = gameObject.AddComponent<PlayerInputManager>();
+        inputManager.Initialize(this);
+
         Debug.Log("Player initialized successfully");
     }
 
@@ -128,47 +130,7 @@ public class Player : Unit
         playerHandler.HandleUpdate();
     }
 
-    public void MovetoCursor()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
 
-            // UI 요소 클릭 체크
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            {
-                return; // UI 요소를 클릭한 경우 이동하지 않음
-            }
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
-            {
-                if (hit.collider.TryGetComponent<Monster>(out Monster monster))
-                {
-                    targetMonster = monster;
-                    targetPos = Vector3.zero;
-                    return;
-                }
-            }
-
-            if (Physics.Raycast(ray, out hit, 1000f, groundLayerMask))
-            {
-                targetPos = hit.point;
-                targetMonster = null;
-            }
-        }
-    }
-    public override void StopMoving()
-    {
-        base.StopMoving();
-        targetPos = Vector3.zero;
-    }
-
-
-    public void PlayerAnimatorChange(RuntimeAnimatorController newAnimator)
-    {
-        playerAnimator.runtimeAnimatorController = newAnimator;
-    }
 
     #region 레벨 시스템
     public float TotalExp => totalExp;
@@ -349,14 +311,14 @@ public class Player : Unit
 
     public IEnumerator DieRoutine()
     {
-        PlayerAnimator.SetTrigger("Die");
+        Animator.SetTrigger("Die");
 
-        while (!PlayerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        while (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Die"))
         {
             yield return null;
         }
 
-        while (PlayerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        while (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
         {
             yield return null;
         }
@@ -364,7 +326,7 @@ public class Player : Unit
     }
     public void ClearTarget()
     {
-        targetMonster = null;
+        Target = null;
     }
 
 
@@ -377,15 +339,31 @@ public class Player : Unit
             StopCoroutine(manaRegenCoroutine);
     }
 
-    public void SetTarget(Monster monster)
+    public void SetTarget(Unit monster)
     {
-        targetMonster = monster;
+        Target = monster;
         targetPos = Vector3.zero;
     }
 
     public void SetDestination(Vector3 position)
     {
         targetPos = position;
-        targetMonster = null;
+        Target = null;
+    }
+
+    public override void MoveTo(Vector3 destination)
+    {
+        if (Target != null)
+        {
+            Vector3 directionToTarget = (destination - transform.position).normalized;
+            float attackRange = characterStats.GetStatValue(StatType.AttackRange);
+
+            Vector3 targetPosition = destination - (directionToTarget * attackRange);
+            base.MoveTo(targetPosition);
+        }
+        else
+        {
+            base.MoveTo(destination);
+        }
     }
 }

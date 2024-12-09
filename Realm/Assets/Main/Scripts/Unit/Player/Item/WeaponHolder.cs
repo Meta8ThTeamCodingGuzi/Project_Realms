@@ -10,14 +10,14 @@ public class WeaponHolder : MonoBehaviour
         public ItemType weaponType;
         public TwoBoneIKConstraint mainHandIK;
         public Transform mainHandTarget;
-        public TwoBoneIKConstraint offHandIK;  // 활 등 양손 무기용
+        public TwoBoneIKConstraint offHandIK; 
         public Transform offHandTarget;
     }
 
     [Header("Rig Settings")]
     [SerializeField] private Rig weaponRig;
     [SerializeField] private WeaponIKSetup[] weaponIKSetups;
-    [SerializeField] private RigBuilder rigBuilder;  // Inspector에서 할당
+    [SerializeField] private RigBuilder rigBuilder;  
 
     [Header("Debug Settings")]
     [SerializeField] private bool showDebugControls = false;
@@ -28,14 +28,12 @@ public class WeaponHolder : MonoBehaviour
     [SerializeField] private float weaponScale = 1f;
     [SerializeField] private float ikWeightSpeed = 10f;
 
-    // 런타임 조정을 위한 오프셋 값들
     private Vector3 mainHandPositionOffset;
     private Vector3 mainHandRotationOffset;
     private Vector3 offHandPositionOffset;
     private Vector3 offHandRotationOffset;
 
     private GameObject currentWeaponObject;
-    private Collider weaponCollider;
     private ItemType currentWeaponType;
     private WeaponIKSetup currentIKSetup;
 
@@ -97,7 +95,6 @@ public class WeaponHolder : MonoBehaviour
                 StartCoroutine(LerpRigWeight(1f));
             }
 
-            weaponCollider = currentWeaponObject.GetComponentInChildren<Collider>();
         }
     }
 
@@ -118,7 +115,6 @@ public class WeaponHolder : MonoBehaviour
 
             Destroy(currentWeaponObject);
             currentWeaponObject = null;
-            weaponCollider = null;
             currentWeaponType = ItemType.None;
             currentIKSetup = null;
         }
@@ -138,10 +134,6 @@ public class WeaponHolder : MonoBehaviour
         weaponRig.weight = targetWeight;
     }
 
-    public Collider GetWeaponComponents()
-    {
-        return (weaponCollider);
-    }
 
 #if UNITY_EDITOR
     private void OnGUI()

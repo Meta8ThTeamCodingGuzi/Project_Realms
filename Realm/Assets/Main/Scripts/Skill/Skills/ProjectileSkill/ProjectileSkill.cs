@@ -20,6 +20,8 @@ public class ProjectileSkill : Skill
             Debug.LogError($"{gameObject.name}: projectilePrefab이 할당되지 않았습니다!");
         }
 
+        firePoint = Owner.transform?.Find("FirePoint");
+
         if (firePoint == null)
         {
             // firePoint가 없으면 자동으로 생성
@@ -31,14 +33,14 @@ public class ProjectileSkill : Skill
         }
     }
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
+        base.Initialize(owner);
+
         if (skillStat != null)
         {
             projectileStats = (ProjectileSkillStat)skillStat;
             projectileStats.InitializeStats();
-            Debug.Log($"{gameObject.name}: ProjectileSkill 초기화 완료");
         }
         else
         {
@@ -51,7 +53,7 @@ public class ProjectileSkill : Skill
         StartCoroutine(FireSequence());
     }
 
-    private IEnumerator FireSequence()
+    protected virtual IEnumerator FireSequence()
     {
         if (projectileStats == null)
         {
@@ -65,12 +67,15 @@ public class ProjectileSkill : Skill
             yield break;
         }
 
+        isSkillInProgress = true;
+
         float shotInterval = projectileStats.GetStatValue<float>(SkillStatType.ShotInterval);
         float innerInterval = projectileStats.GetStatValue<float>(SkillStatType.InnerInterval);
         int projectileCount = projectileStats.GetStatValue<int>(SkillStatType.ProjectileCount);
 
         ProjectileData projectileData = new ProjectileData
         {
+            owner = Owner,
             Damage = projectileStats.GetStatValue<float>(SkillStatType.Damage),
             Speed = projectileStats.GetStatValue<float>(SkillStatType.ProjectileSpeed),
             Range = projectileStats.GetStatValue<float>(SkillStatType.ProjectileRange),
@@ -79,26 +84,38 @@ public class ProjectileSkill : Skill
                        projectileStats.GetStatValue<int>(SkillStatType.HomingLevel) ? false : true,
             HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange),
         };
-
-        GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
-        firePoint.rotation = transform.rotation;
+        if (Owner is Player)
+        {
+            Owner.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
+        }
+        else 
+        {
+            Owner.transform.LookAt(Owner.Target.transform);
+        }
 
         for (int i = 0; i < projectileCount; i++)
         {
-            GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
+            if (Owner.Animator != null)
+            {
+                Owner.Animator.SetTrigger("Attack");
+            }
             FireProjectile(projectileData);
             if (innerInterval > 0 && i < projectileCount - 1)
             {
                 yield return new WaitForSeconds(innerInterval);
             }
         }
+
+        Owner.Animator.SetTrigger("Idle");
+
+        isSkillInProgress = false;
     }
 
     private Vector3? GetTargetDirection()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
+         
         if (groundPlane.Raycast(ray, out float distance))
         {
             Vector3 targetPoint = ray.GetPoint(distance);
@@ -109,7 +126,7 @@ public class ProjectileSkill : Skill
         return null;
     }
 
-    private void FireProjectile(ProjectileData data)
+    protected  virtual void FireProjectile(ProjectileData data)
     {
         if (projectilePrefab == null)
         {
@@ -157,6 +174,7 @@ public class ProjectileSkill : Skill
 
 public struct ProjectileData
 {
+    public Unit owner;
     public float Damage;
     public float Speed;
     public float Range;

@@ -1,6 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class SkillSelectUI : MonoBehaviour
 {
@@ -88,5 +89,49 @@ public class SkillSelectUI : MonoBehaviour
     public void ClosePanel()
     {
         skillSelectPanel.SetActive(false);
+    }
+
+    public void RefreshButtons()
+    {
+        if (!skillSelectPanel.activeSelf) return;
+
+        Vector2 currentPosition = panelRectTransform.position;
+
+        ClearSkillButtons();
+        CreateSkillButtons();
+
+        panelRectTransform.position = currentPosition;
+    }
+
+    private void Update()
+    {
+        if (!skillSelectPanel.activeSelf) return;
+
+        // 마우스 클릭 감지
+        if (Input.GetMouseButtonDown(0))
+        {
+            // UI 레이캐스트 결과 확인
+            PointerEventData pointerData = new PointerEventData(EventSystem.current);
+            pointerData.position = Input.mousePosition;
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, results);
+
+            bool clickedInsidePanel = false;
+            foreach (RaycastResult result in results)
+            {
+                if (result.gameObject == skillSelectPanel ||
+                    result.gameObject.transform.IsChildOf(skillSelectPanel.transform))
+                {
+                    clickedInsidePanel = true;
+                    break;
+                }
+            }
+
+            // 패널 외부 클릭 시 닫기
+            if (!clickedInsidePanel)
+            {
+                ClosePanel();
+            }
+        }
     }
 }

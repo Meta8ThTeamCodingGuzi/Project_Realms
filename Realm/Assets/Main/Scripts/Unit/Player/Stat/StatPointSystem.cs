@@ -27,7 +27,7 @@ public class StatPointSystem : MonoBehaviour
         if (stat == null) return false;
 
         float increaseAmount = playerStat.GetPointIncreaseAmount(statType);
-        if (increaseAmount <= 0) return false;  // 투자 불가능한 스탯
+        if (increaseAmount <= 0) return false; 
 
         stat.InvestPoint(increaseAmount);
         owner.UpdateMoveSpeed();

@@ -22,11 +22,23 @@ public enum SkillID
 {
     BasicSwordAttack,
     BasicBowAttack,
+    MonsterSkill,
+    DragonBreath,
+    DragonBite,
+    DragonNova,
     TestSkill,
-    Test1,
-    Test2,
-    Test3,
-    Test4,
+    FireBall,
+    FireRain,
+    MagicChain,
+    Dash,
+    Nuclear,
+    ThunderStroke,
+    IceFatalWheel,
+    BattleOrders,
+    BattleCry,
+
+
+
 }
 public enum SkillStatType
 {
@@ -73,6 +85,8 @@ public enum SkillStatType
     DeBuffAreaScale,
 
     #endregion
+
+    DashDistance
 
 }
 

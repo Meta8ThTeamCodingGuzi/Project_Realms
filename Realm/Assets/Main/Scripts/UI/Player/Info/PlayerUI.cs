@@ -7,18 +7,59 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     private Player player;
-    public OrbUI mpOrb;
-    public OrbUI hpOrb;
-    public Slider playerExp;
-    public TextMeshProUGUI playerLevelText;
+    private OrbUI mpOrb;
+    private OrbUI hpOrb;
+    private Slider playerExp;
+    private TextMeshProUGUI playerLevelText;
+    public PlayerBarUI playerBarUI;
+    public TooltipWindow tooltipWindow;
+    public InventoryUI inventoryUI;
     public StatUI statUI;
+    public SkillTreeUI skillTreeUI;
+    public MonsterTargetUI monsterTargetUI;
+    public PlayerPortrait playerPortrait;
+    public MobGauge monsterGaugeUI;
 
     public void Initialize(Player player)
     {
         this.player = player;
-        statUI = GetComponentInChildren<StatUI>();
+
+        monsterGaugeUI = Instantiate(monsterGaugeUI, transform);
+        monsterGaugeUI.Initialize();
+
+        statUI = Instantiate(statUI, transform);
         statUI.Initialize(player);
         statUI.gameObject.SetActive(false);
+
+        inventoryUI = Instantiate(inventoryUI, transform);
+        inventoryUI.Initialize(player, this);
+
+        skillTreeUI = Instantiate(skillTreeUI, transform);
+        skillTreeUI.Initialize(player);
+        skillTreeUI.gameObject.SetActive(false);
+
+        playerBarUI = Instantiate(playerBarUI, transform);
+        playerBarUI.Initialize(player);
+        this.mpOrb = playerBarUI.mpOrb;
+        this.hpOrb = playerBarUI.hpOrb;
+        this.playerExp = playerBarUI.playerExpBar;
+
+        monsterTargetUI = Instantiate(monsterTargetUI, transform);
+        playerPortrait = Instantiate(playerPortrait, transform);
+        this.playerLevelText = playerPortrait.playerLevelText;
+
+        
+        tooltipWindow = Instantiate(tooltipWindow, transform);
+    }
+
+    public void ShowSkillTreeUI()
+    {
+        skillTreeUI.gameObject.SetActive(true);
+    }
+
+    public void HideSkillTreeUI()
+    {
+        skillTreeUI.gameObject.SetActive(false);
     }
 
     public void ShowStatUI()
@@ -31,6 +72,22 @@ public class PlayerUI : MonoBehaviour
     public void HideStatUI()
     {
         statUI.gameObject.SetActive(false);
+    }
+
+    public void UpdatePlayerLevel(int level)
+    {
+        playerLevelText.text = level.ToString();
+    }
+
+    public void UpdateOrbs(float manaAmount, float hpAmount)
+    {
+        hpOrb.ChangeOrbValue(hpAmount);
+        mpOrb.ChangeOrbValue(manaAmount);
+    }
+
+    public void UpdatePlayerEXP(float amount)
+    {
+        playerExp.value = amount;
     }
 
     public void UpdatePlayerInfo()
@@ -53,21 +110,5 @@ public class PlayerUI : MonoBehaviour
         UpdatePlayerLevel(level);
 
         UpdatePlayerEXP(expAmount);
-    }
-
-    public void UpdatePlayerLevel(int level)
-    {
-        playerLevelText.text = level.ToString();
-    }
-
-    public void UpdateOrbs(float manaAmount, float hpAmount)
-    {
-        hpOrb.ChangeOrbValue(hpAmount);
-        mpOrb.ChangeOrbValue(manaAmount);
-    }
-
-    public void UpdatePlayerEXP(float amount)
-    {
-        playerExp.value = amount;
     }
 }

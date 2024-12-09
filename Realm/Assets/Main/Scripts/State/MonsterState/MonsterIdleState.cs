@@ -21,7 +21,6 @@ public class MonsterIdleState : State<Monster>
     public override void OnExit()
     {
         patrolTime = 0;
-        base.OnExit();
     }
 
     public override void OnUpdate()
@@ -30,22 +29,38 @@ public class MonsterIdleState : State<Monster>
         if (!target.IsAlive)
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+            return;
         }
         if (target.wasAttacked)
         {
             target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
+            return; 
         }
-        var currentAnimatorState = target.M_Animator.GetCurrentAnimatorStateInfo(0);
+        var currentAnimatorState = target.Animator.GetCurrentAnimatorStateInfo(0);
         if (currentAnimatorState.IsName("Idle"))
         {
-            if (target.FindPlayer(10f))
+            Debug.Log($"{this} CanAttack ÁØºñ");
+            if (target.CanAttack(target.Target))
+            {
+                target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
+                return;
+            }
+            if (target.Target !=null)
             {
                 target.M_StateHandler.TransitionTo(new FollowState(target));
+                return;
             }
-            if (patrolTime > 5f)
+            else if (target.FindPlayer(Mathf.Max(target.CharacterStats.GetStatValue(StatType.AttackRange),10f)))
+            {
+                target.M_StateHandler.TransitionTo(new FollowState(target));
+                return;
+            }
+            if (patrolTime > 2f)
             {
                 target.M_StateHandler.TransitionTo(new MonsterMoveState(target));
+                return;
             }
+            return;
         }
     }
 

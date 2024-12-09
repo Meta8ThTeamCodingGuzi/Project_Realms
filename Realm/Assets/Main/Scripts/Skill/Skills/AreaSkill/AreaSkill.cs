@@ -8,12 +8,12 @@ using UnityEngine;
 public class AreaSkill : Skill
 {
     [SerializeField] private AreaEffect areaPrefab;
-    [SerializeField] private Vector3 spawnPoint;
+    private Vector3 spawnPoint;
     private AreaSkillStat areaSkillStat;
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
+        base.Initialize(owner);
         areaSkillStat = (AreaSkillStat)skillStat;
         areaSkillStat.InitializeStats();
     }
@@ -29,13 +29,17 @@ public class AreaSkill : Skill
         int spawnCount = Mathf.RoundToInt(areaSkillStat.GetStatValue<float>(SkillStatType.SpawnCount));
         float spawnInterval = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnInterval);
 
+        isSkillInProgress = true;
+
         for (int i = 0; i < spawnCount; i++)
         {
+            Owner.Animator.SetTrigger("Attack");
             AreaEffectData areaData = new AreaEffectData()
             {
+                owner = Owner,
                 damage = areaSkillStat.GetStatValue<float>(SkillStatType.Damage),
-                duration = areaSkillStat.GetStatValue<float>(SkillStatType.Duration),
                 areaScale = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnScale),
+                duration = areaSkillStat.GetStatValue<float>(SkillStatType.Duration)
             };
 
             SpawnArea(areaData);
@@ -45,6 +49,11 @@ public class AreaSkill : Skill
                 yield return new WaitForSeconds(spawnInterval);
             }
         }
+
+        Owner.Animator.SetTrigger("Idle");
+
+        yield return new WaitForSeconds(0.3f);
+        isSkillInProgress = false;
     }
 
     private void SetSpawnPoint()
@@ -55,7 +64,7 @@ public class AreaSkill : Skill
         }
         else if (areaSkillStat.GetStatValue<int>(SkillStatType.IsSpawnAtEnemy) == 1)
         {
-            SpawnAtEnemyPosition();
+            SpawnAtTargetPosition();
         }
         else
         {
@@ -72,14 +81,11 @@ public class AreaSkill : Skill
         {
             Vector3 targetPoint = ray.GetPoint(distance);
 
-            // 캐릭터와 커서 사이의 방향을 계산합니다
             Vector3 direction = (targetPoint - transform.position).normalized;
-            direction.y = 0; // Y축 회전만 필요하므로 y값은 0으로 설정
+            direction.y = 0;
 
-            // 캐릭터를 커서 방향으로 회전시킵니다
-            GameManager.Instance.player.transform.rotation = Quaternion.LookRotation(direction);
+            Owner.transform.rotation = Quaternion.LookRotation(direction);
 
-            // 스킬 범위 제한 확인
             if (Vector3.Distance(transform.position, targetPoint) > areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange))
             {
                 spawnPoint = transform.position + direction * areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange);
@@ -91,37 +97,60 @@ public class AreaSkill : Skill
         }
     }
 
-    private void SpawnAtEnemyPosition()
+    private void SpawnAtTargetPosition()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange));
-        Transform nearestMonster = null;
+        Transform nearestTarget = null;
         float nearestDistance = float.MaxValue;
+
+        bool isOwnerPlayer = Owner is Player;
 
         foreach (Collider collider in colliders)
         {
-            if (collider.TryGetComponent<Monster>(out Monster monster))
+            if (!collider.TryGetComponent<Unit>(out Unit targetUnit))
+                continue;
+
+            if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
             {
-                float distance = Vector3.Distance(transform.position, monster.transform.position);
+                float distance = Vector3.Distance(transform.position, targetUnit.transform.position);
                 if (distance < nearestDistance)
                 {
                     nearestDistance = distance;
-                    nearestMonster = monster.transform;
+                    nearestTarget = targetUnit.transform;
                 }
             }
         }
 
-        if (nearestMonster != null)
+        if (nearestTarget != null)
         {
-            // 가장 가까운 몬스터 방향으로 캐릭터를 회전
-            Vector3 direction = (nearestMonster.position - transform.position).normalized;
+            Vector3 direction = (nearestTarget.position - transform.position).normalized;
             direction.y = 0;
             transform.rotation = Quaternion.LookRotation(direction);
-            spawnPoint = nearestMonster.position;
+            spawnPoint = nearestTarget.position;
         }
         else
         {
-            SpawnAtMouseCursor();
+            if (isOwnerPlayer)
+            {
+                SpawnAtMouseCursor();
+            }
+            else
+            {
+                SpawnAtRandomPosition();
+            }
         }
+    }
+
+    private void SpawnAtRandomPosition()
+    {
+        float spawnRange = areaSkillStat.GetStatValue<float>(SkillStatType.SpawnRange);
+        float randomAngle = Random.Range(0f, 360f);
+        float randomDistance = Random.Range(0f, spawnRange);
+
+        Vector3 randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward;
+        spawnPoint = transform.position + randomDirection * randomDistance;
+
+        transform.rotation = Quaternion.LookRotation(randomDirection);
     }
 
 
@@ -137,12 +166,12 @@ public class AreaSkill : Skill
     public override void LevelUp()
     {
         base.LevelUp();
-        PrintAllStats();
     }
 }
 
 public struct AreaEffectData
 {
+    public Unit owner;
     public float damage;
     public float duration;
     public float areaScale;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Buffers;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,25 +7,21 @@ public abstract class Skill : MonoBehaviour
 {
     [SerializeField] public SkillData data;
     [SerializeField] public SkillStat skillStat;
-    [SerializeField] private AnimationClip animaClip;
+    [SerializeField] protected AnimationClip animaClip;
+    private Unit owner;
+    public Unit Owner => owner;
     protected bool isSkillInProgress = false;
 
-    private float currentCooldown = 0f;
+    protected float currentCooldown = 0f;
 
     public bool IsOnCooldown => currentCooldown > 0f;
     public float RemainingCooldown => currentCooldown;
     public float TotalCooldown => skillStat.GetStatValue<float>(SkillStatType.Cooldown);
 
-    public virtual void Initialize()
+    public virtual void Initialize(Unit owner)
     {
-        if (skillStat == null)
-        {
-            skillStat = GetComponent<SkillStat>();
-            if (skillStat == null)
-            {
-                Debug.LogError("SkillStat component not found!");
-            }
-        }
+        this.owner = owner;
+        skillStat = this?.GetComponent<SkillStat>();
     }
 
     private void Update()
@@ -46,39 +43,38 @@ public abstract class Skill : MonoBehaviour
     {
         skillStat.SetSkillLevel(level);
     }
-    private StatModifier CalcManaCost(float costmana)
+    protected StatModifier CalcManaCost(float costmana)
     {
         return new StatModifier(costmana, StatModifierType.Flat, SourceType.Skill);
     }
 
     public virtual bool TryUseSkill()
     {
-        if (data.skillID != SkillID.BasicSwordAttack)
+        print($"{this}  Try Use 호출");
+        if (data.skillID != SkillID.BasicSwordAttack || data.skillID != SkillID.BasicBowAttack || data.skillID != SkillID.MonsterSkill)
         {
             float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);
             if (IsOnCooldown)
             {
-                Debug.Log($"스킬이 쿨다운 중입니다. 남은 시간: {currentCooldown:F1}초");
                 return false;
             }
 
-            if (GameManager.Instance.player.CharacterStats.GetStatValue(StatType.Mana) < costmana)
+            if (owner is Player)
             {
-                Debug.Log("마나가 부족합니다");
-                return false;
+                if (owner.CharacterStats.GetStatValue(StatType.Mana) < costmana)
+                {
+                    return false;
+                }
+
+                owner.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
+
+                owner.Animator.SetFloat("AttackSpeed", 3f);
             }
 
-            GameManager.Instance.player.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
             if (animaClip != null)
             {
-                GameManager.Instance.player.PlayerAnimController.Clipchange(animaClip);
-                StartCoroutine(SkillSequenceTimer());
+                owner.AnimController.Clipchange(animaClip);
             }
-
-            //TODO : 마이크로컨트롤
-            GameManager.Instance.player.PlayerAnimator.SetFloat("AttackSpeed",
-                5f);
-            GameManager.Instance.player.PlayerAnimator.SetTrigger("Attack");
         }
 
         UseSkill();
@@ -95,7 +91,7 @@ public abstract class Skill : MonoBehaviour
     {
         isSkillInProgress = true;
 
-        float animationSpeed = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.AttackSpeed) / 2f;
+        float animationSpeed = GameManager.Instance.player.CharacterStats.GetStatValue(StatType.AttackSpeed);
         float actualDuration = animaClip.length / animationSpeed;
 
         yield return new WaitForSeconds(actualDuration);
@@ -107,7 +103,7 @@ public abstract class Skill : MonoBehaviour
 
     private bool IsCurrentAnimation(AnimationClip clip)
     {
-        var currentClip = GameManager.Instance.player.PlayerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip;
+        var currentClip = GameManager.Instance.player.Animator.GetCurrentAnimatorClipInfo(0)[0].clip;
         return currentClip == clip;
     }
 
@@ -147,10 +143,14 @@ public abstract class Skill : MonoBehaviour
     {
         return type switch
         {
-            SkillStatType.SkillLevel => $"{(int)value}",
+            SkillStatType.SkillLevel => value is float floatValue
+                ? $"{Mathf.RoundToInt(floatValue)}"
+                : value.ToString(),
             SkillStatType.Cooldown or
             SkillStatType.Duration or
-            SkillStatType.Damage => $"{(float)value:F2}",
+            SkillStatType.Damage => value is float floatValue
+                ? $"{floatValue:F2}"
+                : value.ToString(),
             _ => value.ToString()
         };
     }

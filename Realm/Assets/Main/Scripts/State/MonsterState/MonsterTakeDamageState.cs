@@ -11,7 +11,7 @@ public class MonsterTakeDamageState : State<Monster>
 
     public override void OnEnter()
     {
-        target.M_Animator.SetTrigger("TakeDamage");
+        target.Animator.SetTrigger("TakeDamage");
     }
 
     public override void OnExit()
@@ -21,12 +21,14 @@ public class MonsterTakeDamageState : State<Monster>
 
     public override void OnUpdate()
     {
+        target.FindPlayer(20f);
         if (!target.IsAlive)
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
         }
         else if (target.IsAlive)
         {
+            target.Animator.SetTrigger("Idle");
             target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
         }
     }

@@ -7,6 +7,7 @@ public class ItemInstanceData
     private Color nameColor;
     private List<ItemData.ItemStat> stats = new List<ItemData.ItemStat>();
     private ItemData template;
+    public string itemDesc;
 
     public ItemRarity Rarity => rarity;
     public Color NameColor => nameColor;
@@ -17,6 +18,7 @@ public class ItemInstanceData
         this.template = template;
         this.rarity = template.Rarity;
         this.nameColor = template.NameColor;
+        this.itemDesc = template.Description;
     }
 
     public void SetRarity(ItemRarity newRarity, Color color)
@@ -35,11 +37,29 @@ public class ItemInstanceData
         });
     }
 
-    public string GetTooltip()
+    public string GetItemName()
     {
-        string tooltip = $"<color=#{ColorUtility.ToHtmlStringRGB(nameColor)}>[{rarity}] {template.ItemID}</color>\n";
-        tooltip += $"{template.Description}\n\n";
+        return $"<color=#{ColorUtility.ToHtmlStringRGB(nameColor)}>{template.ItemName}</color>";
+    }
 
+    public string GetRarity()
+    {
+        return $"<color=#{ColorUtility.ToHtmlStringRGB(nameColor)}>{rarity}</color>";
+    }
+
+    public string GetItemType()
+    {
+        return template.GetItemType();
+    }
+
+    public string GetDescription()
+    {
+        return template.GetDescription();
+    }
+
+    public string GetStatsTooltip()
+    {
+        string tooltip = "";
         string statColor = rarity switch
         {
             ItemRarity.Common => "#FFFFFF",

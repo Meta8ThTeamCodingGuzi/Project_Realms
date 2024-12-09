@@ -152,7 +152,7 @@ Animator:
   m_GameObject: {fileID: 375064375392671751}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 1121f0d75e60c4b48a4a1c121cf566f2, type: 3}
-  m_Controller: {fileID: 9100000, guid: e7075450937af7548ada34a666ea0ce3, type: 2}
+  m_Controller: {fileID: 9100000, guid: 78ed0e86fe7085b46be4244e75341b76, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1279,8 +1279,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6081237985504684722}
-  - component: {fileID: 6536675483409847576}
   - component: {fileID: 2693903783011050582}
+  - component: {fileID: 5889783840944072735}
+  - component: {fileID: -4271505619204185316}
+  - component: {fileID: 75094576440711549}
   - component: {fileID: 2693932084577508542}
   m_Layer: 0
   m_Name: Wolf White
@@ -1306,29 +1308,6 @@ Transform:
   - {fileID: 891025487808222756}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6536675483409847576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5642600776820439909}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetPlayer: {fileID: 0}
-  setPatrolTransforms:
-  - {fileID: 4240856727099767856}
-  - {fileID: 705118442075853449}
-  - {fileID: 2304222615616909678}
-  - {fileID: 496764615078642298}
-  - {fileID: 8539209486823800241}
-  wasAttacked: 0
-  isattacked: 1
-  nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 7423734860729984066}
 --- !u!195 &2693903783011050582
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1340,9 +1319,9 @@ NavMeshAgent:
   m_AgentTypeID: -1372625422
   m_Radius: 0.3
   m_Speed: 3.5
-  m_Acceleration: 2000
+  m_Acceleration: 3000
   avoidancePriority: 50
-  m_AngularSpeed: 2000
+  m_AngularSpeed: 3000
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1351,6 +1330,74 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &5889783840944072735
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5642600776820439909}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.42849413
+  m_Height: 1.6329403
+  m_Direction: 2
+  m_Center: {x: 0.0026550293, y: 0.31438765, z: 0.06745148}
+--- !u!54 &-4271505619204185316
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5642600776820439909}
+  serializedVersion: 4
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &75094576440711549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5642600776820439909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setPatrolTransforms: []
+  expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
+  monsterDieParticle: {fileID: 198112793686261236, guid: 3845c058642164c4aa72204c65011e98, type: 3}
+  monsterType: 0
+  skills:
+  - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
 --- !u!114 &2693932084577508542
 MonoBehaviour:
   m_ObjectHideFlags: 0

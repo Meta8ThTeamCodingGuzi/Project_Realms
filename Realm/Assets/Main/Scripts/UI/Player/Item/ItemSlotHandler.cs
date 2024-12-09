@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
+public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private Slot slot;
     private bool isInventorySlot;
-    private Inventory inventory;
+    private InventoryUI inventory;
 
     public bool IsInventorySlot { get => isInventorySlot; set => isInventorySlot = value; }
 
-    public void InitializeSlotHandler(Inventory inventoryRef)
+    public void InitializeSlotHandler(InventoryUI inventoryRef)
     {
         if (slot == null)
             slot = GetComponent<Slot>();
@@ -39,30 +39,23 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         var dragHolder = inventory.DragHolder;
         if (!dragHolder.IsDragging) return;
 
-        // 현재 슬롯이 드래그된 아이템을 받을 수 있는지 확인
         if (slot.CanAcceptItem(dragHolder.DraggedItem))
         {
             if (slot.IsEmpty())
             {
-                // 빈 슬롯인 경우 그냥 아이템 배치
                 dragHolder.SetTargetSlot(slot);
             }
             else
             {
-                // 아이템이 있는 경우, 두 슬롯의 아이템을 교환
                 Slot sourceSlot = dragHolder.SourceSlot;
 
-                // 원본 슬롯이 대상 아이템을 받을 수 있는지 확인
                 if (sourceSlot.CanAcceptItem(slot.Item))
                 {
-                    // 현재 슬롯의 아이템 임시 저장
                     Item tempItem = slot.Item;
 
-                    // 현재 슬롯을 비우고 드래그된 아이템 배치
                     slot.ClearSlot();
                     dragHolder.SetTargetSlot(slot);
 
-                    // 원본 슬롯에 임시 저장된 아이템 배치
                     sourceSlot.PlaceItem(tempItem);
                 }
             }
@@ -72,35 +65,67 @@ public class ItemSlotHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!IsInventorySlot || slot.IsEmpty()) return;
+        if (slot.IsEmpty()) return;
 
-        foreach (Slot equipSlot in inventory.EquipmentSlots)
+        if (IsInventorySlot)
         {
-            if (equipSlot.CanAcceptItem(slot.Item))
+            foreach (Slot equipSlot in inventory.EquipmentSlots)
             {
-                if (equipSlot.IsEmpty())
+                if (equipSlot.CanAcceptItem(slot.Item))
                 {
-                    Item itemToEquip = slot.Item;
-                    slot.ClearSlot();
-                    equipSlot.PlaceItem(itemToEquip);
-                }
-                else
-                {
-                    Item equippedItem = equipSlot.Item;
-                    Item inventoryItem = slot.Item;
+                    if (equipSlot.IsEmpty())
+                    {
+                        Item itemToEquip = slot.Item;
+                        slot.ClearSlot();
+                        equipSlot.PlaceItem(itemToEquip);
+                    }
+                    else
+                    {
+                        Item equippedItem = equipSlot.Item;
+                        Item inventoryItem = slot.Item;
 
-                    slot.ClearSlot();
-                    equipSlot.ClearSlot();
+                        slot.ClearSlot();
+                        equipSlot.ClearSlot();
 
-                    equipSlot.PlaceItem(inventoryItem);
-                    slot.PlaceItem(equippedItem);
-                }
+                        equipSlot.PlaceItem(inventoryItem);
+                        slot.PlaceItem(equippedItem);
+                    }
 
-                if (IsInventorySlot)
                     inventory.CompactInventory();
-
-                break;
+                    break;
+                }
             }
         }
+        else
+        {
+            if (inventory.HasFreeInventorySpace())
+            {
+                Item unequippedItem = slot.Item;  
+                slot.ClearSlot();                 
+                inventory.TryAddItem(unequippedItem);  
+                inventory.CompactInventory();
+            }
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (slot.IsEmpty() || !gameObject.activeInHierarchy) return;
+
+        var itemInstance = slot.Item.InstanceData;
+        TooltipWindow.Instance.ShowTooltip(
+            itemInstance.GetItemName(),
+            itemInstance.GetRarity(),
+            itemInstance.GetItemType(),
+            itemInstance.GetDescription(),
+            itemInstance.GetStatsTooltip(),
+            slot.Item.Icon,
+            eventData.position.x
+        );
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        TooltipWindow.Instance.HideTooltip();
     }
 }

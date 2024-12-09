@@ -16,11 +16,22 @@ public class WorldDropItem : MonoBehaviour
     [SerializeField] private float bobAmount = 0.1f;
     [SerializeField] private LayerMask mouseRaycastLayer;
 
-    private SphereCollider coll;
     private Vector3 startPosition;
     private bool isPlayerInRange;
     private Player player;
     private Camera mainCamera;
+    private static WorldDropItem currentHoveredItem = null;
+
+    [Header("Spawn Animation")]
+    [SerializeField] private float spawnJumpHeight = 2f;
+    [SerializeField] private float spawnRotationSpeed = 720f;
+    [SerializeField] private float spawnAnimationTime = 0.5f;
+    private float spawnStartTime;
+    private bool isSpawning = true;
+    private Vector3 originalRotation;
+
+    // InteractionRadius를 public 프로퍼티로 변경
+    public float InteractionRadius => interactionRadius;
 
     private void Start()
     {
@@ -28,9 +39,12 @@ public class WorldDropItem : MonoBehaviour
 
         startPosition = transform.position;
         mainCamera = Camera.main;
-        coll = GetComponent<SphereCollider>();
+        player = GameManager.Instance.player;
 
-        coll.radius = nameDisplayRadius;
+        // 스폰 애니메이션 초기화
+        spawnStartTime = Time.time;
+        originalRotation = transform.eulerAngles;
+        isSpawning = true;
 
         // 초기에는 이름 텍스트 비활성화
         if (tooltipCanvas != null)
@@ -42,56 +56,103 @@ public class WorldDropItem : MonoBehaviour
 
     private void Update()
     {
-        // 아이템 위아래로 둥둥 떠다니는 효과
-        float newY = startPosition.y + floatingHeight + Mathf.Sin(Time.time * bobSpeed) * bobAmount;
-        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
-
-        if (isPlayerInRange)
+        if (isSpawning)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-            if (distanceToPlayer <= nameDisplayRadius)
-            {
-                CheckMouseHover();
-
-                // 클릭으로 아이템 획득
-                if (distanceToPlayer <= interactionRadius && Input.GetMouseButtonDown(0))
-                {
-                    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-
-                    if (Physics.Raycast(ray, out hit, 100f, mouseRaycastLayer) && hit.collider.gameObject == gameObject)
-                    {
-                        TryPickupItem();
-                    }
-                }
-            }
-            else
-            {
-                HideTooltip();
-            }
-        }
-    }
-
-    private void CheckMouseHover()
-    {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 1000f, mouseRaycastLayer))
-        {
-            if (hit.collider.gameObject == gameObject)
-            {
-                ShowTooltip();
-            }
-            else
-            {
-                HideTooltip();
-            }
+            UpdateSpawnAnimation();
         }
         else
         {
-            HideTooltip();
+            float newY = startPosition.y + floatingHeight + Mathf.Sin(Time.time * bobSpeed) * bobAmount;
+            transform.position = new Vector3(transform.position.x, newY, transform.position.z);
         }
+    }
+
+    public static void UpdateHoveredItem(WorldDropItem newHoveredItem)
+    {
+        if (currentHoveredItem == newHoveredItem) return;
+
+        if (currentHoveredItem != null)
+        {
+            currentHoveredItem.HideTooltip();
+        }
+
+        currentHoveredItem = newHoveredItem;
+
+        if (currentHoveredItem != null)
+        {
+            currentHoveredItem.ShowTooltip();
+        }
+    }
+
+    public void TryPickupItem()
+    {
+        if (player == null) return;
+
+        PlayerInventorySystem inventorySystem = player.InventorySystem;
+        if (inventorySystem == null)
+        {
+            Debug.LogError("PlayerInventorySystem not found!");
+            return;
+        }
+
+        GameObject newItemObj = new GameObject(item.ItemID.ToString());
+        Item newItem = newItemObj.AddComponent<Item>();
+
+        ItemInstanceData instanceData = ItemManager.Instance.GetItemInstanceData(item);
+        if (instanceData == null)
+        {
+            Debug.LogError("Item instance data not found!");
+            Destroy(newItemObj);
+            return;
+        }
+
+        newItem.Initialize(item.ItemData, instanceData);
+        newItemObj.transform.SetParent(player.transform);
+
+        if (inventorySystem.AddItem(newItem))
+        {
+            ItemManager.Instance.RemoveItem(item);
+            Destroy(gameObject);
+        }
+        else
+        {
+            Destroy(newItemObj);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // 에디터에서 상호작용 범위와 이름 표시 범위를 시각화
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactionRadius);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, nameDisplayRadius);
+    }
+
+    private void UpdateSpawnAnimation()
+    {
+        float elapsedTime = Time.time - spawnStartTime;
+        float progress = elapsedTime / spawnAnimationTime;
+
+        if (progress >= 1f)
+        {
+            isSpawning = false;
+            transform.eulerAngles = originalRotation;
+            return;
+        }
+
+        float jumpProgress = Mathf.Sin(progress * Mathf.PI);
+        float currentHeight = startPosition.y + (spawnJumpHeight * jumpProgress);
+
+        float rotationAmount = spawnRotationSpeed * elapsedTime;
+
+        transform.position = new Vector3(transform.position.x, currentHeight, transform.position.z);
+        transform.eulerAngles = new Vector3(
+            originalRotation.x,
+            originalRotation.y,
+            originalRotation.z + rotationAmount
+        );
     }
 
     private void ShowTooltip()
@@ -111,24 +172,6 @@ public class WorldDropItem : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            player = other.GetComponent<Player>();
-            isPlayerInRange = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInRange = false;
-            HideTooltip();
-        }
-    }
-
     private void UpdateItemNameText()
     {
         if (itemNameText != null && item != null)
@@ -140,57 +183,5 @@ public class WorldDropItem : MonoBehaviour
                 itemNameText.text = $"<color=#{colorHex}>[{instanceData.Rarity}] {item.ItemID}</color>";
             }
         }
-    }
-
-    private void TryPickupItem()
-    {
-        if (player == null) return;
-
-        PlayerInventorySystem inventorySystem = player.InventorySystem;
-        if (inventorySystem == null)
-        {
-            Debug.LogError("PlayerInventorySystem not found!");
-            return;
-        }
-
-        // 새로운 아이템 인스턴스 생성
-        GameObject newItemObj = new GameObject(item.ItemID.ToString());
-        Item newItem = newItemObj.AddComponent<Item>();
-
-        // 아이템 데이터와 인스턴스 데이터 복사
-        ItemInstanceData instanceData = ItemManager.Instance.GetItemInstanceData(item);
-        if (instanceData == null)
-        {
-            Debug.LogError("Item instance data not found!");
-            Destroy(newItemObj);
-            return;
-        }
-
-        // 새 아이템 초기화
-        newItem.Initialize(item.ItemData, instanceData);
-        newItemObj.transform.SetParent(player.transform);
-
-        // PlayerInventorySystem을 통해 아이템 추가
-        if (inventorySystem.AddItem(newItem))
-        {
-            // 성공적으로 추가되었다면 월드에서 제거
-            ItemManager.Instance.RemoveItem(item);
-            Destroy(gameObject);
-        }
-        else
-        {
-            // 실패시 생성한 아이템 제거
-            Destroy(newItemObj);
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        // 에디터에서 상호작용 범위와 이름 표시 범위를 시각화
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactionRadius);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, nameDisplayRadius);
     }
 }

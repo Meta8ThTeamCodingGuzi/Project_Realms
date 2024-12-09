@@ -9,9 +9,9 @@ public class PlayerInventorySystem : MonoBehaviour
 
     private List<Item> items = new List<Item>();
     private Dictionary<ItemID, int> itemCounts = new Dictionary<ItemID, int>();
-    private Inventory inventoryUI;  // 인벤토리 UI 참조 추가
+    private InventoryUI inventoryUI;  // 인벤토리 UI 참조 추가
 
-    public void Initialize(Inventory inventory)
+    public void Initialize(InventoryUI inventory)
     {
         inventoryUI = inventory;
 

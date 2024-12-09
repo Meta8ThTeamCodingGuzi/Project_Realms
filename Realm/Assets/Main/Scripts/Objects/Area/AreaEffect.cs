@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class AreaEffect : MonoBehaviour
 {
-    private AreaEffectData areaData;
-    private float durationTime;
-    private Coroutine attackCoroutine;  
+    protected AreaEffectData areaData;
+    protected float durationTime;
+    protected Coroutine attackCoroutine;
 
-    public void Initialize(AreaEffectData Data)
+    public virtual void Initialize(AreaEffectData Data)
     {
         this.areaData = Data;
         transform.localScale = Vector3.one * areaData.areaScale;
@@ -28,39 +28,38 @@ public class AreaEffect : MonoBehaviour
     private void Update()
     {
         durationTime += Time.deltaTime;
+
+        if (durationTime >= areaData.duration)
+        {
+            StopCoroutine(attackCoroutine);
+            PoolManager.Instance.Despawn<AreaEffect>(this);
+        }
     }
 
-    private IEnumerator AttackRoutine()
+    public virtual IEnumerator AttackRoutine()
     {
+        bool isOwnerPlayer = areaData.owner is Player;
+
         while (true)
         {
-            if (areaData.duration < durationTime) PoolManager.Instance.Despawn<AreaEffect>(this);
-            Collider[] colliders = Physics.OverlapSphere(transform.position,areaData.areaScale);
+            if (areaData.duration < durationTime)
+            {
+                PoolManager.Instance.Despawn<AreaEffect>(this);
+                yield break;
+            }
 
+            Collider[] colliders = Physics.OverlapSphere(transform.position, areaData.areaScale);
             foreach (Collider collider in colliders)
             {
-                if (collider.TryGetComponent<Monster>(out Monster monster))
+                if (!collider.TryGetComponent<Unit>(out Unit targetUnit))
+                    continue;
+
+                if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
                 {
-                    monster.TakeDamage(areaData.damage);
+                    targetUnit.TakeDamage(areaData.damage);
                 }
             }
             yield return new WaitForSeconds(1f);
         }
-    }
-
-    private void StopAttack()
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
-            PoolManager.Instance.Despawn<AreaEffect>(this);
-        }
-        
-    }
-
-    private void OnDestroy()
-    {
-        StopAttack();
     }
 }

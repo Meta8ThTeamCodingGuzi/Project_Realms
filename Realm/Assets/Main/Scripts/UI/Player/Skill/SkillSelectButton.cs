@@ -23,4 +23,9 @@ public class SkillSelectButton : MonoBehaviour
 
         button.onClick.AddListener(() => onSkillSelected?.Invoke(skill));
     }
+
+    public void UpdateLevel(int level)
+    {
+        skillLevelText.text = level.ToString();
+    }
 }

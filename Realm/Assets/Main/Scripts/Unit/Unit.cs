@@ -3,19 +3,34 @@ using UnityEngine.AI;
 using System.Collections;
 using UnityEditor;
 
-public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializable
+public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializable
 {
     protected NavMeshAgent agent;
+    public NavMeshAgent Agent { get => agent; set => agent = value; }
+
     protected ICharacterStats characterStats;
+    private Animator animator;
+
+    private Unit target = null;
+    public Unit Target { get => target; set => target = value; }
+
+    public Animator Animator { get; set; }
+
+    private bool isDashing = false;
+    public bool IsDashing { get => isDashing; set => isDashing = value; }
+
     public ICharacterStats CharacterStats => characterStats;
 
+    public AnimatorController AnimController { get; set; }
     public bool IsInitialized { get; private set; }
-    public bool wasAttacked = false;
+    public bool wasAttacked { get; set; } = false;
 
     protected float lastAttackTime;
     protected Coroutine attackCoroutine;
 
-    protected virtual void Initialize()
+
+
+    public virtual void Initialize()
     {
         agent = GetComponent<NavMeshAgent>();
 
@@ -40,80 +55,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
 
     #region 전투관련
     public virtual bool IsAlive => characterStats.GetStatValue(StatType.Health) > 0;
-    public virtual void Attack(Unit target)
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-        }
-        attackCoroutine = StartCoroutine(AttackRoutine(target));
-    }
 
-
-    public virtual void StopAttack()
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
-        }
-    }
-
-    protected virtual IEnumerator AttackRoutine(Unit target)
-    {
-        while (IsAlive && target != null && target.IsAlive)
-        {
-            if (CanAttack(target))
-            {
-                agent.ResetPath();
-                float currentTime = Time.time;
-                float attackSpeed = characterStats.GetStatValue(StatType.AttackSpeed);
-                float timeBetweenAttacks = 1f / attackSpeed;
-
-                if (currentTime - lastAttackTime >= timeBetweenAttacks)
-                {
-                    PerformAttack(target);
-                    lastAttackTime = currentTime;
-                }
-            }
-            //else
-            //{
-            //    // 대상이 공격 범위를 벗어났을 경우
-            //    MoveTo(target.transform.position);
-            //}
-
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        attackCoroutine = null;
-    }
-
-
-    public virtual bool CanAttack(Unit target)
-    {
-        if (target == null || !target.IsAlive || !IsAlive) return false;
-
-        float attackRange = characterStats.GetStatValue(StatType.AttackRange);
-        float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-
-        return distanceToTarget <= attackRange;
-    }
-
-    protected virtual void PerformAttack(Unit target)
-    {
-        if (target != null && target.IsAlive)
-        {
-            float damage = characterStats.GetStatValue(StatType.Damage);
-            target.TakeDamage(damage);
-            OnAttackPerformed(target);
-        }
-    }
-
-    protected virtual void OnAttackPerformed(Unit target)
-    {
-        // 여기에 공격 이펙트 , 애니메이션등 들어가면 될듯.
-        //Debug.Log($"{gameObject.name}이(가) {target.gameObject.name}을(를) 공격했습니다.");
-    }
 
     public virtual void TakeDamage(float damage)
     {
@@ -147,9 +89,13 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
 
     public virtual void MoveTo(Vector3 destination)
     {
-        if (agent != null && agent.isActiveAndEnabled && IsAlive)
+        if (agent == null || !agent.isActiveAndEnabled || !IsAlive)
+            return;
+
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(destination, out hit, 100f, NavMesh.AllAreas))
         {
-            agent.SetDestination(destination);
+            agent.SetDestination(hit.position);
         }
     }
 
@@ -170,27 +116,33 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable , IInitializab
     }
     public virtual bool HasReachedDestination()
     {
-        // 경로가 없거나 에이전트가 비활성화된 경우
-        if (agent == null || !agent.isActiveAndEnabled) return false;
+        
+        if (agent == null || !agent.isActiveAndEnabled)
+            return false;
 
-        // 경로가 유효하지 않은 경우
-        if (agent.pathStatus == NavMeshPathStatus.PathInvalid) return false;
+        
+        if (agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathPending)
+            return false;
 
-        // 남은 거리가 거의 없고 경로가 유효한 경우
-        if (!agent.pathPending)
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            if (agent.remainingDistance <= agent.stoppingDistance)
+
+            if (agent.velocity.sqrMagnitude < 0.01f && !agent.pathPending)
             {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
-                {
-                    return true;
-                }
+                return true;
             }
         }
+
         return false;
     }
 
     #endregion
+
+    public void ChangeAnimController(RuntimeAnimatorController newAnimator)
+    {
+        Animator.runtimeAnimatorController = newAnimator;
+    }
 
     #region 기즈모 관련
 #if UNITY_EDITOR

@@ -121,7 +121,7 @@ Animator:
   m_GameObject: {fileID: 521349172451110310}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 1121f0d75e60c4b48a4a1c121cf566f2, type: 3}
-  m_Controller: {fileID: 9100000, guid: e7075450937af7548ada34a666ea0ce3, type: 2}
+  m_Controller: {fileID: 9100000, guid: 78ed0e86fe7085b46be4244e75341b76, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1089,11 +1089,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2027429878801110864}
-  - component: {fileID: 6430438508190595658}
   - component: {fileID: 7805041688991191290}
-  - component: {fileID: 6884802449172378662}
   - component: {fileID: 7133581021874329200}
   - component: {fileID: 7974471904675134105}
+  - component: {fileID: 6534726369703704997}
+  - component: {fileID: 4785356250759023967}
   m_Layer: 7
   m_Name: Wolf Black
   m_TagString: Untagged
@@ -1118,30 +1118,6 @@ Transform:
   - {fileID: 2579837104768887066}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6430438508190595658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5910400810249688014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf975c927bc6d88458b16acf08eecd7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wasAttacked: 0
-  setPatrolTransforms:
-  - {fileID: 5241530313266634744}
-  - {fileID: 8538442572672739759}
-  - {fileID: 3558064377136474465}
-  - {fileID: 3580021424796292657}
-  - {fileID: 979837537476820560}
-  isattacked: 1
-  expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
-  nowTarget: {x: 0, y: 0, z: 0}
-  M_Animator: {fileID: 3074471266676340477}
-  monsterDieParticle: {fileID: 0}
 --- !u!195 &7805041688991191290
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1153,9 +1129,9 @@ NavMeshAgent:
   m_AgentTypeID: -1372625422
   m_Radius: 0.3
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 3000
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 3000
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1164,46 +1140,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &6884802449172378662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5910400810249688014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 723906f99f9f88044918a7becc2ffb31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialStats:
-  - Type: 0
-    BaseValue: 1
-    PointIncrease: 0
-  - Type: 7
-    BaseValue: 50
-    PointIncrease: 0.2
-  - Type: 10
-    BaseValue: 1
-    PointIncrease: 2
-  - Type: 11
-    BaseValue: 2
-    PointIncrease: 3
-  - Type: 8
-    BaseValue: 1.5
-    PointIncrease: 0
-  - Type: 9
-    BaseValue: 2
-    PointIncrease: 0
-  - Type: 13
-    BaseValue: 50
-    PointIncrease: 20
-  - Type: 1
-    BaseValue: 250
-    PointIncrease: 50
-  - Type: 1
-    BaseValue: 250
-    PointIncrease: 50
 --- !u!136 &7133581021874329200
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1254,6 +1190,61 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6534726369703704997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5910400810249688014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342426b651cc6344985549689ae30743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setPatrolTransforms: []
+  expParticle: {fileID: 2048825114990469221, guid: 1ca47b4b830e7c847847053f026b9f56, type: 3}
+  monsterDieParticle: {fileID: 2268233570459045565, guid: 05e83b04bef7fa54889fd6d5221474f7, type: 3}
+  monsterType: 0
+  skills:
+  - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
+--- !u!114 &4785356250759023967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5910400810249688014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 723906f99f9f88044918a7becc2ffb31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialStats:
+  - Type: 0
+    BaseValue: 1
+    PointIncrease: 0
+  - Type: 9
+    BaseValue: 6
+    PointIncrease: 0.2
+  - Type: 8
+    BaseValue: 5
+    PointIncrease: 2
+  - Type: 13
+    BaseValue: 20
+    PointIncrease: 3
+  - Type: 10
+    BaseValue: 1.5
+    PointIncrease: 0
+  - Type: 11
+    BaseValue: 2
+    PointIncrease: 0
+  - Type: 7
+    BaseValue: 50
+    PointIncrease: 20
+  - Type: 1
+    BaseValue: 250
+    PointIncrease: 50
 --- !u!1 &5953857178862130198
 GameObject:
   m_ObjectHideFlags: 0

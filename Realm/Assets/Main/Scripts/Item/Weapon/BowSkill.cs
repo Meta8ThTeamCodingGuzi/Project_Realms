@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BowSkill : WeaponSkill
+public class BowSkill : DefaultSkill
 {
     [SerializeField] private Transform arrowSpawnPoint;
     [SerializeField] private Projectile arrowPrefab;
@@ -14,17 +14,12 @@ public class BowSkill : WeaponSkill
     private bool isDrawing = false;
     private Coroutine drawRoutine;
 
-    public override void Initialize()
+    public override void Initialize(Unit owner)
     {
-        base.Initialize();
+        base.Initialize(owner);
         UpdateArrowSpawnPoint();
     }
 
-    public override void UpdateWeaponComponents()
-    {
-        base.UpdateWeaponComponents();
-        UpdateArrowSpawnPoint();
-    }
 
     private void UpdateArrowSpawnPoint()
     {
@@ -44,7 +39,7 @@ public class BowSkill : WeaponSkill
 
     protected override void UseSkill()
     {
-        if (Time.time - lastFireTime >= 1f / GetPlayerAttackSpeed() && !isDrawing)
+        if (Time.time - lastFireTime >= 1f / GetAttackSpeed() && !isDrawing)
         {
             if (drawRoutine != null)
                 StopCoroutine(drawRoutine);
@@ -54,12 +49,11 @@ public class BowSkill : WeaponSkill
 
     private IEnumerator DrawAndFireRoutine()
     {
-        isDrawing = true;
+        isSkillInProgress = true;
 
-        if (weaponHolder.CurrentIKSetup?.offHandIK != null)
+        if (weaponHolder?.CurrentIKSetup?.offHandIK != null)
         {
-            print("보우스킬 호출");
-            // 활 당기기 - offHandIK weight를 서서히 0.5까지 증가
+            Owner.Animator.SetTrigger("Attack");
             float elapsedTime = 0f;
             float startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
 
@@ -74,7 +68,6 @@ public class BowSkill : WeaponSkill
             FireArrow();
             lastFireTime = Time.time;
 
-            // 활 놓기 - offHandIK weight를 서서히 0으로 감소
             elapsedTime = 0f;
             startWeight = weaponHolder.CurrentIKSetup.offHandIK.weight;
 
@@ -86,8 +79,19 @@ public class BowSkill : WeaponSkill
                 yield return null;
             }
         }
+        else
+        {
+            FireArrow();
+            lastFireTime = Time.time;
+        }
 
-        isDrawing = false;
+        isSkillInProgress = false;
+
+        if (Owner?.Animator != null)
+        {
+            Owner.Animator.SetTrigger("Idle");
+        }
+
         yield break;
     }
 
@@ -102,30 +106,28 @@ public class BowSkill : WeaponSkill
             {
                 Vector3 targetPoint = ray.GetPoint(distance);
 
-                // 캐릭터를 타겟 방향으로 회전
                 Vector3 directionToTarget = (targetPoint - transform.position).normalized;
-                directionToTarget.y = 0; // Y축 회전만 적용
-                player.transform.rotation = Quaternion.LookRotation(directionToTarget);
+                directionToTarget.y = 0;
+                Owner.transform.rotation = Quaternion.LookRotation(directionToTarget);
 
-                // 사거리 제한
                 float distanceToTarget = Vector3.Distance(transform.position, targetPoint);
                 if (distanceToTarget > GetAttackRange())
                 {
                     targetPoint = transform.position + directionToTarget * GetAttackRange();
                 }
 
-                // 화레이어의 forward 방향으로 화살 발사
                 Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
                     arrowPrefab.gameObject,
                     arrowSpawnPoint.position,
-                    Quaternion.LookRotation(player.transform.forward));
+                    Quaternion.LookRotation(Owner.transform.forward));
 
                 if (arrow != null)
                 {
-                    float totalDamage = GetPlayerDamage();
+                    float totalDamage = GetDamage();
 
                     ProjectileData data = new ProjectileData
                     {
+                        owner = Owner,
                         Damage = totalDamage,
                         Speed = 15f,
                         Range = 15f

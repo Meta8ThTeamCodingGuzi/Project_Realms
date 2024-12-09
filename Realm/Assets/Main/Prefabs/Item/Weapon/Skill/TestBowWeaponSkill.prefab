@@ -52,7 +52,10 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 128
-  arrowPrefab: {fileID: 8297238604543973301, guid: 482008d15260d284abd60c79c7e563a8, type: 3}
+  arrowSpawnPoint: {fileID: 0}
+  arrowPrefab: {fileID: 2164046226966270966, guid: fac981db76aabc64ea273f7fcc2047d6, type: 3}
+  drawDuration: 0.3
+  resetDuration: 0.2
 --- !u!114 &3390364820970981048
 MonoBehaviour:
   m_ObjectHideFlags: 0

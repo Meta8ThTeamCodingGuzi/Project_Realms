@@ -9,7 +9,10 @@ public class AreaSkillStat : SkillStat
     [SerializeField]
     private StatInitializer[] initialStats = new StatInitializer[]
     {
-
+        new StatInitializer
+        {
+            Type = SkillStatType.SkillLevel,
+        },
         new StatInitializer
         {
             Type = SkillStatType.Damage,
@@ -46,16 +49,20 @@ public class AreaSkillStat : SkillStat
         {
             Type = SkillStatType.IsSpawnAtEnemy,
         },
+        new StatInitializer
+        {
+            Type = SkillStatType.Cooldown,
+        }
 
     };
 
     protected override StatInitializer[] GetInitialStats()
     {
-        Debug.Log($"initialStats count: {initialStats.Length}");
-        foreach (var stat in initialStats)
-        {
-            Debug.Log($"Stat: {stat.Type}, BaseValue: {stat.BaseValue}");
-        }
+        //Debug.Log($"initialStats count: {initialStats.Length}");
+        //foreach (var stat in initialStats)
+        //{
+        //    Debug.Log($"Stat: {stat.Type}, BaseValue: {stat.BaseValue}");
+        //}
         return initialStats;
     }
 
