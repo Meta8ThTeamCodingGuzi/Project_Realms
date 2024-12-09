@@ -5,8 +5,7 @@ public class WorldDropItem : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Item item;
-    [SerializeField] private Canvas tooltipCanvas;
-    [SerializeField] private TextMeshProUGUI itemNameText;
+    [SerializeField] private TextMeshPro itemNameText;
 
     [Header("Settings")]
     [SerializeField] private float interactionRadius = 2f;
@@ -29,9 +28,19 @@ public class WorldDropItem : MonoBehaviour
     private float spawnStartTime;
     private bool isSpawning = true;
     private Vector3 originalRotation;
+    private Transform textTransform;
 
-    // InteractionRadius를 public 프로퍼티로 변경
     public float InteractionRadius => interactionRadius;
+
+    private void Awake()
+    {
+        if (itemNameText != null)
+        {
+            textTransform = itemNameText.transform;
+            itemNameText.gameObject.SetActive(false);
+                UpdateItemNameText();
+        }
+    }
 
     private void Start()
     {
@@ -41,16 +50,18 @@ public class WorldDropItem : MonoBehaviour
         mainCamera = Camera.main;
         player = GameManager.Instance.player;
 
-        // 스폰 애니메이션 초기화
         spawnStartTime = Time.time;
         originalRotation = transform.eulerAngles;
         isSpawning = true;
 
-        // 초기에는 이름 텍스트 비활성화
-        if (tooltipCanvas != null)
+        if (itemNameText != null)
         {
-            tooltipCanvas.gameObject.SetActive(false);
+            textTransform = itemNameText.transform;
+            itemNameText.gameObject.SetActive(false);
             UpdateItemNameText();
+
+            itemNameText.alignment = TextAlignmentOptions.Center;
+            itemNameText.fontSize = 5;
         }
     }
 
@@ -64,6 +75,11 @@ public class WorldDropItem : MonoBehaviour
         {
             float newY = startPosition.y + floatingHeight + Mathf.Sin(Time.time * bobSpeed) * bobAmount;
             transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+
+            if (itemNameText != null && itemNameText.gameObject.activeSelf)
+            {
+                UpdateTextRotation();
+            }
         }
     }
 
@@ -120,9 +136,8 @@ public class WorldDropItem : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
-        // 에디터에서 상호작용 범위와 이름 표시 범위를 시각화
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
 
@@ -157,18 +172,18 @@ public class WorldDropItem : MonoBehaviour
 
     private void ShowTooltip()
     {
-        if (tooltipCanvas != null)
+        if (itemNameText != null && !itemNameText.gameObject.activeSelf)
         {
-            tooltipCanvas.gameObject.SetActive(true);
-            tooltipCanvas.transform.forward = mainCamera.transform.forward;
+            itemNameText.gameObject.SetActive(true);
+            UpdateTextRotation();
         }
     }
 
     private void HideTooltip()
     {
-        if (tooltipCanvas != null)
+        if (itemNameText != null)
         {
-            tooltipCanvas.gameObject.SetActive(false);
+            itemNameText.gameObject.SetActive(false);
         }
     }
 
@@ -181,7 +196,17 @@ public class WorldDropItem : MonoBehaviour
             {
                 string colorHex = ColorUtility.ToHtmlStringRGB(instanceData.NameColor);
                 itemNameText.text = $"<color=#{colorHex}>[{instanceData.Rarity}] {item.ItemID}</color>";
+                itemNameText.color = instanceData.NameColor;
             }
+        }
+    }
+
+    private void UpdateTextRotation()
+    {
+        if (itemNameText != null && mainCamera != null)
+        {
+            textTransform.LookAt(mainCamera.transform);
+            textTransform.Rotate(0, 180, 0);
         }
     }
 }

@@ -42,10 +42,12 @@ public class MonsterManager : SingletonManager<MonsterManager>
     [SerializeField] private List<Barrier> barriers = new List<Barrier>();
 
     [Header("Continuous Spawn Settings")]
-    [SerializeField] private float respawnDelay = 5f; 
+    [SerializeField] private float respawnDelay = 5f;
     private Dictionary<MonsterSpawnData, Coroutine> spawnCoroutines = new Dictionary<MonsterSpawnData, Coroutine>();
 
     public bool isInitialized = false;
+
+    private bool isEliteSpawning = false;
 
     protected override void Awake()
     {
@@ -82,6 +84,8 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
     private void AddGauge(float amount)
     {
+        if (isEliteSpawning || currentEliteMonster != null) return;
+
         currentGauge = Mathf.Min(currentGauge + amount, maxGauge);
 
         if (currentGauge >= maxGauge)
@@ -92,6 +96,10 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
     private IEnumerator TriggerEliteSpawn()
     {
+        if (isEliteSpawning) yield break;
+
+        isEliteSpawning = true;
+
         foreach (Monster monster in currentMonsters)
         {
             if (monster != null && monster.IsAlive && monster != currentEliteMonster)
@@ -114,10 +122,12 @@ public class MonsterManager : SingletonManager<MonsterManager>
         SpawnEliteMonster(currentCheckpoint);
 
         currentGauge = 0f;
+        isEliteSpawning = false;
     }
 
     private void SpawnEliteMonster(int checkpointId)
     {
+        print("엘리트 몬스터 스폰");
         var eliteMonsterData = eliteMonsterDataList.Find(data => data.checkpointId == checkpointId);
         if (eliteMonsterData != null && eliteMonsterData.eliteMonsterPrefab != null)
         {
