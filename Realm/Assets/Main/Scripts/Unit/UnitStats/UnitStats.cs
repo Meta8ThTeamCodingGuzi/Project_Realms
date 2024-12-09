@@ -111,7 +111,7 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
         {
             return stat;
         }
-        Debug.Log($"Stat {statType} 이 없는데 접근하려 합니다.");
+        //Debug.Log($"Stat {statType} 이 없는데 접근하려 합니다.");
         return null;
     }
 

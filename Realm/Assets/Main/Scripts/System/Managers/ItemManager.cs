@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static ItemGenerationRuleSO;
+using System.Collections;
 
 public class ItemManager : SingletonManager<ItemManager>
 {
@@ -10,6 +11,22 @@ public class ItemManager : SingletonManager<ItemManager>
 
     private List<Item> items = new List<Item>();
     private Dictionary<Item, ItemInstanceData> itemInstanceData = new Dictionary<Item, ItemInstanceData>();
+
+    private void Start()
+    {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
+        StartCoroutine(InitializeRoutine());
+    }
+
+    public IEnumerator InitializeRoutine()
+    {
+        yield return new WaitUntil(() => GameManager.Instance != null && GameManager.Instance.IsInitialized && UIManager.instance != null && UIManager.Instance.IsInitialized);
+        GiveDefaultItemsToPlayer();
+    }
 
     public Item GenerateRandomItem(MonsterType monsterType, Vector3 position)
     {
@@ -108,26 +125,50 @@ public class ItemManager : SingletonManager<ItemManager>
             return;
         }
 
-        var playerInventory = GameManager.Instance.player.InventorySystem;
+        var player = GameManager.Instance.player;
+        var playerInventory = player.InventorySystem;
         if (playerInventory == null)
         {
             Debug.LogError("플레이어 인벤토리를 찾을 수 없습니다.");
             return;
         }
 
+        var playerUI = UIManager.instance.PlayerUI;
+        if (playerUI == null || playerUI.inventoryUI == null)
+        {
+            Debug.LogError("InventoryUI를 찾을 수 없습니다.");
+            return;
+        }
+
         foreach (var itemTemplate in defaultPlayerItems)
         {
-            GameObject itemObj = new GameObject(itemTemplate.ItemID.ToString());
-            Item item = itemObj.AddComponent<Item>();
-
-            var instanceData = new ItemInstanceData(itemTemplate);
-            instanceData.SetRarity(ItemRarity.Common, Color.white);
-
-            itemInstanceData[item] = instanceData;
-            item.Initialize(itemTemplate, instanceData);
-            items.Add(item);
-
-            playerInventory.AddItem(item);
+            Item item = CreateItem(itemTemplate, ItemRarity.Common, Color.white);
+            if (item != null)
+            {
+                playerUI.inventoryUI.TryAddItem(item);
+            }
         }
+    }
+
+    private Item CreateItem(ItemData template, ItemRarity rarity, Color nameColor)
+    {
+        GameObject itemObj = new GameObject(template.ItemID.ToString());
+        Item item = itemObj.AddComponent<Item>();
+
+        var instanceData = new ItemInstanceData(template);
+        instanceData.SetRarity(rarity, nameColor);
+
+        foreach (var stat in template.Stats)
+        {
+            instanceData.AddStat(stat.statType, stat.flatValue, stat.percentValue);
+        }
+
+        itemInstanceData[item] = instanceData;
+        item.Initialize(template, instanceData);
+        items.Add(item);
+
+        itemObj.SetActive(false);
+
+        return item;
     }
 }

@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 2309260120549037121}
-  itemNameText: {fileID: 0}
+  itemNameText: {fileID: 999994991975327803}
   interactionRadius: 1
   nameDisplayRadius: 1
   floatingHeight: 0.1
