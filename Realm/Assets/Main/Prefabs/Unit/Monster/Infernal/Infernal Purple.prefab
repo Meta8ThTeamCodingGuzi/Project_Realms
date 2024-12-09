@@ -15500,7 +15500,6 @@ MonoBehaviour:
   monsterDieParticle: {fileID: 198049818700294864, guid: da420a91596617b4ab0f8941677b52e2, type: 3}
   monsterType: 0
   skills:
-  - {fileID: 0}
   - {fileID: 6177470303933401633, guid: 19eacbdcca5ce56489a150e4f2dea4b7, type: 3}
 --- !u!114 &3866222582951452796
 MonoBehaviour:
