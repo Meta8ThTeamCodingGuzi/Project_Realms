@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : Unit , IPoolable
+public class Monster : Unit
 {
     private MonsterStateHandler m_StateHandler;
 
@@ -18,7 +18,7 @@ public class Monster : Unit , IPoolable
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 currentPatrolPoint { get; set; }
+    public Vector3 currentPatrolPoint { get; set ; }
 
     public MonsterStateHandler M_StateHandler => m_StateHandler;
 
@@ -31,21 +31,21 @@ public class Monster : Unit , IPoolable
     [SerializeField] private MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
 
-    [SerializeField] private List<Skill> skills;
+    [SerializeField]private List<Skill> skills;
     public List<Skill> Skills { get => skills; set => skills = value; }
 
     private Skill currentSkill;
     public Skill CurrentSkill => currentSkill;
 
-    public static event System.Action<Monster> OnMonsterDeath;
-
+    private bool isPlayerNullRoutine = true;
+    
     public override void Initialize()
     {
         base.Initialize();
 
         GetRequiredComponents();
-
-        InitializeMonster();
+        
+        InitializeMonster();        
     }
 
     private void InitializeMonster()
@@ -79,15 +79,15 @@ public class Monster : Unit , IPoolable
 
         monsterStat.SetMonsterLevel(adjustedLevel);
 
-        if (skills.Count > 0)
+        if (skills.Count > 0) 
         {
             foreach (Skill skill in skills)
             {
                 skill.Initialize(this);
-                if (skill is not DefaultSkill)
+                if (skill is not DefaultSkill) 
                 {
                     skill.SetLevel(adjustedLevel);
-                }
+                }                
             }
         }
 
@@ -113,7 +113,7 @@ public class Monster : Unit , IPoolable
                     pickedSkill.transform.localPosition = Vector3.zero;
                     currentSkill = pickedSkill;
                 }
-                else
+                else 
                 {
                     currentSkill = null;
                     Destroy(currentSkill);
@@ -134,7 +134,7 @@ public class Monster : Unit , IPoolable
         {
             m_StateHandler = new MonsterStateHandler(this);
         }
-
+        
 
         Animator = GetComponentInChildren<Animator>();
 
@@ -174,8 +174,22 @@ public class Monster : Unit , IPoolable
                 }
             }
         }
-        this.Target = null;
+        if (isPlayerNullRoutine)
+        {
+            StartCoroutine(PlayerNullRoutine());
+        }
+        if (this.Target != null)
+        {
+            return true;
+        }
         return false;
+    }
+    private IEnumerator PlayerNullRoutine()
+    {
+        isPlayerNullRoutine = false;
+        yield return new WaitForSeconds(3f);
+        this.Target = null;
+        isPlayerNullRoutine = true;
     }
 
     public virtual bool CanAttack(Unit target)
@@ -184,7 +198,7 @@ public class Monster : Unit , IPoolable
 
         float attackRange = 0f;
         float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-
+       
         if (CurrentSkill is DefaultSkill)
         {
             attackRange = characterStats.GetStatValue(StatType.AttackRange);
@@ -193,7 +207,7 @@ public class Monster : Unit , IPoolable
         {
             attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
         }
-        else
+        else 
         {
             attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.SpawnRange);
         }
@@ -214,7 +228,6 @@ public class Monster : Unit , IPoolable
     }
     public void MonsterDie()
     {
-        OnMonsterDeath?.Invoke(this);
         StartCoroutine(DieRoutine());
     }
 
@@ -236,7 +249,6 @@ public class Monster : Unit , IPoolable
         ItemManager.Instance.GenerateRandomItem(monsterType, transform.position);
         ParticleSystem mdp = PoolManager.Instance.Spawn<ParticleSystem>(monsterDieParticle.gameObject, transform.position, Quaternion.identity);
         mdp.Play();
-        MonsterManager.Instance.currentMonsters.Remove(this);
         PoolManager.Instance.Despawn(mdp, 1f);
         PoolManager.Instance.Despawn(this);
     }
@@ -275,12 +287,6 @@ public class Monster : Unit , IPoolable
         currentSkill = null;
     }
 
-    public void OnSpawnFromPool()
-    {
-        MonsterManager.Instance.currentMonsters.Add(this);
-    }
 
-    public void OnReturnToPool()
-    {
-    }
+
 }

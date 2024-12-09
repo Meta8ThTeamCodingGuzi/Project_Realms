@@ -32,6 +32,10 @@ public enum SkillID
     MagicChain,
     Dash,
     Nuclear,
+    ThunderStroke,
+    IceFatalWheel,
+    BattleOrders,
+    BattleCry,
 
 
 
