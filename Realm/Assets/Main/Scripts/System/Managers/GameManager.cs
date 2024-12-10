@@ -74,6 +74,20 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
         return true;
     }
 
+    public void OnExit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+    public void OnResume()
+    {
+        UIManager.instance.pausePanel.gameObject.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
     #region Checkpoint System
 
     public void TriggerCheckpoint(int checkpointId)
