@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 public class Player : Unit
@@ -55,6 +56,7 @@ public class Player : Unit
 
     private PlayerInputManager inputManager;
     public PlayerInputManager InputManager => inputManager;
+
 
     private void Start()
     {

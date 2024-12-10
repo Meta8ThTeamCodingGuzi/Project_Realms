@@ -23,7 +23,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
     public ICharacterStats CharacterStats => characterStats;
 
     public AnimatorController AnimController { get; set; }
-    public bool IsInitialized { get; private set; }
+    public bool IsInitialized { get; set; }
     public bool wasAttacked { get; set; } = false;
 
     protected float lastAttackTime;
