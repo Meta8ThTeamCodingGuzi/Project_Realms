@@ -1767,22 +1767,22 @@ MonoBehaviour:
     PointIncrease: 0.2
   - Type: 8
     BaseValue: 10
-    PointIncrease: 2
+    PointIncrease: 5
   - Type: 13
-    BaseValue: 20
-    PointIncrease: 3
+    BaseValue: 60
+    PointIncrease: 20
   - Type: 10
     BaseValue: 0.5
     PointIncrease: 0
   - Type: 11
-    BaseValue: 10
-    PointIncrease: 0
+    BaseValue: 13
+    PointIncrease: 0.1
   - Type: 7
     BaseValue: 50
-    PointIncrease: 20
+    PointIncrease: 35
   - Type: 1
-    BaseValue: 250
-    PointIncrease: 50
+    BaseValue: 450
+    PointIncrease: 65
 --- !u!1 &6099719529632937652
 GameObject:
   m_ObjectHideFlags: 0

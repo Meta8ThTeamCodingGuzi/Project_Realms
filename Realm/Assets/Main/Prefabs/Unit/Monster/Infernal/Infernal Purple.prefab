@@ -15011,7 +15011,7 @@ Transform:
   m_GameObject: {fileID: 4162112075039811786}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.859, y: 0.648, z: 0.457}
+  m_LocalPosition: {x: 0.435, y: 0.648, z: 0.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15519,25 +15519,25 @@ MonoBehaviour:
     PointIncrease: 0
   - Type: 9
     BaseValue: 4
-    PointIncrease: 0.2
+    PointIncrease: 0.1
   - Type: 8
-    BaseValue: 10
+    BaseValue: 20
     PointIncrease: 2
   - Type: 13
-    BaseValue: 20
-    PointIncrease: 3
+    BaseValue: 55
+    PointIncrease: 30
   - Type: 10
-    BaseValue: 1.5
+    BaseValue: 0.5
     PointIncrease: 0
   - Type: 11
     BaseValue: 11
     PointIncrease: 0
   - Type: 7
-    BaseValue: 100
-    PointIncrease: 20
+    BaseValue: 55
+    PointIncrease: 40
   - Type: 1
-    BaseValue: 200
-    PointIncrease: 50
+    BaseValue: 400
+    PointIncrease: 80
 --- !u!1 &7558002256068206664
 GameObject:
   m_ObjectHideFlags: 0

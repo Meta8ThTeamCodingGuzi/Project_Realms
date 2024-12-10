@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 [RequireComponent(typeof(Collider))]
 public class DebuffSKill : Skill
@@ -8,7 +9,6 @@ public class DebuffSKill : Skill
     private Debuff DebuffParticle = null;
     private DeBuffSkillStat deBuffSkillStat;
     private bool isSkillActive = false;
-    private bool clickDelay = true;
 
 
     public override void Initialize(Unit owner)
@@ -21,11 +21,11 @@ public class DebuffSKill : Skill
 
     protected override void UseSkill()
     {
+
         Owner.Animator.SetTrigger("Attack");
-        if (clickDelay == false) return;
         if (!isSkillActive)
         {
-            DebuffParticle = PoolManager.Instance.Spawn<Debuff>(DebuffPrefab.gameObject,Owner.transform.position,Quaternion.Euler(90,0,0));
+            DebuffParticle = PoolManager.Instance.Spawn<Debuff>(DebuffPrefab.gameObject, Owner.transform.position, Quaternion.Euler(90, 0, 0));
             DebuffParticle.transform.SetParent(Owner.transform);
             DebuffParticle.transform.localPosition = Vector3.zero;
             DebuffParticle.Initialize(Owner, deBuffSkillStat);
@@ -33,18 +33,15 @@ public class DebuffSKill : Skill
         }
         else if (isSkillActive)
         {
+            if (Owner is Player)
+            {
+                Owner.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(deBuffSkillStat.GetStatValue<float>(SkillStatType.ManaCost)));
+            }
             PoolManager.Instance.Despawn(DebuffParticle);
             DebuffParticle = null;
             isSkillActive = false;
         }
         Owner.Animator.SetTrigger("Idle");
-        StartCoroutine(ClickRoutine());
-    }
-    private IEnumerator ClickRoutine()
-    {
-        clickDelay = false;
-        yield return new WaitForSeconds(0.1f);
-        clickDelay = true;
     }
 
     private void OnDisable()
@@ -55,11 +52,13 @@ public class DebuffSKill : Skill
             {
                 PoolManager.Instance.Despawn(DebuffParticle);
                 DebuffParticle = null;
+                isSkillActive = false;
             }
         }
         else 
         {
             Destroy(DebuffParticle);
+            isSkillActive = false;
         }
     }
 }
