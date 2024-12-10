@@ -128,7 +128,7 @@ public class Player : Unit
 
         Debug.Log("Player initialized successfully");
 
-        skillPoint += 12;
+        skillPoint += 20;
     }
 
     private void Update()

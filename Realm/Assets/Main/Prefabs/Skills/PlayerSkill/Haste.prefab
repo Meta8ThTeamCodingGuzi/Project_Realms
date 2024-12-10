@@ -80,7 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialStats:
   - Type: 22
-    BaseValue: 3
+    BaseValue: 3.1
     GrowthValue: 0.4
     growthPercent: 0
   - Type: 4

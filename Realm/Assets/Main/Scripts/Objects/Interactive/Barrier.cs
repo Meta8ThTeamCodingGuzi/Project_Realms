@@ -11,7 +11,8 @@ public class Barrier : MonoBehaviour
 
     public void DisableBarrier()
     {
-        Destroy(this);
+        print("dsiable 배리어 호출");
+        gameObject.SetActive(false);
     }
 
     public void EnableBarrier()
@@ -19,11 +20,6 @@ public class Barrier : MonoBehaviour
         if (TryGetComponent<Collider>(out Collider collider))
         {
             collider.enabled = true;
-        }
-
-        if (TryGetComponent<MeshRenderer>(out MeshRenderer renderer))
-        {
-            renderer.enabled = true;
         }
     }
 

@@ -31,6 +31,7 @@ public class WorldDropItem : MonoBehaviour
     private Transform textTransform;
 
     public float InteractionRadius => interactionRadius;
+    public bool IsNameTextActive => itemNameText != null && itemNameText.gameObject.activeSelf;
 
     private void Awake()
     {
@@ -38,7 +39,7 @@ public class WorldDropItem : MonoBehaviour
         {
             textTransform = itemNameText.transform;
             itemNameText.gameObject.SetActive(false);
-                UpdateItemNameText();
+            UpdateItemNameText();
         }
     }
 
@@ -102,6 +103,8 @@ public class WorldDropItem : MonoBehaviour
 
     public void TryPickupItem()
     {
+        if (!IsNameTextActive) return;
+
         print($"트라이픽업 아이템호출 {player}");
         if (player == null) return;
 
@@ -196,8 +199,11 @@ public class WorldDropItem : MonoBehaviour
             if (instanceData != null)
             {
                 string colorHex = ColorUtility.ToHtmlStringRGB(instanceData.NameColor);
-                itemNameText.text = $"<color=#{colorHex}>[{instanceData.Rarity}] {item.ItemID}</color>";
-                itemNameText.color = instanceData.NameColor;
+                Color textColor = instanceData.NameColor;
+                textColor.a = 1f;
+
+                itemNameText.text = $"<color=#{colorHex}> {item.ItemID}</color>";
+                itemNameText.color = textColor;
             }
         }
     }

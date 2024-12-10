@@ -74,7 +74,6 @@ public abstract class SkillStat : MonoBehaviour
             Debug.LogWarning($"스탯 {skillStatType}의 값을 {typeof(T)}로 변환할 수 없습니다!");
             return default(T);
         }        
-        //Debug.LogWarning($"스탯 {skillStatType} 없음 !!!");
         return default(T);
     }
 

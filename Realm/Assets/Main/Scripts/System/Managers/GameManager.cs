@@ -9,8 +9,6 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
     private Player Player;
     public Player player { get => Player; set => Player = value; }
     public bool IsInitialized { get; private set; }
-    private List<Monster> _monsters;
-    public List<Monster> monster { get => _monsters; set => _monsters = value; }
 
     [SerializeField]
     private List<Checkpoint> checkpoints = new List<Checkpoint>();
