@@ -14,6 +14,7 @@ public class PlayerManager : SingletonManager<PlayerManager>, IInitializable
     public void SpawnPlayer(Transform spawnPoint)
     {
         player = Instantiate(player, spawnPoint.position, Quaternion.identity);
+        player.gameObject.name = "Player";
         player.Initialize();
         this.isInitialized = player.IsInitialized;
     }

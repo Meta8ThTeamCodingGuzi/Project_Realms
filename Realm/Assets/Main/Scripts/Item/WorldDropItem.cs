@@ -13,7 +13,6 @@ public class WorldDropItem : MonoBehaviour
     [SerializeField] private float floatingHeight = 0.5f;
     [SerializeField] private float bobSpeed = 1f;
     [SerializeField] private float bobAmount = 0.1f;
-    [SerializeField] private LayerMask mouseRaycastLayer;
 
     private Vector3 startPosition;
     private bool isPlayerInRange;

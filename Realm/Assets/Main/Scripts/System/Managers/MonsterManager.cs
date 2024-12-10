@@ -78,6 +78,11 @@ public class MonsterManager : SingletonManager<MonsterManager>
         {
             currentEliteMonster = null;
             DisableBarrier(currentCheckpoint);
+
+            if (currentCheckpoint == 3)
+            {
+                HandleCheckpointFinalBossDeath();
+            }
             return;
         }
 
@@ -240,5 +245,11 @@ public class MonsterManager : SingletonManager<MonsterManager>
         currentGauge = 0f;
         currentEliteMonster = null;
         EnableAllBarriers();
+    }
+
+    private void HandleCheckpointFinalBossDeath()
+    {
+        ResetSpawnData();
+        PlayerManager.instance.RespawnPlayer(GameManager.instance.spawnPoint);
     }
 }

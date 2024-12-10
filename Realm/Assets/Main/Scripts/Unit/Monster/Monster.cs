@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Monster : Unit
 {
@@ -18,7 +15,7 @@ public class Monster : Unit
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 currentPatrolPoint { get; set ; }
+    public Vector3 currentPatrolPoint { get; set; }
 
     public MonsterStateHandler M_StateHandler => m_StateHandler;
 
@@ -31,7 +28,7 @@ public class Monster : Unit
     [SerializeField] protected MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
 
-    [SerializeField]private List<Skill> skills;
+    [SerializeField] private List<Skill> skills;
     public List<Skill> Skills { get => skills; set => skills = value; }
 
     private Skill currentSkill;
@@ -46,7 +43,7 @@ public class Monster : Unit
         base.Initialize();
 
         GetRequiredComponents();
-        
+
         InitializeMonster();
     }
 
@@ -81,15 +78,15 @@ public class Monster : Unit
 
         monsterStat.SetMonsterLevel(adjustedLevel);
 
-        if (skills.Count > 0) 
+        if (skills.Count > 0)
         {
             foreach (Skill skill in skills)
             {
                 skill.Initialize(this);
-                if (skill is not DefaultSkill) 
+                if (skill is not DefaultSkill)
                 {
                     skill.SetLevel(adjustedLevel);
-                }                
+                }
             }
         }
 
@@ -115,7 +112,7 @@ public class Monster : Unit
                     pickedSkill.transform.localPosition = Vector3.zero;
                     currentSkill = pickedSkill;
                 }
-                else 
+                else
                 {
                     currentSkill = null;
                     Destroy(currentSkill);
@@ -136,7 +133,7 @@ public class Monster : Unit
         {
             m_StateHandler = new MonsterStateHandler(this);
         }
-        
+
 
         Animator = GetComponentInChildren<Animator>();
 
@@ -200,7 +197,7 @@ public class Monster : Unit
 
         float attackRange = 0f;
         float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-       
+
         if (CurrentSkill is DefaultSkill)
         {
             attackRange = characterStats.GetStatValue(StatType.AttackRange);
@@ -209,7 +206,7 @@ public class Monster : Unit
         {
             attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
         }
-        else 
+        else
         {
             attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.SpawnRange);
         }
@@ -272,7 +269,7 @@ public class Monster : Unit
 
         float totalExpDrop = baseExpDrop * expMultiplier;
 
-        int particleCount = Mathf.Max(1, Mathf.RoundToInt(totalExpDrop / 10f));
+        int particleCount = 5;
         float expPerParticle = totalExpDrop / particleCount;
 
         for (int i = 0; i < particleCount; i++)
