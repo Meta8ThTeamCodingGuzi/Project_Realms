@@ -93,10 +93,10 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
             return;
 
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(destination, out hit, 100f, NavMesh.AllAreas))
-        {
+        if (NavMesh.SamplePosition(destination, out hit, 1f, NavMesh.AllAreas))
+        {          
             agent.SetDestination(hit.position);
-        }
+        }       
     }
 
     public virtual void StopMoving()

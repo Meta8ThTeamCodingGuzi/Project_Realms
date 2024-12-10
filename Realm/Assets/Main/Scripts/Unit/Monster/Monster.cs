@@ -228,11 +228,25 @@ public class Monster : Unit
         }
         currentPatrolPoint = patrolPoint[patrolKey];
     }
+    public override void MoveTo(Vector3 destination)
+    {
+        if (agent == null || !agent.isActiveAndEnabled || !IsAlive)
+            return;
+
+        NavMeshPath path = new NavMeshPath();
+        if (agent.CalculatePath(destination, path) && path.status == NavMeshPathStatus.PathComplete)
+        {
+            agent.SetDestination(destination);
+        }
+    }
+
+
     public virtual void MonsterDie()
     {
         OnMonsterDeath?.Invoke(this);
         StartCoroutine(DieRoutine());
     }
+
 
     public virtual IEnumerator DieRoutine()
     {
