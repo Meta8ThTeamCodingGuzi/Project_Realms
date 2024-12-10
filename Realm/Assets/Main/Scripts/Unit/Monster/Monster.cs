@@ -45,14 +45,19 @@ public class Monster : Unit
 
     public static event System.Action<Monster> OnMonsterDeath;
 
-    public override float MoveSpeed { get => characterStats.GetStatValue(StatType.MoveSpeed);}
+    public override float MoveSpeed { get => characterStats.GetStatValue(StatType.MoveSpeed); }
+
+    private float updateInterval = 0.1f;
+    private float lastUpdateTime;
+
+    private Player player;
 
     public override void Initialize()
     {
         characterStats = GetComponent<ICharacterStats>();
         if (characterStats == null)
         {
-            Debug.LogError($"이색기 스탯 안달림 {gameObject.name}");
+            Debug.LogError($"몬스터 컴포넌트가 없습니다 {gameObject.name}");
         }
 
         characterStats.InitializeStats();
@@ -64,9 +69,11 @@ public class Monster : Unit
 
         UpdateMoveSpeed();
         IsInitialized = true;
+
+        player = GameManager.Instance.player;
     }
 
-    private void InitializeMAgent() 
+    private void InitializeMAgent()
     {
         M_Agent = transform.GetComponent<AgentAuthoring>();
         M_AgentBody = M_Agent.EntityBody;
@@ -170,9 +177,24 @@ public class Monster : Unit
 
         InitializeMAgent();
     }
+    private float GetUpdateInterval()
+    {
+        if (player == null) return 1f;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        if (distanceToPlayer <= 20f) return 0.1f;
+        else if (distanceToPlayer <= 40f) return 0.2f;
+        else return 1f;
+    }
+
     private void Update()
     {
-        m_StateHandler.HandleUpdate();
+        float interval = GetUpdateInterval();
+        if (Time.time - lastUpdateTime >= interval)
+        {
+            m_StateHandler.HandleUpdate();
+            lastUpdateTime = Time.time;
+        }
     }
     public bool FindPlayer(float Detection)
     {
@@ -313,7 +335,7 @@ public class Monster : Unit
         NavMeshHit hit;
         if (NavMesh.SamplePosition(destination, out hit, 100f, NavMesh.AllAreas))
         {
-            print("호출");
+            print("이동");
             M_Agent.SetDestination(hit.position);
         }
     }
@@ -331,7 +353,7 @@ public class Monster : Unit
         if (characterStats != null)
         {
             var locomotion = M_Agent.EntityLocomotion;
-            locomotion.Speed = MoveSpeed; 
+            locomotion.Speed = MoveSpeed;
             M_Agent.EntityLocomotion = locomotion;
         }
     }
@@ -343,7 +365,7 @@ public class Monster : Unit
 
         if (M_AgentBody.RemainingDistance < M_Agent.EntityLocomotion.StoppingDistance)
         {
-            
+
             if (M_AgentBody.Speed < 0.01f)
             {
                 return true;

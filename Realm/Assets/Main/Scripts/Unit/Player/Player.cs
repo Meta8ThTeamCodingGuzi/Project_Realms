@@ -47,11 +47,10 @@ public class Player : Unit
     public PlayerInventorySystem InventorySystem => inventorySystem;
 
     [Header("Regeneration Settings")]
-    [SerializeField] private float regenTickTime = 1f;      // 리젠 틱 간격
+    [SerializeField] private float regenTickTime = 1f;  
     private Coroutine healthRegenCoroutine;
     private Coroutine manaRegenCoroutine;
 
-    // groundLayerMask에 대한 getter 추가
     public LayerMask GroundLayer => groundLayerMask;
 
     private PlayerInputManager inputManager;
