@@ -91,8 +91,8 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 2
-    BaseValue: 250
-    GrowthValue: 50
+    BaseValue: 150
+    GrowthValue: 35
     growthPercent: 0
   - Type: 6
     BaseValue: 10
@@ -111,7 +111,7 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 12
-    BaseValue: 15
+    BaseValue: 0
     GrowthValue: 0
     growthPercent: 0
   - Type: 15
@@ -123,11 +123,11 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 9
-    BaseValue: 2
+    BaseValue: 3
     GrowthValue: 0
     growthPercent: 0
   - Type: 11
-    BaseValue: 5
+    BaseValue: 0
     GrowthValue: 0
     growthPercent: 0
   - Type: 4
@@ -135,7 +135,7 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 8
-    BaseValue: 3
+    BaseValue: 4
     GrowthValue: 0
     growthPercent: 0
   - Type: 3

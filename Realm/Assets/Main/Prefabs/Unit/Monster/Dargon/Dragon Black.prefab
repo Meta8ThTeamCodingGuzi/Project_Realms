@@ -3443,14 +3443,14 @@ MonoBehaviour:
     BaseValue: 1
     PointIncrease: 0
   - Type: 9
-    BaseValue: 5.5
-    PointIncrease: 0.2
+    BaseValue: 5
+    PointIncrease: 0.1
   - Type: 8
     BaseValue: 50
-    PointIncrease: 2
+    PointIncrease: 5
   - Type: 13
-    BaseValue: 200
-    PointIncrease: 3
+    BaseValue: 350
+    PointIncrease: 100
   - Type: 10
     BaseValue: 1
     PointIncrease: 0
@@ -3458,11 +3458,11 @@ MonoBehaviour:
     BaseValue: 5
     PointIncrease: 0
   - Type: 7
-    BaseValue: 350
-    PointIncrease: 20
+    BaseValue: 300
+    PointIncrease: 50
   - Type: 1
     BaseValue: 2000
-    PointIncrease: 50
+    PointIncrease: 200
 --- !u!114 &849956713771243756
 MonoBehaviour:
   m_ObjectHideFlags: 0

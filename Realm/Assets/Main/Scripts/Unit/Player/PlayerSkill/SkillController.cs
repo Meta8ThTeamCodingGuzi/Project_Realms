@@ -47,7 +47,7 @@ public class SkillController : MonoBehaviour
     {
         if (skillSlots.TryGetValue(KeyCode.Mouse0, out Skill skill) && skill != null)
         {
-            print("콺Ŭȣ");
+            //print("콺Ŭȣ");
             currentSkill = skill;
             currentSkill.TryUseSkill();
         }
