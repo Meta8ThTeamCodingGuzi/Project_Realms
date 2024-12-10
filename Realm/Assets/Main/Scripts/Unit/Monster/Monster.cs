@@ -307,7 +307,7 @@ public class Monster : Unit
 
     public override void MoveTo(Vector3 destination)
     {
-        if (M_Agent != null || !M_Agent.isActiveAndEnabled || !IsAlive)
+        if (M_Agent == null || !M_Agent.isActiveAndEnabled || !IsAlive)
             return;
 
         NavMeshHit hit;
