@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ProjectDawn.Navigation;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,9 +21,6 @@ public class Player : Unit
     [SerializeField] private LevelData levelData;
 
     internal SkillController skillController;
-
-    
-
 
     private float totalExp = 0f;  // 누적 경험치
 
@@ -127,6 +125,7 @@ public class Player : Unit
         inputManager.Initialize(this);
 
         Debug.Log("Player initialized successfully");
+
 
         skillPoint += 20;
     }
