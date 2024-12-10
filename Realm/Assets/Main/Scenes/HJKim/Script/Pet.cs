@@ -13,6 +13,12 @@ public class Pet : MonoBehaviour
     private bool canAttack = true;
     private NavMeshAgent agent;
     private Animator animator;
+    [Header("펫과나의 거리두기"), Range(1f, 12f)]
+    public float playDis;
+    [Header("펫과적의 거리두기"), Range(1f, 12f)]
+    public float EnemyDis;
+    [Header("텔포 호출거리"), Range(15f, 25f)]
+    public float playerTellme = 15f;
 
     // 마지막 스킬 발사 시간
 
@@ -20,7 +26,7 @@ public class Pet : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-
+        //playerTarget = GameManager.Instance.player.transform;
         agent.stoppingDistance = 8;  // 플레이어와의 멈춤 거리
     }
 
@@ -28,7 +34,7 @@ public class Pet : MonoBehaviour
     {
         Move();
         SetAnim();
-
+        PlayerTell();
     }
 
     // 이동 로직: 적이 있으면 적 추적, 없으면 플레이어 추적
@@ -36,16 +42,30 @@ public class Pet : MonoBehaviour
     {
         if (enemyTarget != null)  // 적이 감지되었으면
         {
-            agent.stoppingDistance = 14;
+            agent.stoppingDistance = EnemyDis;
             agent.SetDestination(enemyTarget.position);
+            transform.LookAt(enemyTarget.position);
         }
         else if (playerTarget != null)  // 적이 없으면 플레이어 추적
         {
-            agent.stoppingDistance = 15;
+            agent.stoppingDistance = playDis;
             agent.SetDestination(playerTarget.position);
         }
     }
 
+
+
+
+    private void PlayerTell()
+    {
+        if (Vector3.Distance(transform.position, playerTarget.position) >= playerTellme)
+        {
+            transform.position = playerTarget.position;
+            enemyTarget = null;
+        }
+
+
+    }
     // 애니메이션 설정: 움직임에 따라 애니메이션 변경
     private void SetAnim()
     {
@@ -112,7 +132,7 @@ public class Pet : MonoBehaviour
             animator.SetTrigger("Shoot"); // "Attack" 트리거 발동
         }
 
- 
+
         yield return new WaitForSeconds(1);
         canAttack = true;
     }
