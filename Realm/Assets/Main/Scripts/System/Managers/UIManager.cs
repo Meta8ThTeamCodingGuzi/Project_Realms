@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,6 +15,7 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     private PlayerStateUI playerStateUI;
     private SkillTreeUI skillTreeUI;
     private SkillSelectUI skillSelectUI;
+    public PausePanel pausePanel;
 
     public PlayerUI PlayerUI => playerUI;
 
@@ -68,6 +70,9 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
 
     private void SetInitialUIState()
     {
+        pausePanel.ExitButton.onClick.AddListener(GameManager.instance.OnExit);
+        pausePanel.ResumeButton.onClick.AddListener(GameManager.instance.OnResume);           
+        pausePanel.gameObject.SetActive(false);
         inventory.gameObject.SetActive(false);
         playerUI.HideStatUI();
         isInventoryVisible = false;
@@ -78,6 +83,7 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         playerUI = GetComponentInChildren<PlayerUI>();
         inventory = GetComponentInChildren<InventoryUI>();
         playerStateUI = GetComponentInChildren<PlayerStateUI>();
+        pausePanel = Instantiate(pausePanel,transform);
     }
 
     private void Update()
@@ -93,6 +99,10 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         if (Input.GetKeyDown(KeyCode.S))
         {
             ToggleSkillTreeUI();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePausePanel();
         }
     }
 
@@ -119,6 +129,19 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
             playerUI.HideSkillTreeUI();
         }
 
+    }
+    private void TogglePausePanel()
+    {
+        if (pausePanel.gameObject.activeSelf == false)
+        {
+            pausePanel.gameObject.SetActive(true);
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            pausePanel.gameObject.SetActive(false);
+            Time.timeScale = 1f;
+        }     
     }
 
     public void RegisterSkillSelectUI(SkillSelectUI selectUI)
