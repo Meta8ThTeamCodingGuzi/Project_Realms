@@ -56,6 +56,9 @@ public class Player : Unit
     private PlayerInputManager inputManager;
     public PlayerInputManager InputManager => inputManager;
 
+    [SerializeField] private Pet myPet;
+    private Pet livePet;
+
     private void Start()
     {
         Initialize();
@@ -63,6 +66,11 @@ public class Player : Unit
 
     public override void Initialize()
     {
+        if (livePet == null)
+        {
+            livePet = Instantiate(myPet);
+            livePet.Initialize(this);
+        }
 
         if (characterStats == null)
         {
@@ -206,7 +214,7 @@ public class Player : Unit
 
     private float CalculateRequiredExp(int level)
     {
-        float currentGrowthRate = levelData.growthRates[0]; 
+        float currentGrowthRate = levelData.growthRates[0];
 
         for (int i = 0; i < levelData.levelBreakpoints.Length; i++)
         {
@@ -227,7 +235,7 @@ public class Player : Unit
 
         statPoint.AddStatPoints(5);
 
-        skillPoint += 3; 
+        skillPoint += 3;
 
         OnLevelUp();
     }

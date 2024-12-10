@@ -5,7 +5,8 @@ using System.Collections;
 public class ProjectileSkill : Skill
 {
     [SerializeField] private Projectile projectilePrefab;
-    [SerializeField] private Transform firePoint;
+    [SerializeField] public Transform firePoint { get; set; }
+
     private ProjectileSkillStat projectileStats;
 
     public void Start()
@@ -21,6 +22,7 @@ public class ProjectileSkill : Skill
         }
 
         firePoint = Owner.transform?.Find("FirePoint");
+
 
         if (firePoint == null)
         {
@@ -88,7 +90,7 @@ public class ProjectileSkill : Skill
         {
             Owner.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
         }
-        else 
+        else
         {
             Owner.transform.LookAt(Owner.Target.transform);
         }
@@ -115,7 +117,7 @@ public class ProjectileSkill : Skill
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-         
+
         if (groundPlane.Raycast(ray, out float distance))
         {
             Vector3 targetPoint = ray.GetPoint(distance);
@@ -126,7 +128,7 @@ public class ProjectileSkill : Skill
         return null;
     }
 
-    protected  virtual void FireProjectile(ProjectileData data)
+    protected virtual void FireProjectile(ProjectileData data)
     {
         if (projectilePrefab == null)
         {
