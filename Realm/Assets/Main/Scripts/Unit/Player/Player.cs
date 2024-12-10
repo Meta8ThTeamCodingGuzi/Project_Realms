@@ -21,6 +21,8 @@ public class Player : Unit
 
     internal SkillController skillController;
 
+    
+
 
     private float totalExp = 0f;  // 누적 경험치
 
@@ -206,7 +208,7 @@ public class Player : Unit
 
     private float CalculateRequiredExp(int level)
     {
-        float currentGrowthRate = levelData.growthRates[0]; 
+        float currentGrowthRate = levelData.growthRates[0];
 
         for (int i = 0; i < levelData.levelBreakpoints.Length; i++)
         {
@@ -227,7 +229,7 @@ public class Player : Unit
 
         statPoint.AddStatPoints(5);
 
-        skillPoint += 3; 
+        skillPoint += 3;
 
         OnLevelUp();
     }
@@ -315,6 +317,7 @@ public class Player : Unit
         {
             yield return null;
         }
+        GameManager.Instance.HandlePlayerDeath();
     }
     public void ClearTarget()
     {
@@ -340,6 +343,25 @@ public class Player : Unit
     {
         targetPos = position;
         Target = null;
+    }
+
+    public void ResetPlayer()
+    {
+        ResetHPMP();
+        Animator.Play("Idle");
+        playerHandler.Initialize();
+    }
+
+    private void ResetHPMP()
+    {
+        float MaxHealth = characterStats.GetStatValue(StatType.MaxHealth);
+        float MaxMana = characterStats.GetStatValue(StatType.MaxMana);
+
+        print($"MaxHP : {MaxHealth} , MaxMana : {MaxMana}");
+        characterStats.AddModifier(StatType.Health,
+            new StatModifier(100f, StatModifierType.Flat, SourceType.BaseStats));
+        characterStats.AddModifier(StatType.Mana,
+            new StatModifier(MaxMana, StatModifierType.Flat, SourceType.BaseStats));
     }
 
     public override void MoveTo(Vector3 destination)
