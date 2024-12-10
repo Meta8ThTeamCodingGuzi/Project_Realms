@@ -2209,25 +2209,25 @@ MonoBehaviour:
     BaseValue: 1
     PointIncrease: 0
   - Type: 9
-    BaseValue: 7
+    BaseValue: 5.5
     PointIncrease: 0.2
   - Type: 8
     BaseValue: 10
     PointIncrease: 2
   - Type: 13
     BaseValue: 20
-    PointIncrease: 3
+    PointIncrease: 10
   - Type: 10
-    BaseValue: 0.25
+    BaseValue: 0.35
     PointIncrease: 0
   - Type: 11
-    BaseValue: 1.5
+    BaseValue: 2
     PointIncrease: 0
   - Type: 7
-    BaseValue: 50
+    BaseValue: 10
     PointIncrease: 20
   - Type: 1
-    BaseValue: 250
+    BaseValue: 100
     PointIncrease: 50
 --- !u!136 &7035118218481515173
 CapsuleCollider:

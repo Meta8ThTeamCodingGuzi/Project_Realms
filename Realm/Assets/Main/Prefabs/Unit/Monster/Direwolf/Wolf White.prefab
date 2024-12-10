@@ -1419,27 +1419,27 @@ MonoBehaviour:
   - Type: 0
     BaseValue: 1
     PointIncrease: 0
-  - Type: 7
-    BaseValue: 4
-    PointIncrease: 0.2
-  - Type: 6
-    BaseValue: 10
-    PointIncrease: 2
-  - Type: 11
-    BaseValue: 20
-    PointIncrease: 3
-  - Type: 8
-    BaseValue: 1.5
-    PointIncrease: 0
   - Type: 9
+    BaseValue: 6
+    PointIncrease: 0.1
+  - Type: 8
+    BaseValue: 7
+    PointIncrease: 5
+  - Type: 13
+    BaseValue: 40
+    PointIncrease: 30
+  - Type: 10
+    BaseValue: 1
+    PointIncrease: 0
+  - Type: 11
     BaseValue: 2
     PointIncrease: 0
-  - Type: 5
-    BaseValue: 50
-    PointIncrease: 20
+  - Type: 7
+    BaseValue: 40
+    PointIncrease: 40
   - Type: 1
-    BaseValue: 250
-    PointIncrease: 50
+    BaseValue: 300
+    PointIncrease: 80
 --- !u!1 &5708529625742247025
 GameObject:
   m_ObjectHideFlags: 0

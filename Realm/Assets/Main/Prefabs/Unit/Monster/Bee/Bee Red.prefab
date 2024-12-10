@@ -3532,26 +3532,26 @@ MonoBehaviour:
     BaseValue: 1
     PointIncrease: 0
   - Type: 9
-    BaseValue: 7
+    BaseValue: 5.5
     PointIncrease: 0.2
   - Type: 8
-    BaseValue: 10
-    PointIncrease: 2
-  - Type: 13
-    BaseValue: 20
+    BaseValue: 15
     PointIncrease: 3
+  - Type: 13
+    BaseValue: 30
+    PointIncrease: 15
   - Type: 10
-    BaseValue: 0.25
+    BaseValue: 0.4
     PointIncrease: 0
   - Type: 11
-    BaseValue: 1.5
+    BaseValue: 2
     PointIncrease: 0
   - Type: 7
-    BaseValue: 50
-    PointIncrease: 20
+    BaseValue: 25
+    PointIncrease: 25
   - Type: 1
-    BaseValue: 250
-    PointIncrease: 50
+    BaseValue: 200
+    PointIncrease: 60
 --- !u!136 &6102507406504879975
 CapsuleCollider:
   m_ObjectHideFlags: 0
