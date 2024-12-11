@@ -8,6 +8,7 @@ public class ProjectileSkill : Skill
     [SerializeField] public Transform firePoint { get; set; }
 
     private ProjectileSkillStat projectileStats;
+    private Vector3? cachedTargetDirection;
 
     public void Start()
     {
@@ -23,14 +24,13 @@ public class ProjectileSkill : Skill
 
         firePoint = Owner.transform?.Find("FirePoint");
 
-
         if (firePoint == null)
         {
             // firePoint가 없으면 자동으로 생성
             GameObject firePointObj = new GameObject("FirePoint");
             firePoint = firePointObj.transform;
-            firePoint.SetParent(transform);
-            firePoint.localPosition = Vector3.zero;
+            firePoint.SetParent(Owner.transform);
+            firePoint.localPosition = new Vector3(0, 1f, 0.5f);
             Debug.Log($"{gameObject.name}: FirePoint가 자동으로 생성되었습니다.");
         }
     }
@@ -63,8 +63,8 @@ public class ProjectileSkill : Skill
             yield break;
         }
 
-        Vector3? targetDirection = GetTargetDirection();
-        if (!targetDirection.HasValue)
+        cachedTargetDirection = GetTargetDirection();
+        if (!cachedTargetDirection.HasValue)
         {
             yield break;
         }
@@ -86,13 +86,16 @@ public class ProjectileSkill : Skill
                        projectileStats.GetStatValue<int>(SkillStatType.HomingLevel) ? false : true,
             HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange),
         };
+
         if (Owner is Player)
         {
-            Owner.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
+            Owner.transform.rotation = Quaternion.LookRotation(cachedTargetDirection.Value);
+            firePoint.rotation = Owner.transform.rotation;
         }
         else
         {
             Owner.transform.LookAt(Owner.Target.transform);
+            firePoint.LookAt(Owner.Target.transform);
         }
 
         for (int i = 0; i < projectileCount; i++)
@@ -109,8 +112,9 @@ public class ProjectileSkill : Skill
         }
 
         Owner.Animator.SetTrigger("Idle");
-
         isSkillInProgress = false;
+
+        cachedTargetDirection = null;
     }
 
     private Vector3? GetTargetDirection()
@@ -142,14 +146,14 @@ public class ProjectileSkill : Skill
             return;
         }
 
-        if (projectilePrefab != null && projectilePrefab.gameObject != null)
+        if (projectilePrefab != null && projectilePrefab.gameObject != null && cachedTargetDirection.HasValue)
         {
             try
             {
                 Projectile projectile = PoolManager.Instance.Spawn<Projectile>(
                     projectilePrefab.gameObject,
                     firePoint.position,
-                    firePoint.rotation);
+                    Quaternion.LookRotation(cachedTargetDirection.Value));
 
                 if (projectile != null)
                 {

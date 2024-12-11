@@ -13,6 +13,7 @@ public class BowSkill : DefaultSkill
 
     private bool isDrawing = false;
     private Coroutine drawRoutine;
+    private Vector3? targetDirection;  // 클래스 상단에 추가
 
     public override void Initialize(Unit owner)
     {
@@ -34,10 +35,9 @@ public class BowSkill : DefaultSkill
             arrowSpawnPoint = Owner.transform.Find("FirePoint");
             if (arrowSpawnPoint == null)
             {
-                // FirePoint가 없으면 생성
                 GameObject firePoint = new GameObject("FirePoint");
                 firePoint.transform.SetParent(Owner.transform);
-                firePoint.transform.localPosition = new Vector3(0, 1f, 0.5f); // 적절한 위치로 조정
+                firePoint.transform.localPosition = new Vector3(0, 1f, 0.5f);  // 위치 조정
                 arrowSpawnPoint = firePoint.transform;
             }
         }
@@ -106,6 +106,23 @@ public class BowSkill : DefaultSkill
     {
         isSkillInProgress = true;
 
+        // 화살을 쏘기 시작할 때 한 번만 방향 계산
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+
+        if (groundPlane.Raycast(ray, out float distance))
+        {
+            Vector3 targetPoint = ray.GetPoint(distance);
+            targetDirection = (targetPoint - transform.position).normalized;
+            targetDirection = new Vector3(targetDirection.Value.x, 0, targetDirection.Value.z);
+            Owner.transform.rotation = Quaternion.LookRotation(targetDirection.Value);
+
+            if (arrowSpawnPoint != null)
+            {
+                arrowSpawnPoint.rotation = Owner.transform.rotation;  // arrowSpawnPoint 회전 추가
+            }
+        }
+
         if (weaponHolder?.CurrentIKSetup?.offHandIK != null)
         {
             Owner.Animator.SetTrigger("Attack");
@@ -152,46 +169,33 @@ public class BowSkill : DefaultSkill
 
     private void FireArrow()
     {
-        if (arrowPrefab != null && arrowSpawnPoint != null)
+        if (arrowPrefab != null && arrowSpawnPoint != null && targetDirection.HasValue)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            Vector3 targetPoint = transform.position + targetDirection.Value * GetAttackRange();
 
-            if (groundPlane.Raycast(ray, out float distance))
+            Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
+                arrowPrefab.gameObject,
+                arrowSpawnPoint.position,
+                Quaternion.LookRotation(targetDirection.Value));
+
+            if (arrow != null)
             {
-                Vector3 targetPoint = ray.GetPoint(distance);
+                float totalDamage = GetDamage();
 
-                Vector3 directionToTarget = (targetPoint - transform.position).normalized;
-                directionToTarget.y = 0;
-                Owner.transform.rotation = Quaternion.LookRotation(directionToTarget);
-
-                float distanceToTarget = Vector3.Distance(transform.position, targetPoint);
-                if (distanceToTarget > GetAttackRange())
+                ProjectileData data = new ProjectileData
                 {
-                    targetPoint = transform.position + directionToTarget * GetAttackRange();
-                }
+                    owner = Owner,
+                    Damage = totalDamage,
+                    Speed = 15f,
+                    Range = 15f
+                };
 
-                Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
-                    arrowPrefab.gameObject,
-                    arrowSpawnPoint.position,
-                    Quaternion.LookRotation(Owner.transform.forward));
-
-                if (arrow != null)
-                {
-                    float totalDamage = GetDamage();
-
-                    ProjectileData data = new ProjectileData
-                    {
-                        owner = Owner,
-                        Damage = totalDamage,
-                        Speed = 15f,
-                        Range = 15f
-                    };
-
-                    arrow.Initialize(data);
-                }
+                arrow.Initialize(data);
             }
         }
+
+        // 발사 후 방향 초기화
+        targetDirection = null;
     }
 
     private void PetFire()
@@ -202,6 +206,9 @@ public class BowSkill : DefaultSkill
 
             Vector3 directionToTarget = (pet.enemyTarget.position - transform.position).normalized;
             directionToTarget.y = 0;
+
+            Owner.transform.rotation = Quaternion.LookRotation(directionToTarget);
+            arrowSpawnPoint.rotation = Owner.transform.rotation;  // arrowSpawnPoint 회전 추가
 
             Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
                 arrowPrefab.gameObject,

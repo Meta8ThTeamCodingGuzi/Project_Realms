@@ -18,7 +18,6 @@ public class MonsterAttackState : State<Monster>
         {
             target.GetSkill(SkillID.MonsterSkill);
         }
-        Debug.Log($"{this} 엔터 호출");
         target.CurrentSkill.TryUseSkill();
     }
 

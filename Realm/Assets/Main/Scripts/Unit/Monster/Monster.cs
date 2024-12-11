@@ -258,7 +258,6 @@ public class Monster : Unit
         do
         {
             patrolKey = Random.Range(0, patrolPoint.Count);
-            print($"Patrol Key : {patrolKey}");
         }
         while (patrolKey == previousPatrolKey);
 
@@ -335,7 +334,6 @@ public class Monster : Unit
     {
         if (M_Agent == null || !M_Agent.isActiveAndEnabled || !IsAlive)
             return;
-        print($"¸ñÀûÁö : {destination}");
         M_Agent.SetDestination(destination.position);        
     }
 

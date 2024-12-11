@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using static ItemGenerationRuleSO;
 using System.Collections;
@@ -30,18 +30,27 @@ public class ItemManager : SingletonManager<ItemManager>
 
     public Item GenerateRandomItem(MonsterType monsterType, Vector3 position)
     {
-        print($"GenerateRandomItem È£Ãâ, MonsterType : {monsterType}");
+        print($"GenerateRandomItem í˜¸ì¶œ, MonsterType : {monsterType}");
         var dropRule = itemGenerationRules.GetDropRuleForMonster(monsterType);
         if (dropRule == null) return null;
-        print($"GenerateRandomItem È£Ãâ, itemDropChance : {dropRule.itemDropChance}");
+        print($"GenerateRandomItem í˜¸ì¶œ, itemDropChance : {dropRule.itemDropChance}");
         if (UnityEngine.Random.Range(0f, 100f) > dropRule.itemDropChance)
             return null;
 
         var raritySettings = itemGenerationRules.GetRaritySettings(dropRule);
         ItemType randomItemType = dropRule.possibleItemTypes[UnityEngine.Random.Range(0, dropRule.possibleItemTypes.Length)];
-        print($"GenerateRandomItem È£Ãâ, randomItemType : {randomItemType}");
-        var itemTemplate = itemDataTemplates.Find(t => t.ItemType == randomItemType);
-        print($"GenerateRandomItem È£Ãâ, itemTemplate : {itemTemplate}");
+        print($"GenerateRandomItem í˜¸ì¶œ, randomItemType : {randomItemType}");
+
+        var matchingTemplates = itemDataTemplates.FindAll(t => t.ItemType == randomItemType);
+        print($"ë§¤ì¹­ëœ í…œí”Œë¦¿ ìˆ˜: {matchingTemplates?.Count ?? 0}");
+        if (matchingTemplates == null || matchingTemplates.Count == 0)
+        {
+            Debug.LogWarning($"ItemType {randomItemType}ì— ëŒ€í•œ í…œí”Œë¦¿ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+            return null;
+        }
+
+        var itemTemplate = matchingTemplates[UnityEngine.Random.Range(0, matchingTemplates.Count)];
+        print($"GenerateRandomItem í˜¸ì¶œ, itemTemplate : {itemTemplate}");
         if (itemTemplate == null) return null;
 
         if (itemTemplate.WorldDropPrefab == null)
@@ -123,7 +132,7 @@ public class ItemManager : SingletonManager<ItemManager>
     {
         if (defaultPlayerItems == null || defaultPlayerItems.Count == 0)
         {
-            Debug.LogWarning("±âº» ¾ÆÀÌÅÛ ¸ñ·ÏÀÌ ºñ¾îÀÖ½À´Ï´Ù.");
+            Debug.LogWarning("ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
@@ -131,14 +140,14 @@ public class ItemManager : SingletonManager<ItemManager>
         var playerInventory = player.InventorySystem;
         if (playerInventory == null)
         {
-            Debug.LogError("ÇÃ·¹ÀÌ¾î ÀÎº¥Åä¸®¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
         var playerUI = UIManager.instance.PlayerUI;
         if (playerUI == null || playerUI.inventoryUI == null)
         {
-            Debug.LogError("InventoryUI¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError("InventoryUIï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 

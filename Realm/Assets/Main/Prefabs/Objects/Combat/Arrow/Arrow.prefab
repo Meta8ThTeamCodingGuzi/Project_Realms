@@ -14911,9 +14911,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8609560726726735208}
   - component: {fileID: 8297238604543973301}
-  - component: {fileID: 1633719272564719514}
+  - component: {fileID: 7620383872218364719}
   m_Layer: 0
-  m_Name: TestArrow
+  m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14948,8 +14948,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitParticle: {fileID: 198094002163677414, guid: eb4e4a06528c2da4b85ff27c4eb39712, type: 3}
---- !u!136 &1633719272564719514
-CapsuleCollider:
+--- !u!135 &7620383872218364719
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -14966,8 +14966,6 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.81
-  m_Height: 1
-  m_Direction: 1
+  serializedVersion: 3
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
