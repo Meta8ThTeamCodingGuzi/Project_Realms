@@ -519,6 +519,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6203202796648201800}
   - component: {fileID: 5415952714673368341}
+  - component: {fileID: 2981970511639620549}
   m_Layer: 0
   m_Name: PrideOfArcher
   m_TagString: Untagged
@@ -564,6 +565,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2981970511639620549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743188399369072587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 773e26ea9f2a8454d81e5dc0d717b97d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1981603169601882063
 GameObject:
   m_ObjectHideFlags: 0
