@@ -15,12 +15,12 @@ public class MonsterMoveState : State<Monster>
     {
         Debug.Log("¹´½ºÅ×ÀÌÆ®");
         target.StopMoving();
-        MoveStateTime = 0f;
+        MoveStateTime = target.UpdateTime;
     }
 
     public override void OnExit()
     {
-        MoveStateTime = 0;
+
         target.Animator.SetBool("Move", false);
     }
 
@@ -46,7 +46,7 @@ public class MonsterMoveState : State<Monster>
                 target.M_StateHandler.TransitionTo(new FollowState(dragon));
                 return;
             }
-            if (MoveStateTime > 5f || target.HasReachedDestination())
+            if (target.UpdateTime-MoveStateTime > 5f)
             {
                 target.Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new DragonIdleState(dragon));
@@ -66,7 +66,7 @@ public class MonsterMoveState : State<Monster>
                 target.M_StateHandler.TransitionTo(new FollowState(target));
                 return;
             }
-            if (MoveStateTime > 5f||target.HasReachedDestination())
+            if (target.UpdateTime-MoveStateTime > 5f)
             {
                 target.Animator.SetTrigger("Idle");
                 target.M_StateHandler.TransitionTo(new MonsterIdleState(target));

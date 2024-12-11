@@ -9,6 +9,7 @@ public class MonsterIdleState : State<Monster>
 
     public MonsterIdleState(Monster target) : base(target)
     {
+        patrolTime = target.UpdateTime;
         this.target = target;
     }
 
@@ -25,7 +26,6 @@ public class MonsterIdleState : State<Monster>
 
     public override void OnUpdate()
     {
-        patrolTime += Time.deltaTime;
         if (!target.IsAlive)
         {
             target.M_StateHandler.TransitionTo(new MonsterDieState(target));
@@ -54,7 +54,7 @@ public class MonsterIdleState : State<Monster>
                 target.M_StateHandler.TransitionTo(new FollowState(target));
                 return;
             }
-            if (patrolTime > 2f)
+            if (target.UpdateTime - patrolTime > 2f)
             {
                 target.M_StateHandler.TransitionTo(new MonsterMoveState(target));
                 return;

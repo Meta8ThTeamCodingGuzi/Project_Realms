@@ -50,6 +50,8 @@ public class Monster : Unit
     private float updateInterval = 0.1f;
     private float lastUpdateTime;
 
+    public float UpdateTime;
+
     private Player player;
 
     public override void Initialize()
@@ -189,6 +191,7 @@ public class Monster : Unit
 
     private void Update()
     {
+        UpdateTime += Time.deltaTime;
         float interval = GetUpdateInterval();
         if (Time.time - lastUpdateTime >= interval)
         {
