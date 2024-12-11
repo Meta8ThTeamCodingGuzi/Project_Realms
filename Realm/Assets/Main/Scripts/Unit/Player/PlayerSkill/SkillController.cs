@@ -34,6 +34,7 @@ public class SkillController : MonoBehaviour
         {
             Skill instance = Instantiate(skillPrefab, transform);
             instance.Initialize(player);
+            instance.gameObject.SetActive(false);
             initializedSkills[skillPrefab.data.skillID] = instance;
         }
     }
@@ -47,7 +48,6 @@ public class SkillController : MonoBehaviour
     {
         if (skillSlots.TryGetValue(KeyCode.Mouse0, out Skill skill) && skill != null)
         {
-            //print("콺Ŭȣ");
             currentSkill = skill;
             currentSkill.TryUseSkill();
         }
@@ -103,6 +103,7 @@ public class SkillController : MonoBehaviour
 
         if (existingSlot != KeyCode.None)
         {
+            skillSlots[existingSlot].gameObject.SetActive(false);
             skillSlots[existingSlot] = null;
             if (skillBarUI != null)
             {
@@ -112,10 +113,12 @@ public class SkillController : MonoBehaviour
 
         if (skillSlots[newSlot] != null)
         {
+            skillSlots[newSlot].gameObject.SetActive(false);
             skillSlots[newSlot] = null;
         }
 
         Skill skillInstance = initializedSkills[skillPrefab.data.skillID];
+        skillInstance.gameObject.SetActive(true);
         skillSlots[newSlot] = skillInstance;
 
         if (!activeSkills.Contains(skillInstance))
@@ -136,7 +139,6 @@ public class SkillController : MonoBehaviour
             Skill skillToRemove = skillSlots[slot];
             activeSkills.Remove(skillToRemove);
 
-            //  ų 
             if (skillToRemove is DefaultSkill)
             {
                 if (initializedSkills.ContainsKey(skillToRemove.data.skillID))
@@ -179,9 +181,9 @@ public class SkillController : MonoBehaviour
 
             availableSkillPrefabs.Add(instance);
             initializedSkills[skillPrefab.data.skillID] = instance;
-            if (skillPrefab.data.skillID == SkillID.Dash) 
+            if (skillPrefab.data.skillID == SkillID.Dash)
             {
-                EquipSkill(instance,KeyCode.Space);
+                EquipSkill(instance, KeyCode.Space);
             }
             existingSkill = instance;
 

@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using ProjectDawn.Navigation;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 public class Player : Unit
@@ -20,7 +22,6 @@ public class Player : Unit
     [SerializeField] private LevelData levelData;
 
     internal SkillController skillController;
-
 
     private float totalExp = 0f;  // 누적 경험치
 
@@ -46,15 +47,15 @@ public class Player : Unit
     public PlayerInventorySystem InventorySystem => inventorySystem;
 
     [Header("Regeneration Settings")]
-    [SerializeField] private float regenTickTime = 1f;      // 리젠 틱 간격
+    [SerializeField] private float regenTickTime = 1f;  
     private Coroutine healthRegenCoroutine;
     private Coroutine manaRegenCoroutine;
 
-    // groundLayerMask에 대한 getter 추가
     public LayerMask GroundLayer => groundLayerMask;
 
     private PlayerInputManager inputManager;
     public PlayerInputManager InputManager => inputManager;
+
 
     private void Start()
     {
@@ -126,7 +127,8 @@ public class Player : Unit
 
         Debug.Log("Player initialized successfully");
 
-        skillPoint += 12;
+
+        skillPoint += 20;
     }
 
     private void Update()
@@ -206,7 +208,7 @@ public class Player : Unit
 
     private float CalculateRequiredExp(int level)
     {
-        float currentGrowthRate = levelData.growthRates[0]; 
+        float currentGrowthRate = levelData.growthRates[0];
 
         for (int i = 0; i < levelData.levelBreakpoints.Length; i++)
         {
@@ -227,7 +229,7 @@ public class Player : Unit
 
         statPoint.AddStatPoints(5);
 
-        skillPoint += 3; 
+        skillPoint += 3;
 
         OnLevelUp();
     }
@@ -315,6 +317,7 @@ public class Player : Unit
         {
             yield return null;
         }
+        GameManager.Instance.HandlePlayerDeath();
     }
     public void ClearTarget()
     {
@@ -340,6 +343,25 @@ public class Player : Unit
     {
         targetPos = position;
         Target = null;
+    }
+
+    public void ResetPlayer()
+    {
+        ResetHPMP();
+        Animator.Play("Idle");
+        playerHandler.Initialize();
+    }
+
+    private void ResetHPMP()
+    {
+        float MaxHealth = characterStats.GetStatValue(StatType.MaxHealth);
+        float MaxMana = characterStats.GetStatValue(StatType.MaxMana);
+
+        print($"MaxHP : {MaxHealth} , MaxMana : {MaxMana}");
+        characterStats.AddModifier(StatType.Health,
+            new StatModifier(100f, StatModifierType.Flat, SourceType.BaseStats));
+        characterStats.AddModifier(StatType.Mana,
+            new StatModifier(MaxMana, StatModifierType.Flat, SourceType.BaseStats));
     }
 
     public override void MoveTo(Vector3 destination)

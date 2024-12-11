@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class UIManager : SingletonManager<UIManager>, IInitializable
@@ -12,7 +9,6 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     private SkillBarUI skillBarUI;
     private Player player;
     private InventoryUI inventory;
-    private PlayerStateUI playerStateUI;
     private SkillTreeUI skillTreeUI;
     private SkillSelectUI skillSelectUI;
     public PausePanel pausePanel;
@@ -54,7 +50,6 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         skillTreeUI = playerUI.skillTreeUI;
         inventory = playerUI.inventoryUI;
         skillBarUI = playerUI.playerBarUI.skillBarUI;
-        playerStateUI.Initialize(player);
         SetInitialUIState();
 
         if (player != null)
@@ -82,7 +77,6 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
     {
         playerUI = GetComponentInChildren<PlayerUI>();
         inventory = GetComponentInChildren<InventoryUI>();
-        playerStateUI = GetComponentInChildren<PlayerStateUI>();
         pausePanel = Instantiate(pausePanel,transform);
     }
 

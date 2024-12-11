@@ -2,6 +2,7 @@
 using UnityEngine.AI;
 using System.Collections;
 using UnityEditor;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 
 public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializable
 {
@@ -22,7 +23,7 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
     public ICharacterStats CharacterStats => characterStats;
 
     public AnimatorController AnimController { get; set; }
-    public bool IsInitialized { get; private set; }
+    public bool IsInitialized { get; set; }
     public bool wasAttacked { get; set; } = false;
 
     protected float lastAttackTime;
@@ -51,7 +52,6 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
         IsInitialized = true;
     }
-
 
     #region 전투관련
     public virtual bool IsAlive => characterStats.GetStatValue(StatType.Health) > 0;

@@ -1,7 +1,7 @@
-using System;
+using ProjectDawn.Navigation;
+using ProjectDawn.Navigation.Hybrid;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,17 +12,21 @@ public class Monster : Unit
     [SerializeField]
     private Transform[] setPatrolTransforms;
 
-    private List<Vector3> patrolPoint = new List<Vector3>();
+    private List<Transform> patrolPoint = new List<Transform>();
 
     public bool isattacked { set; get; } = true;
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 currentPatrolPoint { get; set ; }
+    public Transform currentPatrolPoint { get; set; }
 
     public MonsterStateHandler M_StateHandler => m_StateHandler;
 
     private MonsterStat MonsterStat;
+
+    private AgentAuthoring M_Agent;
+
+    private AgentBody M_AgentBody;
 
     public MonsterStat monsterStat { get => MonsterStat; set => MonsterStat = value; }
 
@@ -31,7 +35,7 @@ public class Monster : Unit
     [SerializeField] protected MonsterType monsterType = MonsterType.Normal;
     public MonsterType MonsterType => monsterType;
 
-    [SerializeField]private List<Skill> skills;
+    [SerializeField] private List<Skill> skills;
     public List<Skill> Skills { get => skills; set => skills = value; }
 
     private Skill currentSkill;
@@ -41,20 +45,47 @@ public class Monster : Unit
 
     public static event System.Action<Monster> OnMonsterDeath;
 
+    public override float MoveSpeed { get => characterStats.GetStatValue(StatType.MoveSpeed); }
+
+    private float updateInterval = 0.1f;
+    private float lastUpdateTime;
+
+    private Player player;
+
     public override void Initialize()
     {
-        base.Initialize();
+        characterStats = GetComponent<ICharacterStats>();
+        if (characterStats == null)
+        {
+            Debug.LogError($"몬스터 컴포넌트가 없습니다 {gameObject.name}");
+        }
+
+        characterStats.InitializeStats();
+
 
         GetRequiredComponents();
-        
+
         InitializeMonster();
+
+        UpdateMoveSpeed();
+        IsInitialized = true;
+
+        player = GameManager.Instance.player;
+    }
+
+    private void InitializeMAgent()
+    {
+        M_Agent = transform.GetComponent<AgentAuthoring>();
+        M_AgentBody = M_Agent.EntityBody;
+        M_AgentBody.IsStopped = false;
+        M_Agent.EntityBody = M_AgentBody;
     }
 
     private void InitializeMonster()
     {
         foreach (Transform setPatrolTransform in setPatrolTransforms)
         {
-            patrolPoint.Add(setPatrolTransform.position);
+            patrolPoint.Add(setPatrolTransform);
         }
 
         float sizeMultiplier = monsterType switch
@@ -81,15 +112,15 @@ public class Monster : Unit
 
         monsterStat.SetMonsterLevel(adjustedLevel);
 
-        if (skills.Count > 0) 
+        if (skills.Count > 0)
         {
             foreach (Skill skill in skills)
             {
                 skill.Initialize(this);
-                if (skill is not DefaultSkill) 
+                if (skill is not DefaultSkill)
                 {
                     skill.SetLevel(adjustedLevel);
-                }                
+                }
             }
         }
 
@@ -100,7 +131,6 @@ public class Monster : Unit
 
         GetSkill(SkillID.MonsterSkill);
     }
-
     public virtual Skill GetSkill(SkillID id)
     {
         foreach (Skill skill in skills)
@@ -115,7 +145,7 @@ public class Monster : Unit
                     pickedSkill.transform.localPosition = Vector3.zero;
                     currentSkill = pickedSkill;
                 }
-                else 
+                else
                 {
                     currentSkill = null;
                     Destroy(currentSkill);
@@ -129,14 +159,14 @@ public class Monster : Unit
         }
         return null;
     }
-
     private void GetRequiredComponents()
     {
+
         if (m_StateHandler == null)
         {
             m_StateHandler = new MonsterStateHandler(this);
         }
-        
+
 
         Animator = GetComponentInChildren<Animator>();
 
@@ -144,23 +174,28 @@ public class Monster : Unit
         {
             monsterStat = (MonsterStat)characterStats;
         }
+
+        InitializeMAgent();
     }
-
-    public void targetMove(Unit unit)
+    private float GetUpdateInterval()
     {
-        if (unit != null && agent.isActiveAndEnabled && IsAlive)
-        {
-            agent.SetDestination(unit.transform.position);
-        }
+        if (player == null) return 1f;
 
-
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        if (distanceToPlayer <= 20f) return 0.2f;
+        else if (distanceToPlayer <= 40f) return 0.4f;
+        else return 1f;
     }
 
     private void Update()
     {
-        m_StateHandler.HandleUpdate();
+        float interval = GetUpdateInterval();
+        if (Time.time - lastUpdateTime >= interval)
+        {
+            m_StateHandler.HandleUpdate();
+            lastUpdateTime = Time.time;
+        }
     }
-
     public bool FindPlayer(float Detection)
     {
         Collider[] colliders = Physics.OverlapSphere(this.transform.position, Detection);
@@ -193,14 +228,13 @@ public class Monster : Unit
         this.Target = null;
         isPlayerNullRoutine = true;
     }
-
     public virtual bool CanAttack(Unit target)
     {
         if (target == null || !target.IsAlive || !IsAlive) return false;
 
         float attackRange = 0f;
         float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-       
+
         if (CurrentSkill is DefaultSkill)
         {
             attackRange = characterStats.GetStatValue(StatType.AttackRange);
@@ -209,45 +243,31 @@ public class Monster : Unit
         {
             attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.ProjectileRange);
         }
-        else 
+        else
         {
             attackRange = CurrentSkill.skillStat.GetStatValue<float>(SkillStatType.SpawnRange);
         }
 
         return distanceToTarget <= attackRange;
     }
-
     public void nextPatrol()
     {
-        patrolKey++;
-        if (patrolKey >= patrolPoint.Count)
+        int previousPatrolKey = patrolKey;
+        do
         {
-            patrolKey = 0;
-            currentPatrolPoint = patrolPoint[patrolKey];
-            return;
+            patrolKey = Random.Range(0, patrolPoint.Count);
+            print($"Patrol Key : {patrolKey}");
         }
+        while (patrolKey == previousPatrolKey);
+
         currentPatrolPoint = patrolPoint[patrolKey];
+       
     }
-    public override void MoveTo(Vector3 destination)
-    {
-        if (agent == null || !agent.isActiveAndEnabled || !IsAlive)
-            return;
-
-        NavMeshPath path = new NavMeshPath();
-        if (agent.CalculatePath(destination, path) && path.status == NavMeshPathStatus.PathComplete)
-        {
-            agent.SetDestination(destination);
-        }
-    }
-
-
     public virtual void MonsterDie()
     {
         OnMonsterDeath?.Invoke(this);
         StartCoroutine(DieRoutine());
     }
-
-
     public virtual IEnumerator DieRoutine()
     {
         Animator.SetTrigger("Die");
@@ -270,7 +290,6 @@ public class Monster : Unit
         PoolManager.Instance.Despawn(mdp, 1f);
         PoolManager.Instance.Despawn(this);
     }
-
     protected void DropExpParticle()
     {
         float baseExpDrop = characterStats.GetStatValue(StatType.DropExp);
@@ -286,7 +305,7 @@ public class Monster : Unit
 
         float totalExpDrop = baseExpDrop * expMultiplier;
 
-        int particleCount = Mathf.Max(1, Mathf.RoundToInt(totalExpDrop / 10f));
+        int particleCount = 5;
         float expPerParticle = totalExpDrop / particleCount;
 
         for (int i = 0; i < particleCount; i++)
@@ -297,6 +316,60 @@ public class Monster : Unit
             ExpParticle particle = PoolManager.Instance.Spawn<ExpParticle>(expParticle.gameObject, randomPosition, Quaternion.identity);
             particle.SetExpAmount(expPerParticle);
         }
+    }
+
+    public void targetMove(Unit unit)
+    {
+        if (unit != null && M_Agent.isActiveAndEnabled && IsAlive)
+        {
+            M_Agent.SetDestination(unit.transform.position);
+        }
+    }
+
+    public override bool IsMoving => M_Agent != null && M_AgentBody.Speed > 0.1f;
+
+    
+    public void MoveTo(Transform destination)
+    {
+        if (M_Agent == null || !M_Agent.isActiveAndEnabled || !IsAlive)
+            return;
+        print($"목적지 : {destination}");
+        M_Agent.SetDestination(destination.position);        
+    }
+
+    public override void StopMoving()
+    {
+        if (M_Agent != null && M_Agent.isActiveAndEnabled)
+        {
+            M_Agent.Stop();
+        }
+    }
+
+    public override void UpdateMoveSpeed()
+    {
+        if (characterStats != null)
+        {
+            var locomotion = M_Agent.EntityLocomotion;
+            locomotion.Speed = MoveSpeed;
+            M_Agent.EntityLocomotion = locomotion;
+        }
+    }
+    public override bool HasReachedDestination()
+    {
+
+        if (M_Agent == null || !M_Agent.isActiveAndEnabled)
+            return false;
+
+        if (M_AgentBody.RemainingDistance < M_Agent.EntityLocomotion.StoppingDistance)
+        {
+
+            if (M_AgentBody.Speed < 0.01f)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void OnDisable()

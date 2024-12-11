@@ -26,7 +26,7 @@ public class StatUI : MonoBehaviour
         this.player = player;
         unitStats = (PlayerStat)player.CharacterStats;
         statPointSystem = player.statPointSystem;
-
+        
         InitializeUI();
     }
 

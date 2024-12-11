@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class MonsterMoveState : State<Monster>
@@ -12,6 +13,7 @@ public class MonsterMoveState : State<Monster>
 
     public override void OnEnter()
     {
+        Debug.Log("¹´½ºÅ×ÀÌÆ®");
         target.StopMoving();
         MoveStateTime = 0f;
     }
@@ -24,6 +26,7 @@ public class MonsterMoveState : State<Monster>
 
     public override void OnUpdate()
     {
+        Debug.Log($"{target.IsMoving}");
         MoveStateTime += Time.deltaTime;
 
         if (!target.IsMoving)

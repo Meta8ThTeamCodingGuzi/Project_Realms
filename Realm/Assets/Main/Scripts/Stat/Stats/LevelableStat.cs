@@ -58,10 +58,8 @@ public class LevelableStat : Stat
         float baseValueFloat = isInteger ? (int)baseValue : (float)baseValue;
         float leveledBase = baseValueFloat;
 
-        // 고정 증가량
         leveledBase += growthValue * (currentLevel - 1);
 
-        // 비율 증가량
         if (growthRate > 0)
         {
             leveledBase *= Mathf.Pow(1 + growthRate, currentLevel - 1);
