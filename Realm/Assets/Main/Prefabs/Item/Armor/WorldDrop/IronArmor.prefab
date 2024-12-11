@@ -11201,6 +11201,7 @@ GameObject:
   - component: {fileID: 3535152049296048989}
   - component: {fileID: -5514596949374373088}
   - component: {fileID: 1833658405700016030}
+  - component: {fileID: 4730452450872724755}
   m_Layer: 0
   m_Name: IronArmor
   m_TagString: Untagged
@@ -11281,6 +11282,27 @@ MonoBehaviour:
   spawnJumpHeight: 2
   spawnRotationSpeed: 720
   spawnAnimationTime: 0.5
+--- !u!135 &4730452450872724755
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5218882441851534846}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.2
+  m_Center: {x: 0, y: 0.64, z: 0}
 --- !u!1 &5312560813880880190
 GameObject:
   m_ObjectHideFlags: 0

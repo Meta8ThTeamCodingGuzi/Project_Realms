@@ -12,314 +12,168 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952cb7307efdcbc4b92ba65dc9248cf9, type: 3}
   m_Name: ItemGenRule
   m_EditorClassIdentifier: 
+  rarityColors:
+  - rarity: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - rarity: 1
+    color: {r: 0.118, g: 1, b: 0, a: 1}
+  - rarity: 2
+    color: {r: 0, g: 0.439, b: 0.867, a: 1}
+  - rarity: 3
+    color: {r: 0.639, g: 0.208, b: 0.933, a: 1}
+  - rarity: 4
+    color: {r: 1, g: 0.502, b: 0, a: 1}
   monsterDropRules:
   - monsterType: 0
-    itemDropChance: 1
-    possibleItemTypes: 0300000002000000
-    possibleStatTypes: 07000000
-    raritySettings:
-    - rarity: 0
-      dropChance: 80
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 20, y: 35}
-      itemNameColor: {r: 0.37254903, g: 0.37254903, b: 0.37254903, a: 0}
-    - rarity: 1
-      dropChance: 10
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 30, y: 55}
-      itemNameColor: {r: 0, g: 1, b: 0, a: 0}
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 50, y: 80}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 3
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 75, y: 100}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 2
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 200, y: 300}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 0
-    itemDropChance: 1
-    possibleItemTypes: 05000000
-    possibleStatTypes: 07000000
-    raritySettings:
-    - rarity: 0
-      dropChance: 80
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 25, y: 50}
-      itemNameColor: {r: 0.37254903, g: 0.37254903, b: 0.37254903, a: 0}
-    - rarity: 1
-      dropChance: 10
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 40, y: 70}
-      itemNameColor: {r: 0, g: 1, b: 0, a: 0}
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 55, y: 80}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 80, y: 100}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 200, y: 300}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 0
-    itemDropChance: 1
-    possibleItemTypes: 05000000
-    possibleStatTypes: 0400000001000000
-    raritySettings:
-    - rarity: 0
-      dropChance: 80
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 250, y: 300}
-      itemNameColor: {r: 0.37254903, g: 0.37254903, b: 0.37254903, a: 0}
-    - rarity: 1
-      dropChance: 10
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 250, y: 350}
-      itemNameColor: {r: 0, g: 1, b: 0, a: 0}
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 300, y: 500}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 450, y: 650}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 800, y: 1000}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 0
-    itemDropChance: 1
-    possibleItemTypes: 05000000
-    possibleStatTypes: 090000000a00000008000000
-    raritySettings:
-    - rarity: 0
-      dropChance: 80
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 1, y: 3}
-      itemNameColor: {r: 0.37254903, g: 0.37254903, b: 0.37254903, a: 0}
-    - rarity: 1
-      dropChance: 10
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 3, y: 5}
-      itemNameColor: {r: 0, g: 1, b: 0, a: 0}
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 5, y: 10}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 2, y: 3}
-      statValueRange: {x: 15, y: 20}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 3, y: 3}
-      statValueRange: {x: 25, y: 40}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 0
-    itemDropChance: 50
-    possibleItemTypes: 04000000
-    possibleStatTypes: 0100000004000000
-    raritySettings:
-    - rarity: 0
-      dropChance: 80
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 200, y: 250}
-      itemNameColor: {r: 0.37254903, g: 0.37254903, b: 0.37254903, a: 0}
-    - rarity: 1
-      dropChance: 10
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 235, y: 300}
-      itemNameColor: {r: 0, g: 1, b: 0, a: 0}
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 275, y: 350}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 330, y: 400}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 1000, y: 1500}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 0
-    itemDropChance: 1
-    possibleItemTypes: 04000000
-    possibleStatTypes: 0700000008000000
-    raritySettings:
-    - rarity: 0
-      dropChance: 80
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 20, y: 40}
-      itemNameColor: {r: 0.37254903, g: 0.37254903, b: 0.37254903, a: 0}
-    - rarity: 1
-      dropChance: 10
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 35, y: 50}
-      itemNameColor: {r: 0, g: 1, b: 0, a: 0}
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 45, y: 60}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 55, y: 80}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 100, y: 150}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 2
-    itemDropChance: 50
-    possibleItemTypes: 0200000003000000
-    possibleStatTypes: 07000000
-    raritySettings:
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 45, y: 60}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 55, y: 80}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 1, y: 1}
-      statValueRange: {x: 100, y: 150}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 2
-    itemDropChance: 50
-    possibleItemTypes: 04000000
-    possibleStatTypes: 0400000001000000
-    raritySettings:
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 275, y: 350}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 330, y: 400}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 1000, y: 1500}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
+    itemDropChance: 30
+    possibleItems:
+    - itemTemplate: {fileID: 11400000, guid: 4828b4cd563462d4ba0618d139ea6350, type: 2}
+      baseDropChance: 50
+      possibleStats:
+      - statType: 1
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      - statType: 6
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 25
+      - statType: 4
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 35
+      maxStatCount: 2
+    - itemTemplate: {fileID: 11400000, guid: 6bf1bae8c29be4b49a71563f69682bf4, type: 2}
+      baseDropChance: 100
+      possibleStats:
+      - statType: 1
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      - statType: 6
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 25
+      maxStatCount: 2
+    - itemTemplate: {fileID: 11400000, guid: 79a4a3b87e2d5e44ea40bd01ab889889, type: 2}
+      baseDropChance: 12
+      possibleStats:
+      - statType: 7
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      - statType: 6
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 25
+      maxStatCount: 2
   - monsterType: 2
     itemDropChance: 100
-    possibleItemTypes: 04000000
-    possibleStatTypes: 0700000008000000
-    raritySettings:
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 45, y: 60}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 55, y: 80}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 100, y: 150}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-    - rarity: 4
-      dropChance: 100
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 100, y: 150}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 2
-    itemDropChance: 50
-    possibleItemTypes: 05000000
-    possibleStatTypes: 0100000004000000
-    raritySettings:
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 1, y: 2}
-      statValueRange: {x: 300, y: 500}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 450, y: 650}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 800, y: 1000}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 2
-    itemDropChance: 50
-    possibleItemTypes: 05000000
-    possibleStatTypes: 08000000090000000a000000
-    raritySettings:
-    - rarity: 2
-      dropChance: 5
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 5, y: 10}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 4
-      _statCountRange: {x: 2, y: 3}
-      statValueRange: {x: 15, y: 20}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 1
-      _statCountRange: {x: 3, y: 3}
-      statValueRange: {x: 25, y: 40}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-  - monsterType: 0
-    itemDropChance: 100
-    possibleItemTypes: 04000000
-    possibleStatTypes: 08000000090000000a000000
-    raritySettings:
-    - rarity: 2
-      dropChance: 100
-      _statCountRange: {x: 2, y: 2}
-      statValueRange: {x: 5, y: 10}
-      itemNameColor: {r: 0, g: 0, b: 1, a: 0}
-    - rarity: 3
-      dropChance: 100
-      _statCountRange: {x: 2, y: 3}
-      statValueRange: {x: 15, y: 20}
-      itemNameColor: {r: 1, g: 0, b: 1, a: 0}
-    - rarity: 4
-      dropChance: 100
-      _statCountRange: {x: 3, y: 3}
-      statValueRange: {x: 25, y: 40}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
-    - rarity: 0
-      dropChance: 100
-      _statCountRange: {x: 3, y: 3}
-      statValueRange: {x: 25, y: 40}
-      itemNameColor: {r: 1, g: 1, b: 0, a: 0}
+    possibleItems:
+    - itemTemplate: {fileID: 11400000, guid: cbbdc71b227c4cb40a5775fb5beb8f27, type: 2}
+      baseDropChance: 62.7
+      possibleStats:
+      - statType: 1
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      - statType: 6
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 25
+      - statType: 4
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 35
+      - statType: 8
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      maxStatCount: 2
+    - itemTemplate: {fileID: 11400000, guid: 6bf1bae8c29be4b49a71563f69682bf4, type: 2}
+      baseDropChance: 100
+      possibleStats:
+      - statType: 1
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      - statType: 6
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 25
+      maxStatCount: 2
+    - itemTemplate: {fileID: 11400000, guid: 79a4a3b87e2d5e44ea40bd01ab889889, type: 2}
+      baseDropChance: 12
+      possibleStats:
+      - statType: 7
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      - statType: 6
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 25
+      maxStatCount: 2
+    - itemTemplate: {fileID: 11400000, guid: fea4dc673cbc4f64898aa3276b768a8b, type: 2}
+      baseDropChance: 100
+      possibleStats:
+      - statType: 7
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      - statType: 6
+        flatValueRange: {x: 25, y: 50}
+        percentValueRange: {x: 0, y: 0}
+        usePercentValue: 0
+        generationChance: 100
+      maxStatCount: 2
+    - itemTemplate: {fileID: 11400000, guid: 05ce22d889a3960479eaaba1fb111a32, type: 2}
+      baseDropChance: 10.5
+      possibleStats:
+      - statType: 7
+        flatValueRange: {x: 0, y: 0}
+        percentValueRange: {x: 100, y: 250}
+        usePercentValue: 1
+        generationChance: 100
+      - statType: 1
+        flatValueRange: {x: 0, y: 0}
+        percentValueRange: {x: 200, y: 600}
+        usePercentValue: 1
+        generationChance: 100
+      - statType: 9
+        flatValueRange: {x: 0, y: 0}
+        percentValueRange: {x: 200, y: 600}
+        usePercentValue: 1
+        generationChance: 100
+      - statType: 8
+        flatValueRange: {x: 0, y: 0}
+        percentValueRange: {x: 200, y: 600}
+        usePercentValue: 1
+        generationChance: 33
+      - statType: 10
+        flatValueRange: {x: 0, y: 0}
+        percentValueRange: {x: 200, y: 600}
+        usePercentValue: 1
+        generationChance: 33
+      - statType: 12
+        flatValueRange: {x: 0, y: 0}
+        percentValueRange: {x: 200, y: 600}
+        usePercentValue: 1
+        generationChance: 33
+      maxStatCount: 5

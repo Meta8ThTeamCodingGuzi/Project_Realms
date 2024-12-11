@@ -64,7 +64,7 @@ public class ObjectPool : MonoBehaviour
                 Destroy(obj.gameObject);
             }
 
-            Debug.Log($"Optimized pool {tag}: Size={pool.Count}, MaxUsed={stats.maxUsed}, TotalSpawns={stats.totalSpawns}");
+            //Debug.Log($"Optimized pool {tag}: Size={pool.Count}, MaxUsed={stats.maxUsed}, TotalSpawns={stats.totalSpawns}");
         }
     }
 

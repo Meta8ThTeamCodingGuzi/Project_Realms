@@ -758,6 +758,7 @@ GameObject:
   - component: {fileID: 4094087664349964547}
   - component: {fileID: -7619117906920295196}
   - component: {fileID: 7612523491928541016}
+  - component: {fileID: 4066525626623347216}
   m_Layer: 0
   m_Name: HermesArmor
   m_TagString: Untagged
@@ -838,6 +839,27 @@ MonoBehaviour:
   spawnJumpHeight: 2
   spawnRotationSpeed: 720
   spawnAnimationTime: 0.5
+--- !u!135 &4066525626623347216
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245329444716526568}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.55
+  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!1 &331607705972683560
 GameObject:
   m_ObjectHideFlags: 0

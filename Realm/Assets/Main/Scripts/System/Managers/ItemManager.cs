@@ -6,7 +6,6 @@ using System.Collections;
 public class ItemManager : SingletonManager<ItemManager>
 {
     [SerializeField] private ItemGenerationRuleSO itemGenerationRules;
-    [SerializeField] private List<ItemData> itemDataTemplates;
     [SerializeField] private List<ItemData> defaultPlayerItems;
 
     private List<Item> items = new List<Item>();
@@ -30,70 +29,88 @@ public class ItemManager : SingletonManager<ItemManager>
 
     public Item GenerateRandomItem(MonsterType monsterType, Vector3 position)
     {
-        print($"GenerateRandomItem 호출, MonsterType : {monsterType}");
         var dropRule = itemGenerationRules.GetDropRuleForMonster(monsterType);
         if (dropRule == null) return null;
-        print($"GenerateRandomItem 호출, itemDropChance : {dropRule.itemDropChance}");
+
         if (UnityEngine.Random.Range(0f, 100f) > dropRule.itemDropChance)
             return null;
 
-        var raritySettings = itemGenerationRules.GetRaritySettings(dropRule);
-        ItemType randomItemType = dropRule.possibleItemTypes[UnityEngine.Random.Range(0, dropRule.possibleItemTypes.Length)];
-        print($"GenerateRandomItem 호출, randomItemType : {randomItemType}");
+        var itemRule = GetRandomItemRule(dropRule.possibleItems);
+        if (itemRule == null || itemRule.itemTemplate == null) return null;
 
-        var matchingTemplates = itemDataTemplates.FindAll(t => t.ItemType == randomItemType);
-        print($"매칭된 템플릿 수: {matchingTemplates?.Count ?? 0}");
-        if (matchingTemplates == null || matchingTemplates.Count == 0)
-        {
-            Debug.LogWarning($"ItemType {randomItemType}에 대한 템플릿을 찾을 수 없습니다.");
-            return null;
-        }
-
-        var itemTemplate = matchingTemplates[UnityEngine.Random.Range(0, matchingTemplates.Count)];
-        print($"GenerateRandomItem 호출, itemTemplate : {itemTemplate}");
-        if (itemTemplate == null) return null;
-
-        if (itemTemplate.WorldDropPrefab == null)
-        {
-            Debug.LogError($"WorldDropPrefab is missing for item: {itemTemplate.ItemID}");
-            return null;
-        }
-
-        GameObject itemObj = Instantiate(itemTemplate.WorldDropPrefab, position, Quaternion.identity);
+        GameObject itemObj = Instantiate(itemRule.itemTemplate.WorldDropPrefab, position, Quaternion.identity);
         Item item = itemObj.GetComponent<Item>();
-        if (item != null)
-        {
-            var instanceData = new ItemInstanceData(itemTemplate);
-            instanceData.SetRarity(raritySettings.rarity, raritySettings.itemNameColor);
-            GenerateRandomStats(instanceData, dropRule, raritySettings);
+        if (item == null) return null;
 
-            itemInstanceData[item] = instanceData;
-            item.Initialize(itemTemplate, instanceData);
-            items.Add(item);
-        }
+        var instanceData = new ItemInstanceData(itemRule.itemTemplate);
+        instanceData.SetRarity(itemRule.itemTemplate.Rarity,
+            itemGenerationRules.GetColorForRarity(itemRule.itemTemplate.Rarity));
+
+        GenerateRandomStats(instanceData, itemRule);
+
+        itemInstanceData[item] = instanceData;
+        item.Initialize(itemRule.itemTemplate, instanceData);
+        items.Add(item);
 
         return item;
     }
 
-    private void GenerateRandomStats(ItemInstanceData itemInstance, MonsterDropRule dropRule, ItemGenerationRuleSO.RaritySettings raritySettings)
+    private ItemGenerationRule GetRandomItemRule(List<ItemGenerationRule> possibleItems)
     {
-        List<StatType> availableStats = new List<StatType>(dropRule.possibleStatTypes);
-        ShuffleList(availableStats);
+        float totalWeight = 0f;
+        foreach (var item in possibleItems)
+        {
+            totalWeight += item.baseDropChance;
+        }
 
-        int statCount = Mathf.Min(
-            UnityEngine.Random.Range(raritySettings.statCountRange.x, raritySettings.statCountRange.y + 1),
-            availableStats.Count
-        );
+        if (totalWeight <= 0f) return null;
+
+        float randomValue = UnityEngine.Random.Range(0f, totalWeight);
+        float currentWeight = 0f;
+
+        foreach (var item in possibleItems)
+        {
+            currentWeight += item.baseDropChance;
+            if (randomValue <= currentWeight)
+                return item;
+        }
+
+        return null;
+    }
+
+    private void GenerateRandomStats(ItemInstanceData instanceData, ItemGenerationRule itemRule)
+    {
+        var selectedStats = new List<StatGenerationRule>();
+
+        foreach (var statRule in itemRule.possibleStats)
+        {
+            if (UnityEngine.Random.Range(0f, 100f) <= statRule.generationChance)
+                selectedStats.Add(statRule);
+        }
+
+        int statCount = Mathf.Min(itemRule.maxStatCount, selectedStats.Count);
+        if (statCount <= 0) return;
+
+        ShuffleList(selectedStats);
 
         for (int i = 0; i < statCount; i++)
         {
-            StatType selectedStatType = availableStats[i];
-            float randomValue = UnityEngine.Random.Range(raritySettings.statValueRange.x, raritySettings.statValueRange.y);
+            var statRule = selectedStats[i];
 
-            float rarityMultiplier = 1f + ((int)raritySettings.rarity * 0.2f);
-            randomValue *= rarityMultiplier;
+            float flatValue = 0f;
+            float percentValue = 0f;
 
-            itemInstance.AddStat(selectedStatType, randomValue, 0);
+            if (statRule.flatValueRange.y > 0)
+            {
+                flatValue = UnityEngine.Random.Range(statRule.flatValueRange.x, statRule.flatValueRange.y);
+            }
+
+            if (statRule.usePercentValue)
+            {
+                percentValue = UnityEngine.Random.Range(statRule.percentValueRange.x, statRule.percentValueRange.y);
+            }
+
+            instanceData.AddStat(statRule.statType, flatValue, percentValue);
         }
     }
 
@@ -132,7 +149,7 @@ public class ItemManager : SingletonManager<ItemManager>
     {
         if (defaultPlayerItems == null || defaultPlayerItems.Count == 0)
         {
-            Debug.LogWarning("�⺻ ������ ����� ����ֽ��ϴ�.");
+            Debug.LogWarning("기본 아이템이 없습니다.");
             return;
         }
 
@@ -140,14 +157,14 @@ public class ItemManager : SingletonManager<ItemManager>
         var playerInventory = player.InventorySystem;
         if (playerInventory == null)
         {
-            Debug.LogError("�÷��̾� �κ��丮�� ã�� �� �����ϴ�.");
+            Debug.LogError("플레이어의 인벤토리를 찾을 수 없습니다.");
             return;
         }
 
         var playerUI = UIManager.instance.PlayerUI;
         if (playerUI == null || playerUI.inventoryUI == null)
         {
-            Debug.LogError("InventoryUI�� ã�� �� �����ϴ�.");
+            Debug.LogError("InventoryUI를 찾을 수 없습니다.");
             return;
         }
 
