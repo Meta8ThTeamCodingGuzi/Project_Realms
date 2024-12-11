@@ -166,7 +166,7 @@ public class MonsterManager : SingletonManager<MonsterManager>
     {
         foreach (var spawnData in spawnDataList)
         {
-            if (!spawnData.hasSpawned && spawnData.requiredCheckpointId <= currentCheckpoint)
+            if (!spawnData.hasSpawned && spawnData.requiredCheckpointId == currentCheckpoint)
             {
                 StartContinuousSpawn(spawnData);
             }

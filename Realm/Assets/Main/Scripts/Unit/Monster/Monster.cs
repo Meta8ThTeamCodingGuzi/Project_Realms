@@ -12,13 +12,13 @@ public class Monster : Unit
     [SerializeField]
     private Transform[] setPatrolTransforms;
 
-    private List<Vector3> patrolPoint = new List<Vector3>();
+    private List<Transform> patrolPoint = new List<Transform>();
 
     public bool isattacked { set; get; } = true;
     [SerializeField] private ExpParticle expParticle;
 
     private int patrolKey = 0;
-    public Vector3 currentPatrolPoint { get; set; }
+    public Transform currentPatrolPoint { get; set; }
 
     public MonsterStateHandler M_StateHandler => m_StateHandler;
 
@@ -85,7 +85,7 @@ public class Monster : Unit
     {
         foreach (Transform setPatrolTransform in setPatrolTransforms)
         {
-            patrolPoint.Add(setPatrolTransform.position);
+            patrolPoint.Add(setPatrolTransform);
         }
 
         float sizeMultiplier = monsterType switch
@@ -182,8 +182,8 @@ public class Monster : Unit
         if (player == null) return 1f;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        if (distanceToPlayer <= 20f) return 0.1f;
-        else if (distanceToPlayer <= 40f) return 0.2f;
+        if (distanceToPlayer <= 20f) return 0.2f;
+        else if (distanceToPlayer <= 40f) return 0.4f;
         else return 1f;
     }
 
@@ -252,14 +252,16 @@ public class Monster : Unit
     }
     public void nextPatrol()
     {
-        patrolKey++;
-        if (patrolKey >= patrolPoint.Count)
+        int previousPatrolKey = patrolKey;
+        do
         {
-            patrolKey = 0;
-            currentPatrolPoint = patrolPoint[patrolKey];
-            return;
+            patrolKey = Random.Range(0, patrolPoint.Count);
+            print($"Patrol Key : {patrolKey}");
         }
+        while (patrolKey == previousPatrolKey);
+
         currentPatrolPoint = patrolPoint[patrolKey];
+       
     }
     public virtual void MonsterDie()
     {
@@ -326,18 +328,13 @@ public class Monster : Unit
 
     public override bool IsMoving => M_Agent != null && M_AgentBody.Speed > 0.1f;
 
-
-    public override void MoveTo(Vector3 destination)
+    
+    public void MoveTo(Transform destination)
     {
         if (M_Agent == null || !M_Agent.isActiveAndEnabled || !IsAlive)
             return;
-
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(destination, out hit, 100f, NavMesh.AllAreas))
-        {
-            print("이동");
-            M_Agent.SetDestination(hit.position);
-        }
+        print($"목적지 : {destination}");
+        M_Agent.SetDestination(destination.position);        
     }
 
     public override void StopMoving()

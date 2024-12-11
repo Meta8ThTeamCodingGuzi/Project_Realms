@@ -29,6 +29,11 @@ public class MonsterMoveState : State<Monster>
         Debug.Log($"{target.IsMoving}");
         MoveStateTime += Time.deltaTime;
 
+        if (!target.IsMoving)
+        {
+            target.Animator.SetBool("Move", true);
+            target.MoveTo(target.currentPatrolPoint);
+        }
         if (target is Dragon dragon)
         {
             if (target.wasAttacked)
@@ -67,12 +72,6 @@ public class MonsterMoveState : State<Monster>
                 target.M_StateHandler.TransitionTo(new MonsterIdleState(target));
                 return;
             }
-        }
-        if (!target.IsMoving)
-        {
-            target.Animator.SetBool("Move", true);
-            target.MoveTo(target.currentPatrolPoint);
-            return;
         }
     }
 }

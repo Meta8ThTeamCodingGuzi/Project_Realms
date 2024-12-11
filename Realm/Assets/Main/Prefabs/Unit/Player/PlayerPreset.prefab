@@ -14494,7 +14494,6 @@ GameObject:
   - component: {fileID: 6470259823532466203}
   - component: {fileID: 4249007362966996352}
   - component: {fileID: 1506022494536758893}
-  - component: {fileID: 4414296015182266952}
   - component: {fileID: 4302647322356322084}
   - component: {fileID: 8982855142261710840}
   - component: {fileID: 6561746126739315273}
@@ -14829,18 +14828,6 @@ MonoBehaviour:
   - UnitState: 0
     ItemType: 3
     AnimaController: {fileID: 22100000, guid: 9b6964a4de5d036488f6b9141f58de32, type: 2}
---- !u!114 &4414296015182266952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1917786591064579421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfddcce5e49dd384bbc1f8e9bc96d6d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &4302647322356322084
 CapsuleCollider:
   m_ObjectHideFlags: 0

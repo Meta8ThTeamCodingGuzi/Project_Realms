@@ -54,7 +54,7 @@ public class MonsterIdleState : State<Monster>
                 target.M_StateHandler.TransitionTo(new FollowState(target));
                 return;
             }
-            if (patrolTime > 1f)
+            if (patrolTime > 2f)
             {
                 target.M_StateHandler.TransitionTo(new MonsterMoveState(target));
                 return;
