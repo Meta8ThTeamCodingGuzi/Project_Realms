@@ -16,6 +16,11 @@ public class MonsterMoveState : State<Monster>
         Debug.Log("¹´½ºÅ×ÀÌÆ®");
         target.StopMoving();
         MoveStateTime = target.UpdateTime;
+        if (!target.IsMoving)
+        {
+            target.Animator.SetBool("Move", true);
+            target.MoveTo(target.currentPatrolPoint);
+        }
     }
 
     public override void OnExit()
@@ -29,11 +34,11 @@ public class MonsterMoveState : State<Monster>
         Debug.Log($"{target.IsMoving}");
         MoveStateTime += Time.deltaTime;
 
-        if (!target.IsMoving)
-        {
-            target.Animator.SetBool("Move", true);
-            target.MoveTo(target.currentPatrolPoint);
-        }
+        //if (!target.IsMoving)
+        //{
+        //    target.Animator.SetBool("Move", true);
+        //    target.MoveTo(target.currentPatrolPoint);
+        //}
         if (target is Dragon dragon)
         {
             if (target.wasAttacked)
