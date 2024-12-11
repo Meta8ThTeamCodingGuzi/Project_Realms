@@ -56,11 +56,7 @@ public class Player : Unit
     private PlayerInputManager inputManager;
     public PlayerInputManager InputManager => inputManager;
 
-
-    private void Start()
-    {
-        Initialize();
-    }
+    public Pet pet { get; set; }
 
     public override void Initialize()
     {

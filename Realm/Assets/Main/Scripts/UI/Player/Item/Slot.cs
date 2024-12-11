@@ -97,8 +97,14 @@ public class Slot : MonoBehaviour
                                 go.SetActive(true);
                             }
                         }
-                    }
-                    
+                    }                    
+                }
+                if (_item.ItemType == ItemType.Pet) 
+                {
+                    Player player = GameManager.Instance.player; 
+                    Pet pet = Instantiate(_item.ItemPrefab,player.transform.position,Quaternion.identity).GetComponent<Pet>();
+                    pet.Initialize(player);
+                    player.pet = pet;
                 }
             }
         }
@@ -124,6 +130,15 @@ public class Slot : MonoBehaviour
                 weaponHolder.UnequipCurrentWeapon();
             }
 
+            if (_item.ItemType == ItemType.Pet)
+            {
+                Player player = GameManager.Instance.player;
+                if (player.pet != null) 
+                {
+                    Destroy(player.pet.gameObject);
+                    player.pet = null;
+                }
+            }
             if (_item.ItemType == ItemType.Armor)
             {
                 foreach (EquipmentIndex eIndex in _player.InventorySystem.equipmentIndices)
