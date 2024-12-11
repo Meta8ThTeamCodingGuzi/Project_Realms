@@ -322,7 +322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MotionType: 3
   Speed: 3.5
-  Acceleration: 300
+  Acceleration: 700
   AngularSpeed: 500
   StoppingDistance: 0.1
   AutoBreaking: 0
@@ -353,7 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe6fc1ebf8ff240ad5b12ad70ce1c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AgentTypeId: 0
+  AgentTypeId: -902729914
   AreaMask: -1
   AutoRepath: 1
   m_Grounded: 1

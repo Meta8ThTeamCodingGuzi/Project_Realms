@@ -15667,7 +15667,7 @@ GameObject:
   - component: {fileID: 4999241804293566207}
   - component: {fileID: 6192992555270087923}
   - component: {fileID: 8339643332853284182}
-  - component: {fileID: 6165456473973876753}
+  - component: {fileID: -6223380507023851193}
   m_Layer: 7
   m_Name: Infernal Orange
   m_TagString: Untagged
@@ -15858,7 +15858,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Radius: 0.5
   Height: 2
---- !u!114 &6165456473973876753
+--- !u!114 &-6223380507023851193
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15867,16 +15867,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8221012645217549540}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42a4cd4cbf6cf044887ce5ff1955fa9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0344116cd75eaaf488b894904a1649d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HiveMindStop:
-    Enabled: 1
-    Radius: 1
-  m_GiveUpStop:
-    Enabled: 0
-    FatigueSpeed: 0.5
-    RecoverySpeed: 0.4
+  Radius: 2
+  Angle: 230
+  MaxAngle: 300
+  Mode: 3
+  BlockedStop: 0
+  UseWalls: 0
+  m_Layers: -1
 --- !u!1 &8616583266408257806
 GameObject:
   m_ObjectHideFlags: 0
