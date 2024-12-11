@@ -97,6 +97,11 @@ public class Projectile : MonoBehaviour
         Debug.Log($"Projectile collision with: {other.gameObject.name}");
         Debug.Log($"Owner is: {data.owner.GetType().Name}");
 
+        if (other.gameObject == null || data.owner.gameObject == null) 
+        {
+            return;
+        }
+
         if (other.gameObject == data.owner.gameObject)
         {
             Debug.Log("Collision with owner, ignoring");

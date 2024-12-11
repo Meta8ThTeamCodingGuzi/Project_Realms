@@ -26,13 +26,16 @@ MonoBehaviour:
     flatValue: 2000
     percentValue: 0
   - statType: 7
-    flatValue: 20000
+    flatValue: 200000
     percentValue: 0
   - statType: 4
     flatValue: 20000
     percentValue: 0
   - statType: 5
     flatValue: 20000
+    percentValue: 0
+  - statType: 9
+    flatValue: 35
     percentValue: 0
   itemPrefab: {fileID: 5218882441851534846, guid: 7ba6aca33f10ca648a6ba4ce2a29f567, type: 3}
   worldDropPrefab: {fileID: 5218882441851534846, guid: d8f10fff5e2d37c40b81454b37877e71, type: 3}

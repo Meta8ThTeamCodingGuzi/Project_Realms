@@ -56,6 +56,8 @@ public class ItemManager : SingletonManager<ItemManager>
         return droppedItems;
     }
 
+    private List<Item> worldDroppedItems = new List<Item>();
+
     private Item GenerateItem(ItemGenerationRule itemRule, Vector3 position)
     {
         if (itemRule == null || itemRule.itemTemplate == null) return null;
@@ -73,6 +75,7 @@ public class ItemManager : SingletonManager<ItemManager>
         itemInstanceData[item] = instanceData;
         item.Initialize(itemRule.itemTemplate, instanceData);
         items.Add(item);
+        worldDroppedItems.Add(item);
 
         return item;
     }
@@ -176,6 +179,22 @@ public class ItemManager : SingletonManager<ItemManager>
             }
         }
     }
+
+    public void ClearAllDroppedItems()
+    {
+        foreach (var item in worldDroppedItems)
+        {
+            if (item != null)
+            {
+                Destroy(item.gameObject);
+                RemoveItem(item);
+            }
+        }
+        worldDroppedItems.Clear();
+    }
+
+
+
 
     private Item CreateItem(ItemData template, ItemRarity rarity, Color nameColor)
     {

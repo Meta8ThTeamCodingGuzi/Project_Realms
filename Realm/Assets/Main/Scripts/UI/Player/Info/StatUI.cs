@@ -46,7 +46,6 @@ public class StatUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        //사용 가능한 포인트 표시
         if (availablePointsText != null)
         {
             availablePointsText.text = $"{statPointSystem.AvailablePoints}";
@@ -54,19 +53,25 @@ public class StatUI : MonoBehaviour
 
         bool hasAvailablePoints = statPointSystem.AvailablePoints > 0;
 
-        // 각 스탯 표시 업데이트
         foreach (var display in statDisplays)
         {
-            float value = unitStats.GetStatValue(display.statType);
-            display.valueText.text = value.ToString("F1");
+            if (display.statType == StatType.Level)
+            {
+                int level = (int)unitStats.GetStatValue(display.statType);
+                display.valueText.text = level.ToString();
+            }
+            else 
+            {
+                float value = unitStats.GetStatValue(display.statType);
+                display.valueText.text = value.ToString("F1");
+            }
 
-            // 버튼 활성화/비활성화
+
             if (display.increaseButton != null)
             {
                 bool canInvest = hasAvailablePoints &&
                                 unitStats.GetPointIncreaseAmount(display.statType) > 0;
 
-                // 버튼의 GameObject를 직접 활성화/비활성화
                 display.increaseButton.gameObject.SetActive(canInvest);
             }
         }

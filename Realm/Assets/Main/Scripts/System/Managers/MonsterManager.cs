@@ -248,7 +248,14 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
     private void HandleCheckpointFinalBossDeath()
     {
-        ResetSpawnData();
+        StartCoroutine(FinalBossDeathRoutine());
+    }
+
+    private IEnumerator FinalBossDeathRoutine()
+    {
+        yield return new WaitForSeconds(10f);
+
+        GameManager.Instance.ResetAllCheckpoints();
         PlayerManager.instance.RespawnPlayer(GameManager.instance.spawnPoint);
     }
 }
