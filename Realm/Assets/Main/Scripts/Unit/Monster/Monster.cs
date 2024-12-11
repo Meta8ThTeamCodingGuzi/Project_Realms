@@ -47,7 +47,6 @@ public class Monster : Unit
 
     public override float MoveSpeed { get => characterStats.GetStatValue(StatType.MoveSpeed); }
 
-    private float updateInterval = 0.1f;
     private float lastUpdateTime;
 
     public float UpdateTime;

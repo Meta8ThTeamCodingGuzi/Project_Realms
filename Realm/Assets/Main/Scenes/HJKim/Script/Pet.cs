@@ -1,41 +1,39 @@
-using System.Collections;
-using System.Collections.Generic;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Pet : MonoBehaviour
+public class Pet : Unit
 {
-    private Player targetPlayer;  
-    private Transform enemyTarget;
-    public Transform attackPoint; 
-    private bool canAttack = true;
-    private NavMeshAgent agent;
-    private Animator animator;
-    [Header("Æê°ú³ªÀÇ °Å¸®µÎ±â"), Range(1f, 12f)]
+    private Player targetPlayer;
+    public Transform enemyTarget;
+    public Transform attackPoint;
+    private new NavMeshAgent agent;
+    public Animator animator;
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½Î±ï¿½"), Range(1f, 12f)]
     public float playDis;
-    [Header("Æê°úÀûÀÇ °Å¸®µÎ±â"), Range(1f, 12f)]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½Î±ï¿½"), Range(1f, 12f)]
     public float EnemyDis;
-    [Header("ÅÚÆ÷ È£Ãâ°Å¸®"), Range(15f, 25f)]
+    [Header("ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½Å¸ï¿½"), Range(15f, 25f)]
     public float playerTellme = 15f;
 
     [SerializeField] private Transform FirePoint;
 
     public GameObject tellEffect;
 
-    public ProjectileSkill pouBall;
+    public Skill petSkill;
 
-    private ProjectileSkill poupouball;
-
+    private float lastAttackTime = 0f;  // ë§ˆì§€ë§‰ ê³µê²© ì‹œê°„ ì¶”ê°€
 
     public void Initialize(Player player)
     {
+        base.Initialize();
         targetPlayer = player;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        agent.stoppingDistance = 8;  // ÇÃ·¹ÀÌ¾î¿ÍÀÇ ¸ØÃã °Å¸®
-        poupouball = Instantiate(pouBall, transform);
-        poupouball.Initialize(player);
-        poupouball.firePoint = FirePoint;
+        Animator = animator;
+        agent.stoppingDistance = 8;
+        petSkill = Instantiate(petSkill, transform);
+        petSkill.Initialize(this);
     }
 
     private void Update()
@@ -47,7 +45,7 @@ public class Pet : MonoBehaviour
 
     private void Move()
     {
-        if (enemyTarget != null) 
+        if (enemyTarget != null)
         {
             agent.stoppingDistance = EnemyDis;
             agent.SetDestination(enemyTarget.position);
@@ -60,12 +58,8 @@ public class Pet : MonoBehaviour
         }
     }
 
-
-
-
     private void PlayerTell()
     {
-
         if (Vector3.Distance(transform.position, targetPlayer.transform.position) >= playerTellme)
         {
             transform.position = targetPlayer.transform.position;
@@ -73,7 +67,6 @@ public class Pet : MonoBehaviour
             animator.SetTrigger("Tell");
             StartCoroutine(SpawnEffect());
         }
-
 
     }
 
@@ -86,25 +79,33 @@ public class Pet : MonoBehaviour
 
     private void SetAnim()
     {
-        if (agent.velocity.sqrMagnitude < 0.01f) 
+        if (agent.velocity.sqrMagnitude < 0.01f)
         {
-            animator.SetBool("isRunning", false); 
+            animator.SetBool("isRunning", false);
         }
-        else 
+        else
         {
-            animator.SetBool("isRunning", true);  
+            animator.SetBool("isRunning", true);
         }
     }
 
-    // ½ºÅ³ ¹ß»ç ·ÎÁ÷
     private void FireSkill()
     {
-        if (attackPoint != null)
+        if (enemyTarget == null) return;
+
+        // ê³µê²© ì†ë„ì— ë”°ë¥¸ ë”œë ˆì´ ì²´í¬
+        float attackDelay = 1f / CharacterStats.GetStatValue(StatType.AttackSpeed);
+        if (Time.time - lastAttackTime < attackDelay) return;
+
+        // ì  ë°©í–¥ìœ¼ë¡œ íšŒì „
+        Vector3 directionToTarget = (enemyTarget.position - transform.position).normalized;
+        transform.rotation = Quaternion.LookRotation(directionToTarget);
+
+        if (petSkill.TryUseSkill())
         {
-            poupouball.TryUseSkill();
+            lastAttackTime = Time.time;
         }
     }
-
 
     private void OnTriggerStay(Collider other)
     {
@@ -115,18 +116,11 @@ public class Pet : MonoBehaviour
         }
     }
 
-    private IEnumerator SkillCooldown()
-    {
-        yield return new WaitForSeconds(1);
-        canAttack = true;  // ÄðÅ¸ÀÓ Á¾·á ÈÄ °ø°Ý °¡´É
-        Debug.Log("ÄðÅ¸ÀÓ ³¡, ´Ù½Ã °ø°Ý °¡´É!");
-    }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.TryGetComponent<Monster>(out Monster monster))
         {
-            enemyTarget = null;  // Àû ÃßÀû ÁßÁö
+            enemyTarget = null;  // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
     }
 }

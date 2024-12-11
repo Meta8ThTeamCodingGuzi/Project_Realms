@@ -28,6 +28,16 @@ public class PlayerManager : SingletonManager<PlayerManager>, IInitializable
             agent.Warp(spawnPoint.position);
             agent.enabled = true;
         }
+        if(player.pet != null) 
+        {
+            NavMeshAgent petAgent = player.pet.Agent;
+            if (petAgent != null)
+            {
+                petAgent.enabled = false;
+                petAgent.Warp(spawnPoint.position);
+                petAgent.enabled = true;
+            }
+        }
         player.ResetPlayer();
     }
 

@@ -72,7 +72,15 @@ public class Projectile : MonoBehaviour
             if (!collider.TryGetComponent<Unit>(out Unit targetUnit))
                 continue;
 
-            if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
+            bool isValidTarget = false;
+            if (isOwnerPlayer && targetUnit is Monster)
+                isValidTarget = true;
+            else if (!isOwnerPlayer && targetUnit is Player && !(data.owner is Pet))
+                isValidTarget = true;
+            else if (data.owner is Pet && targetUnit is Monster)
+                isValidTarget = true;
+
+            if (isValidTarget)
             {
                 float distance = Vector3.Distance(transform.position, targetUnit.transform.position);
                 if (distance < closestDistance)
@@ -86,13 +94,26 @@ public class Projectile : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject == data.owner.gameObject)
+            return;
+
+        if (data.owner is Pet && other.gameObject == GameManager.Instance.player.gameObject)
+            return;
+
         if (!other.TryGetComponent<Unit>(out Unit targetUnit))
             return;
 
-        if ((isOwnerPlayer && targetUnit is Monster) || (!isOwnerPlayer && targetUnit is Player))
+        bool isValidTarget = false;
+        if (isOwnerPlayer && targetUnit is Monster)
+            isValidTarget = true;
+        else if (!isOwnerPlayer && targetUnit is Player)
+            isValidTarget = true;
+        else if (data.owner is Pet && targetUnit is Monster)
+            isValidTarget = true;
+
+        if (isValidTarget)
         {
             targetUnit.TakeDamage(data.Damage);
-
             PlayHitParticle();
 
             remainingPierceCount--;

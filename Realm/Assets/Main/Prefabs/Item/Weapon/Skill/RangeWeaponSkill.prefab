@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6967223206924554752}
   - component: {fileID: 3390364820970981048}
   m_Layer: 0
-  m_Name: TestBowWeaponSkill
+  m_Name: RangeWeaponSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -31,7 +31,6 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
         yield return new WaitForSeconds(respawnDelay);
 
         Transform respawnPosition = spawnPoint;
-
         PlayerManager.Instance.RespawnPlayer(respawnPosition);
     }
 

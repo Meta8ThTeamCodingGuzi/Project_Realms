@@ -623,6 +623,7 @@ GameObject:
   - component: {fileID: 7454660623761706072}
   - component: {fileID: 622919295254426619}
   - component: {fileID: 2773221507712912557}
+  - component: {fileID: 964725918184545899}
   - component: {fileID: 690156915491107048}
   - component: {fileID: 8884420283306513940}
   - component: {fileID: 1961293709438385794}
@@ -693,7 +694,7 @@ MonoBehaviour:
   playerTellme: 15
   FirePoint: {fileID: 6622202793679262666}
   tellEffect: {fileID: 7743616695079064779, guid: 0ceea92b054d7c4469dd92dde13b1263, type: 3}
-  pouBall: {fileID: 2672229833741752612, guid: 34a3d54823853b44691389a5a9563852, type: 3}
+  petSkill: {fileID: 4530534849568664672, guid: c2e661a761d372b45814ef022345d8fb, type: 3}
 --- !u!114 &2773221507712912557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,6 +707,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 773e26ea9f2a8454d81e5dc0d717b97d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &964725918184545899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4242314086637178008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b950f6b86b29f284296d40bda15fc0fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialStats:
+  - Type: 0
+    BaseValue: 1
+    PointIncrease: 0
+  - Type: 11
+    BaseValue: 12
+    PointIncrease: 0.5
+  - Type: 10
+    BaseValue: 1
+    PointIncrease: 0.5
+  - Type: 7
+    BaseValue: 5
+    PointIncrease: 3
+  - Type: 9
+    BaseValue: 7
+    PointIncrease: 0.5
+  - Type: 1
+    BaseValue: 500
+    PointIncrease: 50
+  - Type: 4
+    BaseValue: 300
+    PointIncrease: 20
+  - Type: 8
+    BaseValue: 20
+    PointIncrease: 30
+  - Type: 12
+    BaseValue: 3
+    PointIncrease: 2
+  - Type: 5
+    BaseValue: 3
+    PointIncrease: 1
+  - Type: 6
+    BaseValue: 3
+    PointIncrease: 1
 --- !u!195 &690156915491107048
 NavMeshAgent:
   m_ObjectHideFlags: 0
