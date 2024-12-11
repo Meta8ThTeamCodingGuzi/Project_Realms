@@ -26,7 +26,7 @@ public class ExpParticle : MonoBehaviour
 
     private void Update()
     {
-        if (player == null) return;
+        if (player == null || player.CharacterStats == null) return;
 
         // 둥둥 떠다니는 효과 적용
         if (!isAttracting)
@@ -39,6 +39,9 @@ public class ExpParticle : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         float expRange = player.CharacterStats.GetStatValue(StatType.ExpRange);
 
+        // expRange가 0이하일 경우 처리
+        if (expRange <= 0f) expRange = 0.1f;
+
         // ExpRange 범위 안에 들어왔는지 체크
         if (distanceToPlayer <= expRange)
         {
@@ -47,16 +50,40 @@ public class ExpParticle : MonoBehaviour
 
         if (isAttracting)
         {
-            currentSpeed = moveSpeed + (moveSpeed * accelerationRate * (1 - distanceToPlayer / expRange));
+            // 속도 계산 시 안전장치 추가
+            float speedMultiplier = Mathf.Clamp01(1 - distanceToPlayer / expRange);
+            currentSpeed = moveSpeed + (moveSpeed * accelerationRate * speedMultiplier);
 
-            Vector3 direction = (player.transform.position - transform.position).normalized;
-            transform.position += direction * currentSpeed * Time.deltaTime;
+            Vector3 directionVector = player.transform.position - transform.position;
+            // 방향 벡터가 0인 경우 체크
+            if (directionVector.sqrMagnitude > 0.001f)
+            {
+                Vector3 direction = directionVector.normalized;
+                Vector3 newPosition = transform.position + direction * currentSpeed * Time.deltaTime;
+
+                // 위치 값 유효성 검사
+                if (!float.IsInfinity(newPosition.x) && !float.IsInfinity(newPosition.y) && !float.IsInfinity(newPosition.z))
+                {
+                    transform.position = newPosition;
+                }
+                else
+                {
+                    Debug.LogWarning($"Invalid position detected. Current: {transform.position}, Target: {player.transform.position}");
+                    isAttracting = false;
+                }
+            }
 
             if (distanceToPlayer < 0.5f)
             {
                 player.GainExperience(expAmount);
                 PoolManager.Instance.Despawn<ExpParticle>(this);
             }
+        }
+
+        if (distanceToPlayer > 15f)
+        {
+            player.GainExperience(expAmount);
+            PoolManager.Instance.Despawn<ExpParticle>(this);
         }
     }
 

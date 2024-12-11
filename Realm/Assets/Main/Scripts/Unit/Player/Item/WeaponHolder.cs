@@ -47,7 +47,6 @@ public class WeaponHolder : MonoBehaviour
             weaponRig.weight = 0f;
         }
 
-        // 초기에 모든 IK 비활성화
         foreach (var setup in weaponIKSetups)
         {
             if (setup.mainHandIK != null) setup.mainHandIK.weight = 0f;
@@ -71,29 +70,29 @@ public class WeaponHolder : MonoBehaviour
             currentWeaponObject = Instantiate(weaponPrefab, currentIKSetup.mainHandTarget);
             currentWeaponObject.transform.localScale = Vector3.one * (weaponScale * 100f);
 
-            Transform mainGrip = currentWeaponObject.transform.Find("GripPoint");
-            if (mainGrip != null)
-            {
-                currentWeaponObject.transform.position +=
-                    currentIKSetup.mainHandTarget.position - mainGrip.position;
+            //Transform mainGrip = currentWeaponObject.transform.Find("GripPoint");
+            //if (mainGrip != null)
+            //{
+            //    currentWeaponObject.transform.position +=
+            //        currentIKSetup.mainHandTarget.position - mainGrip.position;
 
-                // 활인 경우 오프핸드 IK 설정
-                if (weaponType == ItemType.Bow && currentIKSetup.offHandIK != null)
-                {
-                    Transform offHandGrip = currentWeaponObject.transform.Find("OffHandGripPoint");
-                    if (offHandGrip != null)
-                    {
-                        currentIKSetup.offHandTarget.position = offHandGrip.position;
-                        currentIKSetup.offHandTarget.rotation = offHandGrip.rotation;
-                        currentIKSetup.offHandIK.weight = 1f;
-                    }
-                }
-            }
+            //    // 활인 경우 오프핸드 IK 설정
+            //    if (weaponType == ItemType.Bow && currentIKSetup.offHandIK != null)
+            //    {
+            //        Transform offHandGrip = currentWeaponObject.transform.Find("OffHandGripPoint");
+            //        if (offHandGrip != null)
+            //        {
+            //            currentIKSetup.offHandTarget.position = offHandGrip.position;
+            //            currentIKSetup.offHandTarget.rotation = offHandGrip.rotation;
+            //            currentIKSetup.offHandIK.weight = 1f;
+            //        }
+            //    }
+            //}
 
-            if (weaponRig != null)
-            {
-                StartCoroutine(LerpRigWeight(1f));
-            }
+            //if (weaponRig != null)
+            //{
+            //    StartCoroutine(LerpRigWeight(1f));
+            //}
 
         }
     }

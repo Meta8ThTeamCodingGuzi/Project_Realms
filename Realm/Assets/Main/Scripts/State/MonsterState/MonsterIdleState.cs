@@ -39,7 +39,6 @@ public class MonsterIdleState : State<Monster>
         var currentAnimatorState = target.Animator.GetCurrentAnimatorStateInfo(0);
         if (currentAnimatorState.IsName("Idle"))
         {
-            Debug.Log($"{this} CanAttack ¡ÿ∫Ò");
             if (target.CanAttack(target.Target))
             {
                 target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
@@ -55,7 +54,7 @@ public class MonsterIdleState : State<Monster>
                 target.M_StateHandler.TransitionTo(new FollowState(target));
                 return;
             }
-            if (patrolTime > 2f)
+            if (patrolTime > 1f)
             {
                 target.M_StateHandler.TransitionTo(new MonsterMoveState(target));
                 return;

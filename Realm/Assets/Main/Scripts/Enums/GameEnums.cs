@@ -120,6 +120,14 @@ public enum ItemID
     Arrow,
     Ring,
     Armor1,
+    IronArmor,
+    KnightArmor,
+    WandererArmor,
+    NimbleArmor,
+    PrideOfArcher,
+    CallingOfTemplar,
+    TemplarArmor,
+    HermesArmor,
 }
 
 public enum ItemType

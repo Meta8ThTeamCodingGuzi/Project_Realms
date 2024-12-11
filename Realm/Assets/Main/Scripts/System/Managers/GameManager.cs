@@ -1,21 +1,39 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class GameManager : SingletonManager<GameManager>, IInitializable
 {
     private Player Player;
     public Player player { get => Player; set => Player = value; }
     public bool IsInitialized { get; private set; }
-    public List<Monster> monster;
 
     [SerializeField]
     private List<Checkpoint> checkpoints = new List<Checkpoint>();
     private int currentCheckpointId = -1;
 
+    public Transform spawnPoint;
+
     public event Action<int> OnCheckpointReached;
+
+    [SerializeField]
+    private float respawnDelay = 3f;
+
+    public void HandlePlayerDeath()
+    {
+        StartCoroutine(RespawnRoutine());
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+
+        Transform respawnPosition = spawnPoint;
+
+        PlayerManager.Instance.RespawnPlayer(respawnPosition);
+    }
 
     protected override void Awake()
     {
@@ -37,18 +55,37 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
         Checkpoint[] foundCheckpoints = FindObjectsOfType<Checkpoint>();
         checkpoints.AddRange(foundCheckpoints);
 
+        yield return new WaitUntil(() => PlayerManager.instance != null);
+        PlayerManager.Instance.Initialize(spawnPoint);
+        CinemachineVirtualCamera vCam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
+        vCam.LookAt = player.transform;
+        vCam.Follow = player.transform;
+        yield return new WaitUntil(() => PlayerManager.instance.IsInitialized);
         yield return new WaitUntil(() => CheckRequiredComponents());
-
         IsInitialized = true;
         Debug.Log("GameManager initialized successfully");
     }
 
     private bool CheckRequiredComponents()
-    {
+    {        
         if (player == null) return false;
         if (!player.IsInitialized) return false;
 
         return true;
+    }
+
+    public void OnExit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+    public void OnResume()
+    {
+        UIManager.instance.pausePanel.gameObject.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     #region Checkpoint System

@@ -153,6 +153,7 @@ public class ItemManager : SingletonManager<ItemManager>
     private Item CreateItem(ItemData template, ItemRarity rarity, Color nameColor)
     {
         GameObject itemObj = new GameObject(template.ItemID.ToString());
+        itemObj.transform.SetParent(GameManager.instance.player.transform);
         Item item = itemObj.AddComponent<Item>();
 
         var instanceData = new ItemInstanceData(template);

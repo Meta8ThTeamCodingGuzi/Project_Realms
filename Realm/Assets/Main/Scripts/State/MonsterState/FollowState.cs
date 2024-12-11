@@ -11,7 +11,6 @@ public class FollowState : State<Monster>
 
     public override void OnEnter()
     {
-        Debug.Log($"타킷  : {target.Target} , 몬스터 팔로우스테이트 진입 ");
         target.StopMoving();
         target.Animator.SetBool("Move", true);
     }
@@ -49,10 +48,8 @@ public class FollowState : State<Monster>
                 target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));
                 return;
             }
-            Debug.Log($"{this} CanAttack 준비");
             if (target.CanAttack(target.Target))
             {
-                Debug.Log($"{this} CanAttack 호출");
                 target.M_StateHandler.TransitionTo(new MonsterAttackState(target));
                 return;
             }

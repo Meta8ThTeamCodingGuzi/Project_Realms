@@ -145,6 +145,8 @@ public class PlayerInputManager : MonoBehaviour
 
     private void HandleDropItemClick(WorldDropItem dropItem)
     {
+        if (!dropItem.IsNameTextActive) return;
+
         float distanceToItem = Vector3.Distance(player.transform.position, dropItem.transform.position);
         if (distanceToItem <= dropItem.InteractionRadius)
         {

@@ -36,6 +36,8 @@ public class MonsterManager : SingletonManager<MonsterManager>
     private int currentCheckpoint = 0;
     private Monster currentEliteMonster;
 
+    [SerializeField] private int maxMobCount = 20;
+
     public float GaugePercentage => currentGauge / maxGauge;
 
     [Header("Barriers")]
@@ -76,6 +78,11 @@ public class MonsterManager : SingletonManager<MonsterManager>
         {
             currentEliteMonster = null;
             DisableBarrier(currentCheckpoint);
+
+            if (currentCheckpoint == 3)
+            {
+                HandleCheckpointFinalBossDeath();
+            }
             return;
         }
 
@@ -183,12 +190,18 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
         while (currentEliteMonster == null)
         {
-            Monster monster = PoolManager.Instance.Spawn<Monster>(
-                spawnData.monsterPrefab.gameObject,
-                spawnData.spawnPoint.position,
-                Quaternion.identity
-            );
-            monster.Initialize();
+            print($"¸÷ °³Ã¼¼ö : {currentMonsters.Count}");
+            if (currentMonsters.Count <= maxMobCount)
+            {
+                Monster monster = PoolManager.Instance.Spawn<Monster>(
+                    spawnData.monsterPrefab.gameObject,
+                    spawnData.spawnPoint.position,
+                    Quaternion.identity
+                    );
+                monster.Initialize();
+                currentMonsters.Add(monster);
+            }
+
 
             yield return new WaitForSeconds(respawnDelay);
         }
@@ -232,5 +245,11 @@ public class MonsterManager : SingletonManager<MonsterManager>
         currentGauge = 0f;
         currentEliteMonster = null;
         EnableAllBarriers();
+    }
+
+    private void HandleCheckpointFinalBossDeath()
+    {
+        ResetSpawnData();
+        PlayerManager.instance.RespawnPlayer(GameManager.instance.spawnPoint);
     }
 }
