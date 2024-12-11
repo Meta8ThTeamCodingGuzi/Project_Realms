@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43823a802b2f4f14d8fcb3972fb9337c, type: 3}
   m_Name: Default Armor
   m_EditorClassIdentifier: 
-  itemID: 4
+  itemID: 5
   itemType: 4
   rarity: 0
   itemName: Armor1

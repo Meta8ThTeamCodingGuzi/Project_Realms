@@ -14589,6 +14589,7 @@ MonoBehaviour:
     - 1.6
     levelBreakpoints: 0a0000001e00000032000000
   regenTickTime: 1
+  pet: {fileID: 4399540919819332605, guid: 4a81db6750bb59e45bb9e13783fd1244, type: 3}
 --- !u!114 &5355763836659043877
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Pet : MonoBehaviour
 {
-    public Transform playerTarget;  // 플레이어를 따라가는 목표
+    private Transform playerTarget;  // 플레이어를 따라가는 목표
     private Transform enemyTarget;  // 적 목표
     public string targetTag = "Enemy";  // 적 태그 설정
     public GameObject pouBallPrefab;  // 투사체 프리팹
@@ -20,13 +20,17 @@ public class Pet : MonoBehaviour
     [Header("텔포 호출거리"), Range(15f, 25f)]
     public float playerTellme = 15f;
 
-    // 마지막 스킬 발사 시간
+    private void Start()
+    {
+        Initialize();
+    }
 
-    void Start()
+    // 마지막 스킬 발사 시간
+    private void Initialize()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        //playerTarget = GameManager.Instance.player.transform;
+        playerTarget = GameManager.Instance.player.transform;
         agent.stoppingDistance = 8;  // 플레이어와의 멈춤 거리
     }
 

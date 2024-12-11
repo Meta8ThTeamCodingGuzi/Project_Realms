@@ -56,11 +56,7 @@ public class Player : Unit
     private PlayerInputManager inputManager;
     public PlayerInputManager InputManager => inputManager;
 
-
-    private void Start()
-    {
-        Initialize();
-    }
+    public Pet pet;
 
     public override void Initialize()
     {
@@ -129,6 +125,8 @@ public class Player : Unit
 
 
         skillPoint += 20;
+
+        Instantiate(pet,transform.position,Quaternion.identity);
     }
 
     private void Update()
