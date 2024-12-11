@@ -54,9 +54,12 @@ public class Projectile : MonoBehaviour
 
     private void PlayHitParticle()
     {
-        ParticleSystem hp = PoolManager.Instance.Spawn<ParticleSystem>(hitParticle.gameObject, transform.position, Quaternion.identity);
-        hp.Play();
-        PoolManager.Instance.Despawn(hp, 1.5f);
+        if (hitParticle != null)
+        {
+            ParticleSystem hp = PoolManager.Instance.Spawn<ParticleSystem>(hitParticle.gameObject, transform.position, Quaternion.identity);
+            hp.Play();
+            PoolManager.Instance.Despawn(hp, 1.5f);
+        }
     }
 
     private void FindTarget()

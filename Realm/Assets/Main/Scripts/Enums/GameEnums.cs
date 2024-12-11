@@ -15,7 +15,7 @@ public enum StatType
     AttackSpeed,
     AttackRange,
     ExpRange,
-    DropExp        
+    DropExp
 }
 
 public enum SkillID
@@ -39,6 +39,7 @@ public enum SkillID
     Haste,
     ManaRegen,
     HpRegen,
+    PouPou
 
 
 
