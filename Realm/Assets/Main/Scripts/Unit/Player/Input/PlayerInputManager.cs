@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.AI;
 
 public class PlayerInputManager : MonoBehaviour
 {
@@ -139,8 +140,16 @@ public class PlayerInputManager : MonoBehaviour
 
     private void HandleGroundClick(Vector3 position)
     {
-        player.SetDestination(position);
-        player.PlayerHandler.TransitionTo(new PlayerMoveState(player));
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(position, out hit, 5f, NavMesh.AllAreas))
+        {
+            NavMeshPath path = new NavMeshPath();
+            if (player.Agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
+            {
+                player.SetDestination(hit.position);
+                player.PlayerHandler.TransitionTo(new PlayerMoveState(player));
+            }
+        }
     }
 
     private void HandleDropItemClick(WorldDropItem dropItem)
