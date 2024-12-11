@@ -27,15 +27,37 @@ public class ItemManager : SingletonManager<ItemManager>
         GiveDefaultItemsToPlayer();
     }
 
-    public Item GenerateRandomItem(MonsterType monsterType, Vector3 position)
+    public List<Item> GenerateRandomItems(MonsterType monsterType, Vector3 position)
     {
         var dropRule = itemGenerationRules.GetDropRuleForMonster(monsterType);
-        if (dropRule == null) return null;
+        if (dropRule == null) return new List<Item>();
 
         if (UnityEngine.Random.Range(0f, 100f) > dropRule.itemDropChance)
-            return null;
+            return new List<Item>();
 
-        var itemRule = GetRandomItemRule(dropRule.possibleItems);
+        List<Item> droppedItems = new List<Item>();
+        Vector3 dropPosition = position;
+
+        foreach (var itemRule in dropRule.possibleItems)
+        {
+            if (UnityEngine.Random.Range(0f, 100f) <= itemRule.baseDropChance)
+            {
+                Vector2 randomOffset = Random.insideUnitCircle * 0.5f;
+                Vector3 itemPosition = dropPosition + new Vector3(randomOffset.x, 0f, randomOffset.y);
+
+                Item newItem = GenerateItem(itemRule, itemPosition);
+                if (newItem != null)
+                {
+                    droppedItems.Add(newItem);
+                }
+            }
+        }
+
+        return droppedItems;
+    }
+
+    private Item GenerateItem(ItemGenerationRule itemRule, Vector3 position)
+    {
         if (itemRule == null || itemRule.itemTemplate == null) return null;
 
         GameObject itemObj = Instantiate(itemRule.itemTemplate.WorldDropPrefab, position, Quaternion.identity);
@@ -53,29 +75,6 @@ public class ItemManager : SingletonManager<ItemManager>
         items.Add(item);
 
         return item;
-    }
-
-    private ItemGenerationRule GetRandomItemRule(List<ItemGenerationRule> possibleItems)
-    {
-        float totalWeight = 0f;
-        foreach (var item in possibleItems)
-        {
-            totalWeight += item.baseDropChance;
-        }
-
-        if (totalWeight <= 0f) return null;
-
-        float randomValue = UnityEngine.Random.Range(0f, totalWeight);
-        float currentWeight = 0f;
-
-        foreach (var item in possibleItems)
-        {
-            currentWeight += item.baseDropChance;
-            if (randomValue <= currentWeight)
-                return item;
-        }
-
-        return null;
     }
 
     private void GenerateRandomStats(ItemInstanceData instanceData, ItemGenerationRule itemRule)
