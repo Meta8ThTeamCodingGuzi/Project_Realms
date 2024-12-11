@@ -119,7 +119,7 @@ public enum ItemID
     Bow,
     Arrow,
     Ring,
-    Armor1,
+    OldArmor,
     IronArmor,
     KnightArmor,
     WandererArmor,
@@ -128,6 +128,7 @@ public enum ItemID
     CallingOfTemplar,
     TemplarArmor,
     HermesArmor,
+    
 }
 
 public enum ItemType
@@ -137,7 +138,8 @@ public enum ItemType
     Sword,
     Bow,
     Armor,
-    Accessory
+    Accessory,
+    Pet,
 }
 
 public enum ItemRarity

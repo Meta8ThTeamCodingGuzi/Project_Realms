@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43823a802b2f4f14d8fcb3972fb9337c, type: 3}
   m_Name: Default Armor
   m_EditorClassIdentifier: 
-  itemID: 5
+  itemID: 4
   itemType: 4
   rarity: 0
-  itemName: Armor1
+  itemName: Old Armor
   description: Testing
   icon: {fileID: 21300000, guid: 876c9b00cf6bf4d4cbd646f0af998877, type: 3}
   stats:
