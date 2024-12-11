@@ -94,25 +94,51 @@ public class Projectile : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"Projectile collision with: {other.gameObject.name}");
+        Debug.Log($"Owner is: {data.owner.GetType().Name}");
+
+        // 발사체가 자신의 주인과 충돌하면 무시
         if (other.gameObject == data.owner.gameObject)
+        {
+            Debug.Log("Collision with owner, ignoring");
             return;
+        }
 
+        // 펫이 쏜 발사체가 플레이어와 충돌하면 무시
         if (data.owner is Pet && other.gameObject == GameManager.Instance.player.gameObject)
+        {
+            Debug.Log("Pet projectile hit player, ignoring");
             return;
+        }
 
+        // Unit이 아닌 대상과 충돌하면 무시
         if (!other.TryGetComponent<Unit>(out Unit targetUnit))
+        {
+            Debug.Log("Target is not a Unit, ignoring");
             return;
+        }
+
+        Debug.Log($"Target Unit type: {targetUnit.GetType().Name}");
 
         bool isValidTarget = false;
-        if (isOwnerPlayer && targetUnit is Monster)
+        if ((data.owner is Player || data.owner is Pet) && targetUnit is Monster)
+        {
+            Debug.Log("Valid target: Player/Pet hitting Monster");
             isValidTarget = true;
-        else if (!isOwnerPlayer && targetUnit is Player)
+        }
+        else if (!(data.owner is Player || data.owner is Pet) && targetUnit is Player)
+        {
+            Debug.Log("Valid target: Monster hitting Player");
             isValidTarget = true;
-        else if (data.owner is Pet && targetUnit is Monster)
-            isValidTarget = true;
+        }
+        else
+        {
+            Debug.Log("Invalid target combination");
+        }
 
         if (isValidTarget)
         {
+            Debug.Log($"Dealing damage to: {targetUnit.gameObject.name}");
             targetUnit.TakeDamage(data.Damage);
             PlayHitParticle();
 

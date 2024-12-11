@@ -30,16 +30,18 @@ public class ItemManager : SingletonManager<ItemManager>
 
     public Item GenerateRandomItem(MonsterType monsterType, Vector3 position)
     {
+        print($"GenerateRandomItem 호출, MonsterType : {monsterType}");
         var dropRule = itemGenerationRules.GetDropRuleForMonster(monsterType);
         if (dropRule == null) return null;
-
+        print($"GenerateRandomItem 호출, itemDropChance : {dropRule.itemDropChance}");
         if (UnityEngine.Random.Range(0f, 100f) > dropRule.itemDropChance)
             return null;
 
         var raritySettings = itemGenerationRules.GetRaritySettings(dropRule);
         ItemType randomItemType = dropRule.possibleItemTypes[UnityEngine.Random.Range(0, dropRule.possibleItemTypes.Length)];
-
+        print($"GenerateRandomItem 호출, randomItemType : {randomItemType}");
         var itemTemplate = itemDataTemplates.Find(t => t.ItemType == randomItemType);
+        print($"GenerateRandomItem 호출, itemTemplate : {itemTemplate}");
         if (itemTemplate == null) return null;
 
         if (itemTemplate.WorldDropPrefab == null)
