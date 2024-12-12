@@ -16,6 +16,7 @@ public abstract class StateHandler<T>
     }
 
     public event Action<IState> OnStateChanged;
+
     private bool hasStateChangedSubscribers => OnStateChanged != null;
 
     public bool HasSubscribers()

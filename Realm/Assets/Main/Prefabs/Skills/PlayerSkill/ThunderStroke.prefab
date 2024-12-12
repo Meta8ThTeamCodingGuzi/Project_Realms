@@ -84,7 +84,7 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 17
-    BaseValue: 5
+    BaseValue: 5.1
     GrowthValue: 0.5
     growthPercent: 0
   - Type: 18

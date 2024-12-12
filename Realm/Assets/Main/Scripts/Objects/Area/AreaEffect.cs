@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class AreaEffect : MonoBehaviour
 {
+
     protected AreaEffectData areaData;
     protected float durationTime;
     protected Coroutine attackCoroutine;
