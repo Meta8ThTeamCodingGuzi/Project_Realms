@@ -16,6 +16,7 @@ public class Projectile : MonoBehaviour
         startPosition = transform.position;
         remainingPierceCount = data.PierceCount;
         isOwnerPlayer = data.owner is Player;
+        transform.localScale = Vector3.one * data.Scale;
 
         if (data.IsHoming)
             FindTarget();
@@ -145,7 +146,7 @@ public class Projectile : MonoBehaviour
             PlayHitParticle();
 
             remainingPierceCount--;
-            if (remainingPierceCount <= 0)
+            if (remainingPierceCount == 0)
             {
                 PoolManager.Instance.Despawn(this);
             }

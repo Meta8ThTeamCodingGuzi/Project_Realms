@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Buffers;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public abstract class DefaultSkill : Skill
 {
@@ -27,6 +28,13 @@ public abstract class DefaultSkill : Skill
     {
         if (!CanUseSkill()) return false;
         if (isAttackInProgress) return false;
+
+        Owner.Animator.SetFloat("AttackSpeed", 3f);
+
+        if (animaClip != null)
+        {
+            Owner.AnimController.Clipchange(animaClip);
+        }
         UseSkill();
         return true;
     }

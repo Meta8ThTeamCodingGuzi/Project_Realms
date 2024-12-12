@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(ProjectileSkillStat))]
 public class ProjectileSkill : Skill
@@ -85,6 +86,7 @@ public class ProjectileSkill : Skill
             IsHoming = projectileStats.GetStatValue<int>(SkillStatType.IsHoming) <=
                        projectileStats.GetStatValue<int>(SkillStatType.HomingLevel) ? false : true,
             HomingRange = projectileStats.GetStatValue<float>(SkillStatType.HomingRange),
+            Scale = projectileStats.GetStatValue<float>(SkillStatType.ProjectileScale),
         };
 
         if (Owner is Player)
@@ -187,4 +189,5 @@ public struct ProjectileData
     public int PierceCount;
     public bool IsHoming;
     public float HomingRange;
+    public float Scale;
 }

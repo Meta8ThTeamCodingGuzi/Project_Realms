@@ -32,11 +32,7 @@ public class MonsterMoveState : State<Monster>
     {
         MoveStateTime += Time.deltaTime;
 
-        //if (!target.IsMoving)
-        //{
-        //    target.Animator.SetBool("Move", true);
-        //    target.MoveTo(target.currentPatrolPoint);
-        //}
+
         if (target is Dragon dragon)
         {
             if (target.wasAttacked)

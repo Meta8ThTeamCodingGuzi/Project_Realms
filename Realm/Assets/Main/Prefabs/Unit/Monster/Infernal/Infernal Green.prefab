@@ -240,6 +240,7 @@ MonoBehaviour:
   monsterType: 0
   skills:
   - {fileID: 6177470303933401633, guid: 19eacbdcca5ce56489a150e4f2dea4b7, type: 3}
+  UpdateTime: 0
 --- !u!114 &9048371800809085796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10771,7 +10772,7 @@ Transform:
   m_GameObject: {fileID: 5677032836396442422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.435, y: 0.648, z: 0.79}
+  m_LocalPosition: {x: 0.127, y: 0.648, z: 0.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

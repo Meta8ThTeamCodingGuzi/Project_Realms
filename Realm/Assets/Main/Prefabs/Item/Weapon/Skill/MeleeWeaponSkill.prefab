@@ -47,8 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 3105649885076527639}
   skillStat: {fileID: 0}
-  animaClip: {fileID: 0}
-  attackAngle: 90
+  animaClip: {fileID: -203655887218126122, guid: bd94eaf090b23d8418672b38ddac1d13, type: 3}
+  attackAngle: 45
   targetLayer:
     serializedVersion: 2
     m_Bits: 128

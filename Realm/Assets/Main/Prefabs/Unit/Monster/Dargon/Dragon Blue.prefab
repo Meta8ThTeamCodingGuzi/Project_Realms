@@ -3344,6 +3344,7 @@ MonoBehaviour:
   - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
   - {fileID: 6503323496141120415, guid: ff785eed7d9485547818fc7baa3c9bdb, type: 3}
   - {fileID: 8582521760243147514, guid: 8bc398b74f4e2e04b912db3d2e179b3d, type: 3}
+  UpdateTime: 0
 --- !u!114 &4710851983419400807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3365,7 +3366,7 @@ MonoBehaviour:
     PointIncrease: 0.1
   - Type: 8
     BaseValue: 60
-    PointIncrease: 20
+    PointIncrease: 10
   - Type: 13
     BaseValue: 500
     PointIncrease: 500

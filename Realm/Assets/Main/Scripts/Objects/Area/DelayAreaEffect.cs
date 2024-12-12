@@ -67,7 +67,7 @@ public class DelayAreaEffect : AreaEffect
                     yield break;
                 }
 
-                Collider[] colliders = Physics.OverlapSphere(transform.position, areaData.areaScale * afterShockScale);
+                Collider[] colliders = Physics.OverlapSphere(transform.position,( areaData.areaScale * afterShockScale)/2f);
                 foreach (Collider collider in colliders)
                 {
                     if (!collider.TryGetComponent<Unit>(out Unit targetUnit))
@@ -84,7 +84,7 @@ public class DelayAreaEffect : AreaEffect
 
     private void MainDamage(bool isOwnerPlayer)
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, areaData.areaScale * MainDamageScale);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, (areaData.areaScale * MainDamageScale)/2f);
         foreach (Collider collider in colliders)
         {
             if (!collider.TryGetComponent<Unit>(out Unit targetUnit))

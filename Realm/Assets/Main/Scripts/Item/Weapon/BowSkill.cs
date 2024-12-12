@@ -176,6 +176,7 @@ public class BowSkill : DefaultSkill
             Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
                 arrowPrefab.gameObject,
                 arrowSpawnPoint.position,
+                
                 Quaternion.LookRotation(targetDirection.Value));
 
             if (arrow != null)
@@ -187,7 +188,8 @@ public class BowSkill : DefaultSkill
                     owner = Owner,
                     Damage = totalDamage,
                     Speed = 15f,
-                    Range = 15f
+                    Range = 15f,
+                    PierceCount = -1
                 };
 
                 arrow.Initialize(data);

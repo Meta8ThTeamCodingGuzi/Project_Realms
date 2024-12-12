@@ -68,12 +68,13 @@ public abstract class Skill : MonoBehaviour
                 owner.CharacterStats.AddModifier(StatType.Mana, CalcManaCost(costmana));
 
                 owner.Animator.SetFloat("AttackSpeed", 3f);
+
+                if (animaClip != null)
+                {
+                    owner.AnimController.Clipchange(animaClip);
+                }
             }
 
-            if (animaClip != null)
-            {
-                owner.AnimController.Clipchange(animaClip);
-            }
         }
 
         UseSkill();
