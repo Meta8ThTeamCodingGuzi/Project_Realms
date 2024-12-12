@@ -8,12 +8,12 @@ public class BowSkill : DefaultSkill
     private float lastFireTime;
 
     [Header("Bow Animation")]
-    [SerializeField] private float drawDuration = 0.3f;  // Ȱ ���� �ð�
-    [SerializeField] private float resetDuration = 0.2f;  // ���� �ڼ��� ���ư��� �ð�
+    [SerializeField] private float drawDuration = 0.3f; 
+    [SerializeField] private float resetDuration = 0.2f;
 
     private bool isDrawing = false;
     private Coroutine drawRoutine;
-    private Vector3? targetDirection;  // 클래스 상단에 추가
+    private Vector3? targetDirection;  
 
     public override void Initialize(Unit owner)
     {
@@ -37,7 +37,7 @@ public class BowSkill : DefaultSkill
             {
                 GameObject firePoint = new GameObject("FirePoint");
                 firePoint.transform.SetParent(Owner.transform);
-                firePoint.transform.localPosition = new Vector3(0, 1f, 0.5f);  // 위치 조정
+                firePoint.transform.localPosition = new Vector3(0, 1f, 0.5f);  
                 arrowSpawnPoint = firePoint.transform;
             }
         }
@@ -106,7 +106,6 @@ public class BowSkill : DefaultSkill
     {
         isSkillInProgress = true;
 
-        // 화살을 쏘기 시작할 때 한 번만 방향 계산
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
@@ -119,7 +118,7 @@ public class BowSkill : DefaultSkill
 
             if (arrowSpawnPoint != null)
             {
-                arrowSpawnPoint.rotation = Owner.transform.rotation;  // arrowSpawnPoint 회전 추가
+                arrowSpawnPoint.rotation = Owner.transform.rotation;
             }
         }
 
