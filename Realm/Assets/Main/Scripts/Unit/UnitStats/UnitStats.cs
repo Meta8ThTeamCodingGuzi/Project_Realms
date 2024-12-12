@@ -127,4 +127,15 @@ public abstract class UnitStats : MonoBehaviour, ICharacterStats
 
         return 0f;
     }
+
+    public virtual void SetStatCurrentValue(StatType statType, float value)
+    {
+        if (stats.TryGetValue(statType, out Stat stat))
+        {
+            if (stat is FloatStat floatStat)
+            {
+                floatStat.SetBaseValue(value);
+            }
+        }
+    }
 }

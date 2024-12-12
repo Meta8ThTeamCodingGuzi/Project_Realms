@@ -47,7 +47,7 @@ public class Player : Unit
     public PlayerInventorySystem InventorySystem => inventorySystem;
 
     [Header("Regeneration Settings")]
-    [SerializeField] private float regenTickTime = 1f;  
+    [SerializeField] private float regenTickTime = 1f;
     private Coroutine healthRegenCoroutine;
     private Coroutine manaRegenCoroutine;
 
@@ -348,14 +348,27 @@ public class Player : Unit
 
     private void ResetHPMP()
     {
-        float MaxHealth = characterStats.GetStatValue(StatType.MaxHealth);
-        float MaxMana = characterStats.GetStatValue(StatType.MaxMana);
+        Debug.Log($"[ResetHPMP 시작] 모든 값 체크:" +
+                  $"\nHealth Base: {((FloatStat)CharacterStats.GetStat(StatType.Health)).BaseValue}" +
+                  $"\nCurrent Health: {CharacterStats.GetStatValue(StatType.Health)}" +
+                  $"\nMax Health: {CharacterStats.GetStatValue(StatType.MaxHealth)}");
 
-        print($"MaxHP : {MaxHealth} , MaxMana : {MaxMana}");
-        characterStats.AddModifier(StatType.Health,
-            new StatModifier(100f, StatModifierType.Flat, SourceType.BaseStats));
-        characterStats.AddModifier(StatType.Mana,
-            new StatModifier(MaxMana, StatModifierType.Flat, SourceType.BaseStats));
+        // 먼저 모든 모디파이어 제거
+        CharacterStats.GetStat(StatType.Health).ClearAllModifiers();
+        CharacterStats.GetStat(StatType.Mana).ClearAllModifiers();
+
+        // 최대 체력/마나 가져오기
+        float maxHealth = CharacterStats.GetStatValue(StatType.MaxHealth);
+        float maxMana = CharacterStats.GetStatValue(StatType.MaxMana);
+
+        // 기본값을 최대치로 직접 설정
+        ((FloatStat)CharacterStats.GetStat(StatType.Health)).SetBaseValue(maxHealth);
+        ((FloatStat)CharacterStats.GetStat(StatType.Mana)).SetBaseValue(maxMana);
+
+        Debug.Log($"[ResetHPMP 완료] 최종 값 체크:" +
+                  $"\nHealth Base: {((FloatStat)CharacterStats.GetStat(StatType.Health)).BaseValue}" +
+                  $"\nCurrent Health: {CharacterStats.GetStatValue(StatType.Health)}" +
+                  $"\nMax Health: {CharacterStats.GetStatValue(StatType.MaxHealth)}");
     }
 
     public override void MoveTo(Vector3 destination)

@@ -1,6 +1,7 @@
 public class FloatStat : Stat
 {
     protected float baseValue;
+    public float BaseValue => baseValue;
     protected float lastValue;
     protected float pointIncrease;
 
@@ -60,5 +61,11 @@ public class FloatStat : Stat
         }
 
         lastValue = finalValue;
+    }
+
+    public void SetBaseValue(float value)
+    {
+        baseValue = value;
+        isDirty = true;
     }
 }
