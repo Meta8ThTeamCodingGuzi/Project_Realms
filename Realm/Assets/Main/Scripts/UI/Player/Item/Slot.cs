@@ -60,8 +60,16 @@ public class Slot : MonoBehaviour
     {
         if (item != null && !CanAcceptItem(item)) return;
 
-        RemoveCurrentItem();
+        // 현재 체력/마나 비율 저장 (1을 넘지 않도록)
+        float healthRatio = Mathf.Min(1f, _player.CharacterStats.GetStatValue(StatType.Health) /
+                                     _player.CharacterStats.GetStatValue(StatType.MaxHealth));
+        float manaRatio = Mathf.Min(1f, _player.CharacterStats.GetStatValue(StatType.Mana) /
+                                   _player.CharacterStats.GetStatValue(StatType.MaxMana));
 
+        Debug.Log($"[장비 장착 전] HP: {_player.CharacterStats.GetStatValue(StatType.Health)}/{_player.CharacterStats.GetStatValue(StatType.MaxHealth)} ({healthRatio:P0}), " +
+                  $"MP: {_player.CharacterStats.GetStatValue(StatType.Mana)}/{_player.CharacterStats.GetStatValue(StatType.MaxMana)} ({manaRatio:P0})");
+
+        RemoveCurrentItem();
         _item = item;
 
         if (_item != null)
@@ -71,8 +79,22 @@ public class Slot : MonoBehaviour
 
             if (isEquipSlot && _player != null)
             {
+                // 먼저 모든 모디파이어 제거
+                _player.CharacterStats.GetStat(StatType.Health).ClearAllModifiers();
+                _player.CharacterStats.GetStat(StatType.Mana).ClearAllModifiers();
+
                 _item.ApplyStats(_player.GetComponent<ICharacterStats>());
                 _player.UpdateMoveSpeed();
+
+                // 새로운 최대값으로 현재 체력/마나 설정 (비율 유지)
+                float newMaxHealth = _player.CharacterStats.GetStatValue(StatType.MaxHealth);
+                float newMaxMana = _player.CharacterStats.GetStatValue(StatType.MaxMana);
+
+                ((FloatStat)_player.CharacterStats.GetStat(StatType.Health)).SetBaseValue(newMaxHealth * healthRatio);
+                ((FloatStat)_player.CharacterStats.GetStat(StatType.Mana)).SetBaseValue(newMaxMana * manaRatio);
+
+                Debug.Log($"[장비 장착 후] HP: {_player.CharacterStats.GetStatValue(StatType.Health)}/{newMaxHealth} ({healthRatio:P0}), " +
+                          $"MP: {_player.CharacterStats.GetStatValue(StatType.Mana)}/{newMaxMana} ({manaRatio:P0})");
 
                 if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
                 {
@@ -86,23 +108,23 @@ public class Slot : MonoBehaviour
 
                     _player.AnimController.PlayerAnimatorChange(_item.ItemType);
                 }
-                if (_item.ItemType == ItemType.Armor) 
+                if (_item.ItemType == ItemType.Armor)
                 {
-                    foreach (EquipmentIndex eIndex in _player.InventorySystem.equipmentIndices) 
+                    foreach (EquipmentIndex eIndex in _player.InventorySystem.equipmentIndices)
                     {
-                        if (eIndex.itemID == _item.ItemID) 
+                        if (eIndex.itemID == _item.ItemID)
                         {
-                            foreach (GameObject go in eIndex.objsToAcitve) 
+                            foreach (GameObject go in eIndex.objsToAcitve)
                             {
                                 go.SetActive(true);
                             }
                         }
-                    }                    
+                    }
                 }
-                if (_item.ItemType == ItemType.Pet) 
+                if (_item.ItemType == ItemType.Pet)
                 {
-                    Player player = GameManager.Instance.player; 
-                    Pet pet = Instantiate(_item.ItemPrefab,player.transform.position,Quaternion.identity).GetComponent<Pet>();
+                    Player player = GameManager.Instance.player;
+                    Pet pet = Instantiate(_item.ItemPrefab, player.transform.position, Quaternion.identity).GetComponent<Pet>();
                     pet.Initialize(player);
                     player.pet = pet;
                 }
@@ -120,8 +142,24 @@ public class Slot : MonoBehaviour
     {
         if (_item != null && isEquipSlot && _player != null)
         {
+            float healthRatio = Mathf.Min(1f, _player.CharacterStats.GetStatValue(StatType.Health) /
+                                        _player.CharacterStats.GetStatValue(StatType.MaxHealth));
+            float manaRatio = Mathf.Min(1f, _player.CharacterStats.GetStatValue(StatType.Mana) /
+                                      _player.CharacterStats.GetStatValue(StatType.MaxMana));
+
+
+            _player.CharacterStats.GetStat(StatType.Health).ClearAllModifiers();
+            _player.CharacterStats.GetStat(StatType.Mana).ClearAllModifiers();
+
             _item.RemoveStats(_player.GetComponent<ICharacterStats>());
             _player.UpdateMoveSpeed();
+
+            float newMaxHealth = _player.CharacterStats.GetStatValue(StatType.MaxHealth);
+            float newMaxMana = _player.CharacterStats.GetStatValue(StatType.MaxMana);
+
+            ((FloatStat)_player.CharacterStats.GetStat(StatType.Health)).SetBaseValue(newMaxHealth * healthRatio);
+            ((FloatStat)_player.CharacterStats.GetStat(StatType.Mana)).SetBaseValue(newMaxMana * manaRatio);
+
 
             if (_item.ItemType == ItemType.Sword || _item.ItemType == ItemType.Bow)
             {
@@ -133,7 +171,7 @@ public class Slot : MonoBehaviour
             if (_item.ItemType == ItemType.Pet)
             {
                 Player player = GameManager.Instance.player;
-                if (player.pet != null) 
+                if (player.pet != null)
                 {
                     Destroy(player.pet.gameObject);
                     player.pet = null;

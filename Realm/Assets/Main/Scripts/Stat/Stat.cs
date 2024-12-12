@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -16,7 +16,7 @@ public abstract class Stat
     public abstract object Value { get; }
     public abstract void InvestPoint(float increaseAmount);
 
-    #region ½ºÅÈ º¯°æ °ü·Ã ¸Þ¼­µåµé
+    #region ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½
     public virtual void AddModifier(StatModifier modifier)
     {
         modifiers.Add(modifier);
@@ -34,7 +34,7 @@ public abstract class Stat
     public int GetInvestedPoints() => investedPoints;
     #endregion
 
-    #region ÃâÃ³º° ½ºÅÈ°è»ê ÇïÆÛ¸Þ¼­µå
+    #region ï¿½ï¿½Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½È°ï¿½ï¿½ ï¿½ï¿½ï¿½Û¸Þ¼ï¿½ï¿½ï¿½
     public List<StatModifier> GetModifiersFromSource(SourceType sourceType)
     {
         return modifiers.Where(mod => mod.SourceType == sourceType).ToList();
@@ -79,13 +79,11 @@ public abstract class Stat
         float sumPercentAdd = 0;
         var sourceModifiers = GetModifiersFromSource(sourceType);
 
-        // 1´Ü°è: ´Ü¼ø µ¡¼À
         foreach (var mod in sourceModifiers.Where(m => m.Type == StatModifierType.Flat))
         {
             value += mod.Value;
         }
 
-        // 2´Ü°è: ÆÛ¼¾Æ® µ¡¼À
         foreach (var mod in sourceModifiers.Where(m => m.Type == StatModifierType.PercentAdd))
         {
             sumPercentAdd += mod.Value;
@@ -95,7 +93,6 @@ public abstract class Stat
             value *= (1 + sumPercentAdd);
         }
 
-        // 3´Ü°è: ÆÛ¼¾Æ® °ö¼À
         foreach (var mod in sourceModifiers.Where(m => m.Type == StatModifierType.PercentMult))
         {
             value *= (1 + mod.Value);
@@ -104,4 +101,10 @@ public abstract class Stat
         return value;
     }
     #endregion
+
+    public void ClearAllModifiers()
+    {
+        modifiers.Clear();
+        isDirty = true;
+    }
 }
