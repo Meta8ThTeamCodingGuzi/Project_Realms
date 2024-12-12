@@ -50,7 +50,6 @@ MonoBehaviour:
   skillStat: {fileID: 8035002135269178052}
   animaClip: {fileID: -203655887218126122, guid: f388b6006af5c20408008415689f0500, type: 3}
   projectilePrefab: {fileID: 4746490303687640220, guid: fd649b266126077469fad3624637939d, type: 3}
-  firePoint: {fileID: 2576823358758784094}
 --- !u!114 &5205079589154066666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,8 +134,8 @@ MonoBehaviour:
     GrowthValue: 0
     growthPercent: 0
   - Type: 8
-    BaseValue: 3
-    GrowthValue: 0
+    BaseValue: 2.1
+    GrowthValue: 0.3
     growthPercent: 0
   - Type: 3
     BaseValue: 5
