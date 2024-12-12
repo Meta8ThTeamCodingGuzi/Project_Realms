@@ -91,8 +91,10 @@ public class ProjectileSkill : Skill
 
         if (Owner is Player)
         {
-            Owner.transform.rotation = Quaternion.LookRotation(cachedTargetDirection.Value);
-            firePoint.rotation = Owner.transform.rotation;
+            Vector3 directionWithoutY = cachedTargetDirection.Value;
+            directionWithoutY.y = 0;
+            Owner.transform.rotation = Quaternion.LookRotation(directionWithoutY);
+            firePoint.rotation = Quaternion.LookRotation(directionWithoutY);
         }
         else
         {
@@ -127,8 +129,7 @@ public class ProjectileSkill : Skill
         if (groundPlane.Raycast(ray, out float distance))
         {
             Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = (targetPoint - transform.position).normalized;
-            direction.y = 0;
+            Vector3 direction = (targetPoint - firePoint.position).normalized;
             return direction;
         }
         return null;
@@ -155,7 +156,7 @@ public class ProjectileSkill : Skill
                 Projectile projectile = PoolManager.Instance.Spawn<Projectile>(
                     projectilePrefab.gameObject,
                     firePoint.position,
-                    Quaternion.LookRotation(cachedTargetDirection.Value));
+                    firePoint.rotation);
 
                 if (projectile != null)
                 {

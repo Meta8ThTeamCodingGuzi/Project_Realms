@@ -103,6 +103,10 @@ MonoBehaviour:
     BaseValue: 1.5
     GrowthValue: 0
     growthPercent: 0
+  - Type: 8
+    BaseValue: 1.5
+    GrowthValue: 0
+    growthPercent: 0
 --- !u!114 &6177470303933401633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,7 +123,6 @@ MonoBehaviour:
   skillStat: {fileID: 6502034717348192798}
   animaClip: {fileID: 0}
   projectilePrefab: {fileID: -6513845039715445785, guid: 82bf9ea283043f84aa03a6e4e12c4796, type: 3}
-  firePoint: {fileID: 0}
 --- !u!114 &15655192636639066
 MonoBehaviour:
   m_ObjectHideFlags: 0

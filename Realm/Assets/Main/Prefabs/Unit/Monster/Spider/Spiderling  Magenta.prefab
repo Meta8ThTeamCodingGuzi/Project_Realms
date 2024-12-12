@@ -2140,10 +2140,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1.5620849
+  m_Radius: 0.5723667
+  m_Height: 1.7181243
   m_Direction: 1
-  m_Center: {x: 0, y: 0.28104246, z: 0}
+  m_Center: {x: 0, y: 0.6865967, z: 0}
 --- !u!54 &-6690229813171171340
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2194,6 +2194,7 @@ MonoBehaviour:
   monsterType: 0
   skills:
   - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
+  UpdateTime: 0
 --- !u!114 &226339407140534893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2263,7 +2264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Radius: 0.5
-  Height: 2
+  Height: 1.25
 --- !u!114 &1831387177720380348
 MonoBehaviour:
   m_ObjectHideFlags: 0

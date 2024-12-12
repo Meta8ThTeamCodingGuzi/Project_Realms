@@ -176,7 +176,7 @@ public class BowSkill : DefaultSkill
             Projectile arrow = PoolManager.Instance.Spawn<Projectile>(
                 arrowPrefab.gameObject,
                 arrowSpawnPoint.position,
-                
+
                 Quaternion.LookRotation(targetDirection.Value));
 
             if (arrow != null)

@@ -3496,6 +3496,7 @@ MonoBehaviour:
   monsterType: 0
   skills:
   - {fileID: 1454855076727536601, guid: 4a833210fedfa1645887524c9226540c, type: 3}
+  UpdateTime: 0
 --- !u!114 &1158549471176475299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3552,10 +3553,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.36989212
-  m_Height: 1.3000951
+  m_Radius: 0.65564567
+  m_Height: 2.4905279
   m_Direction: 1
-  m_Center: {x: 0, y: 0.57489085, z: 0}
+  m_Center: {x: 0, y: 0.5165523, z: 0}
 --- !u!54 &7648872008552318114
 Rigidbody:
   m_ObjectHideFlags: 0

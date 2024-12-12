@@ -26,7 +26,6 @@ public abstract class StateHandler<T>
 
     public virtual void Initialize()
     {
-
         OnStateChanged?.Invoke(CurrentState);
     }
 
