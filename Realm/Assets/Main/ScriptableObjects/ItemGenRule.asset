@@ -144,7 +144,7 @@ MonoBehaviour:
         generationChance: 100
       maxStatCount: 2
     - itemTemplate: {fileID: 11400000, guid: 05ce22d889a3960479eaaba1fb111a32, type: 2}
-      baseDropChance: 10.5
+      baseDropChance: 0.05
       possibleStats:
       - statType: 7
         flatValueRange: {x: 0, y: 0}

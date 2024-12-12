@@ -227,7 +227,9 @@ public class BowSkill : DefaultSkill
                     Speed = 15f,
                     Range = 15f,
                     IsHoming = true,
-                    HomingRange = 10f
+                    HomingRange = 10f,
+                    Scale = 0.5f,
+                    PierceCount = 0
                 };
 
                 arrow.Initialize(data);

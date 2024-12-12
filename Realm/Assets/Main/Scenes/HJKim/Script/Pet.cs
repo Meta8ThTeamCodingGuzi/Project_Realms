@@ -56,8 +56,10 @@ public class Pet : Unit
     {
         if (Vector3.Distance(transform.position, targetPlayer.transform.position) >= playerTellme)
         {
-            transform.position = targetPlayer.transform.position;
+            agent.enabled = false;  
+            transform.position = targetPlayer.transform.position;            
             enemyTarget = null;
+            agent.enabled = true;
             P_Animator.SetTrigger("Tell");
             StartCoroutine(SpawnEffect());
         }

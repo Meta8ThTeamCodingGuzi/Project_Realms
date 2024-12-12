@@ -344,6 +344,7 @@ public class Player : Unit
         ResetHPMP();
         Animator.Play("Idle");
         playerHandler.Initialize();
+        StartRegeneration();
     }
 
     private void ResetHPMP()
@@ -353,15 +354,12 @@ public class Player : Unit
                   $"\nCurrent Health: {CharacterStats.GetStatValue(StatType.Health)}" +
                   $"\nMax Health: {CharacterStats.GetStatValue(StatType.MaxHealth)}");
 
-        // 먼저 모든 모디파이어 제거
         CharacterStats.GetStat(StatType.Health).ClearAllModifiers();
         CharacterStats.GetStat(StatType.Mana).ClearAllModifiers();
 
-        // 최대 체력/마나 가져오기
         float maxHealth = CharacterStats.GetStatValue(StatType.MaxHealth);
         float maxMana = CharacterStats.GetStatValue(StatType.MaxMana);
 
-        // 기본값을 최대치로 직접 설정
         ((FloatStat)CharacterStats.GetStat(StatType.Health)).SetBaseValue(maxHealth);
         ((FloatStat)CharacterStats.GetStat(StatType.Mana)).SetBaseValue(maxMana);
 

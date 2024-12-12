@@ -29,6 +29,18 @@ public class Projectile : MonoBehaviour
 
     private void ProjectileMove()
     {
+        Vector3 moveDirection = transform.forward;
+        float moveDistance = data.Speed * Time.deltaTime;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, moveDirection, out hit, moveDistance, LayerMask.GetMask("Obstacle","Ground")))
+        {
+            transform.position = hit.point;
+            PlayHitParticle();
+            PoolManager.Instance.Despawn(this);
+            return;
+        }
+
         if (data.IsHoming && target != null)
         {
             Unit targetUnit = target.GetComponent<Unit>();
@@ -43,7 +55,7 @@ public class Projectile : MonoBehaviour
             }
         }
 
-        transform.position += transform.forward * data.Speed * Time.deltaTime;
+        transform.position += moveDirection * moveDistance;
         distanceTraveled = Vector3.Distance(startPosition, transform.position);
 
         if (distanceTraveled >= data.Range)
@@ -98,7 +110,7 @@ public class Projectile : MonoBehaviour
         Debug.Log($"Projectile collision with: {other.gameObject.name}");
         Debug.Log($"Owner is: {data.owner.GetType().Name}");
 
-        if (other.gameObject == null || data.owner.gameObject == null) 
+        if (other.gameObject == null || data.owner.gameObject == null)
         {
             return;
         }
