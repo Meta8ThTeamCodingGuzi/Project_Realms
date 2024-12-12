@@ -20,7 +20,7 @@ public class ObstacleSightRemover : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.TryGetComponent<Renderer>(out Renderer obstacleRenderer))
+        if (other.CompareTag("Obstacle") && other.TryGetComponent<Renderer>(out Renderer obstacleRenderer))
         {
             if (!originalAlphas.ContainsKey(obstacleRenderer))
             {

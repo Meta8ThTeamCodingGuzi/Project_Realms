@@ -36,7 +36,7 @@ public abstract class Skill : MonoBehaviour
     {
         int currentLevel = skillStat.GetStatValue<int>(SkillStatType.SkillLevel);
         skillStat.SetSkillLevel(currentLevel + 1);
-        PrintAllStats();
+        //PrintAllStats();
     }
 
     public virtual void SetLevel(int level)
@@ -50,7 +50,6 @@ public abstract class Skill : MonoBehaviour
 
     public virtual bool TryUseSkill()
     {
-        print($"{this}  Try Use 호출");
         if (data.skillID != SkillID.BasicSwordAttack || data.skillID != SkillID.BasicBowAttack || data.skillID != SkillID.MonsterSkill)
         {
             float costmana = -skillStat.GetStatValue<float>(SkillStatType.ManaCost);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class TooltipWindow : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class TooltipWindow : MonoBehaviour
 
     private Camera mainCamera;
     private Canvas parentCanvas;
-    private Vector2 offset = new Vector2(20f, 20f);
+    private Vector2 offset = new Vector2(5f, 5f);
     private RectTransform canvasRectTransform;
     private bool isShowing = false;
 
@@ -44,6 +45,18 @@ public class TooltipWindow : MonoBehaviour
             Destroy(gameObject);
         }
 
+        Canvas[] canvases = FindObjectsOfType<Canvas>();
+        Canvas highestCanvas = canvases
+            .Where(c => c.renderMode == RenderMode.ScreenSpaceOverlay)
+            .OrderByDescending(c => c.sortingOrder)
+            .FirstOrDefault();
+
+        if (highestCanvas != null)
+        {
+            transform.SetParent(highestCanvas.transform, false);
+            transform.SetAsLastSibling();
+        }
+
         mainCamera = Camera.main;
         parentCanvas = GetComponentInParent<Canvas>();
         canvasRectTransform = parentCanvas.GetComponent<RectTransform>();
@@ -57,6 +70,7 @@ public class TooltipWindow : MonoBehaviour
     {
         isShowing = false;
         canvasGroup.alpha = 0f;
+        canvasGroup.blocksRaycasts = false;
         gameObject.SetActive(false);
     }
 
@@ -79,6 +93,7 @@ public class TooltipWindow : MonoBehaviour
 
         gameObject.SetActive(true);
         canvasGroup.alpha = 1f;
+        canvasGroup.blocksRaycasts = false;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(windowRect);
         Canvas.ForceUpdateCanvases();
@@ -99,29 +114,30 @@ public class TooltipWindow : MonoBehaviour
         if (!isShowing) return;
 
         Vector2 mousePos = Input.mousePosition;
-        Vector2 position = mousePos + offset;
-
         Vector2 size = windowRect.rect.size;
+        Vector2 position = mousePos + offset;
 
         if (position.x + size.x > Screen.width)
         {
-            position.x = mousePos.x - size.x - offset.x;
+            position.x = mousePos.x - size.x - offset.x * 3;
         }
-
-        if (position.y + size.y > Screen.height)
-        {
-            position.y = mousePos.y - size.y - offset.y;
-        }
-
-        position.x = Mathf.Max(position.x, offset.x);
-        position.y = Mathf.Max(position.y, offset.y);
 
         if (parentCanvas.renderMode == RenderMode.ScreenSpaceCamera)
         {
-            position = mainCamera.ScreenToWorldPoint(position);
+            Vector2 screenPoint = position;
+            Vector2 worldPos;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRectTransform,
+                screenPoint,
+                parentCanvas.worldCamera,
+                out worldPos
+            );
+            windowRect.localPosition = worldPos;
         }
-
-        windowRect.position = position;
+        else
+        {
+            windowRect.position = position;
+        }
     }
 
     public void HideTooltip()

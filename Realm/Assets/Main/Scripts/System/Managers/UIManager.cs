@@ -106,9 +106,14 @@ public class UIManager : SingletonManager<UIManager>, IInitializable
         inventory.gameObject.SetActive(isInventoryVisible);
 
         if (isInventoryVisible)
+        {
             playerUI.ShowStatUI();
-        else
+        }
+        else 
+        {
             playerUI.HideStatUI();
+            TooltipWindow.Instance.HideTooltip();
+        }
     }
     private void ToggleSkillTreeUI()
     {

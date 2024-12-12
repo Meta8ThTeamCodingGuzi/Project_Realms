@@ -190,7 +190,6 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
         while (currentEliteMonster == null)
         {
-            print($"¸÷ °³Ã¼¼ö : {currentMonsters.Count}");
             if (currentMonsters.Count <= maxMobCount)
             {
                 Monster monster = PoolManager.Instance.Spawn<Monster>(
@@ -249,7 +248,14 @@ public class MonsterManager : SingletonManager<MonsterManager>
 
     private void HandleCheckpointFinalBossDeath()
     {
-        ResetSpawnData();
+        StartCoroutine(FinalBossDeathRoutine());
+    }
+
+    private IEnumerator FinalBossDeathRoutine()
+    {
+        yield return new WaitForSeconds(10f);
+
+        GameManager.Instance.ResetAllCheckpoints();
         PlayerManager.instance.RespawnPlayer(GameManager.instance.spawnPoint);
     }
 }

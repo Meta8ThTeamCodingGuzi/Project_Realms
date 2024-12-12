@@ -61,7 +61,9 @@ public class Dragon : Monster
         }
 
         DropExpParticle();
-        ItemManager.Instance.GenerateRandomItem(monsterType, transform.position);
+
+        List<Item> droppedItems = ItemManager.Instance.GenerateRandomItems(monsterType, transform.position);
+
         ParticleSystem mdp = PoolManager.Instance.Spawn<ParticleSystem>(monsterDieParticle.gameObject, transform.position, Quaternion.identity);
         mdp.Play();
         MonsterManager.Instance.currentMonsters.Remove(this);

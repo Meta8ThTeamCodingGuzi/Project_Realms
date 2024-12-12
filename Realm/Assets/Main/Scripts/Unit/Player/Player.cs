@@ -124,15 +124,13 @@ public class Player : Unit
         Debug.Log("Player initialized successfully");
 
 
-        skillPoint += 20;
+        skillPoint += 3;
     }
 
     private void Update()
     {
         playerHandler.HandleUpdate();
     }
-
-
 
     #region 레벨 시스템
     public float TotalExp => totalExp;

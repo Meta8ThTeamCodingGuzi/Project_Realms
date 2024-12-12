@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using UnityEngine;
 using static ItemGenerationRuleSO;
 using System.Collections;
@@ -6,7 +6,6 @@ using System.Collections;
 public class ItemManager : SingletonManager<ItemManager>
 {
     [SerializeField] private ItemGenerationRuleSO itemGenerationRules;
-    [SerializeField] private List<ItemData> itemDataTemplates;
     [SerializeField] private List<ItemData> defaultPlayerItems;
 
     private List<Item> items = new List<Item>();
@@ -28,61 +27,92 @@ public class ItemManager : SingletonManager<ItemManager>
         GiveDefaultItemsToPlayer();
     }
 
-    public Item GenerateRandomItem(MonsterType monsterType, Vector3 position)
+    public List<Item> GenerateRandomItems(MonsterType monsterType, Vector3 position)
     {
         var dropRule = itemGenerationRules.GetDropRuleForMonster(monsterType);
-        if (dropRule == null) return null;
+        if (dropRule == null) return new List<Item>();
 
         if (UnityEngine.Random.Range(0f, 100f) > dropRule.itemDropChance)
-            return null;
+            return new List<Item>();
 
-        var raritySettings = itemGenerationRules.GetRaritySettings(dropRule);
-        ItemType randomItemType = dropRule.possibleItemTypes[UnityEngine.Random.Range(0, dropRule.possibleItemTypes.Length)];
+        List<Item> droppedItems = new List<Item>();
+        Vector3 dropPosition = position;
 
-        var itemTemplate = itemDataTemplates.Find(t => t.ItemType == randomItemType);
-        if (itemTemplate == null) return null;
-
-        if (itemTemplate.WorldDropPrefab == null)
+        foreach (var itemRule in dropRule.possibleItems)
         {
-            Debug.LogError($"WorldDropPrefab is missing for item: {itemTemplate.ItemID}");
-            return null;
+            if (UnityEngine.Random.Range(0f, 100f) <= itemRule.baseDropChance)
+            {
+                Vector2 randomOffset = Random.insideUnitCircle * 0.5f;
+                Vector3 itemPosition = dropPosition + new Vector3(randomOffset.x, 0f, randomOffset.y);
+
+                Item newItem = GenerateItem(itemRule, itemPosition);
+                if (newItem != null)
+                {
+                    droppedItems.Add(newItem);
+                }
+            }
         }
 
-        GameObject itemObj = Instantiate(itemTemplate.WorldDropPrefab, position, Quaternion.identity);
+        return droppedItems;
+    }
+
+    private List<Item> worldDroppedItems = new List<Item>();
+
+    private Item GenerateItem(ItemGenerationRule itemRule, Vector3 position)
+    {
+        if (itemRule == null || itemRule.itemTemplate == null) return null;
+
+        GameObject itemObj = Instantiate(itemRule.itemTemplate.WorldDropPrefab, position, Quaternion.identity);
         Item item = itemObj.GetComponent<Item>();
-        if (item != null)
-        {
-            var instanceData = new ItemInstanceData(itemTemplate);
-            instanceData.SetRarity(raritySettings.rarity, raritySettings.itemNameColor);
-            GenerateRandomStats(instanceData, dropRule, raritySettings);
+        if (item == null) return null;
 
-            itemInstanceData[item] = instanceData;
-            item.Initialize(itemTemplate, instanceData);
-            items.Add(item);
-        }
+        var instanceData = new ItemInstanceData(itemRule.itemTemplate);
+        instanceData.SetRarity(itemRule.itemTemplate.Rarity,
+            itemGenerationRules.GetColorForRarity(itemRule.itemTemplate.Rarity));
+
+        GenerateRandomStats(instanceData, itemRule);
+
+        itemInstanceData[item] = instanceData;
+        item.Initialize(itemRule.itemTemplate, instanceData);
+        items.Add(item);
+        worldDroppedItems.Add(item);
 
         return item;
     }
 
-    private void GenerateRandomStats(ItemInstanceData itemInstance, MonsterDropRule dropRule, ItemGenerationRuleSO.RaritySettings raritySettings)
+    private void GenerateRandomStats(ItemInstanceData instanceData, ItemGenerationRule itemRule)
     {
-        List<StatType> availableStats = new List<StatType>(dropRule.possibleStatTypes);
-        ShuffleList(availableStats);
+        var selectedStats = new List<StatGenerationRule>();
 
-        int statCount = Mathf.Min(
-            UnityEngine.Random.Range(raritySettings.statCountRange.x, raritySettings.statCountRange.y + 1),
-            availableStats.Count
-        );
+        foreach (var statRule in itemRule.possibleStats)
+        {
+            if (UnityEngine.Random.Range(0f, 100f) <= statRule.generationChance)
+                selectedStats.Add(statRule);
+        }
+
+        int statCount = Mathf.Min(itemRule.maxStatCount, selectedStats.Count);
+        if (statCount <= 0) return;
+
+        ShuffleList(selectedStats);
 
         for (int i = 0; i < statCount; i++)
         {
-            StatType selectedStatType = availableStats[i];
-            float randomValue = UnityEngine.Random.Range(raritySettings.statValueRange.x, raritySettings.statValueRange.y);
+            var statRule = selectedStats[i];
 
-            float rarityMultiplier = 1f + ((int)raritySettings.rarity * 0.2f);
-            randomValue *= rarityMultiplier;
+            float flatValue = 0f;
+            float percentValue = 0f;
 
-            itemInstance.AddStat(selectedStatType, randomValue, 0);
+            if (statRule.flatValueRange.y > 0)
+            {
+                flatValue = UnityEngine.Random.Range(statRule.flatValueRange.x, statRule.flatValueRange.y);
+            }
+
+            if (statRule.usePercentValue)
+            {
+                percentValue = UnityEngine.Random.Range(statRule.percentValueRange.x, statRule.percentValueRange.y);
+            }
+
+            instanceData.AddStat(statRule.statType, flatValue, percentValue);
         }
     }
 
@@ -121,7 +151,7 @@ public class ItemManager : SingletonManager<ItemManager>
     {
         if (defaultPlayerItems == null || defaultPlayerItems.Count == 0)
         {
-            Debug.LogWarning("±‚∫ª æ∆¿Ã≈€ ∏Ò∑œ¿Ã ∫ÒæÓ¿÷Ω¿¥œ¥Ÿ.");
+            Debug.LogWarning("Í∏∞Î≥∏ ÏïÑÏù¥ÌÖúÏù¥ ÏóÜÏäµÎãàÎã§.");
             return;
         }
 
@@ -129,14 +159,14 @@ public class ItemManager : SingletonManager<ItemManager>
         var playerInventory = player.InventorySystem;
         if (playerInventory == null)
         {
-            Debug.LogError("«√∑π¿ÃæÓ ¿Œ∫•≈‰∏Æ∏¶ √£¿ª ºˆ æ¯Ω¿¥œ¥Ÿ.");
+            Debug.LogError("ÌîåÎ†àÏù¥Ïñ¥Ïùò Ïù∏Î≤§ÌÜ†Î¶¨Î•º Ï∞æÏùÑ Ïàò ÏóÜÏäµÎãàÎã§.");
             return;
         }
 
         var playerUI = UIManager.instance.PlayerUI;
         if (playerUI == null || playerUI.inventoryUI == null)
         {
-            Debug.LogError("InventoryUI∏¶ √£¿ª ºˆ æ¯Ω¿¥œ¥Ÿ.");
+            Debug.LogError("InventoryUIÎ•º Ï∞æÏùÑ Ïàò ÏóÜÏäµÎãàÎã§.");
             return;
         }
 
@@ -149,6 +179,22 @@ public class ItemManager : SingletonManager<ItemManager>
             }
         }
     }
+
+    public void ClearAllDroppedItems()
+    {
+        foreach (var item in worldDroppedItems)
+        {
+            if (item != null)
+            {
+                Destroy(item.gameObject);
+                RemoveItem(item);
+            }
+        }
+        worldDroppedItems.Clear();
+    }
+
+
+
 
     private Item CreateItem(ItemData template, ItemRarity rarity, Color nameColor)
     {

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 10
   itemType: 4
-  rarity: 0
+  rarity: 4
   itemName: CallingOfTemplar
   description: this CallingOfTemplar
   icon: {fileID: 21300000, guid: 2b52a6bd3c2f38946b3d5afa69346559, type: 3}

@@ -94,6 +94,10 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
         currentCheckpointId = checkpointId;
         OnCheckpointReached?.Invoke(checkpointId);
         SaveCheckpoint();
+        if (ItemManager.Instance != null)
+        {
+            ItemManager.Instance.ClearAllDroppedItems();
+        }
     }
 
     public void ResetAllCheckpoints()
@@ -102,6 +106,10 @@ public class GameManager : SingletonManager<GameManager>, IInitializable
         foreach (var checkpoint in checkpoints)
         {
             checkpoint.ResetCheckpoint();
+        }
+        if (MonsterManager.Instance != null)
+        {
+            MonsterManager.Instance.ResetSpawnData();
         }
     }
 

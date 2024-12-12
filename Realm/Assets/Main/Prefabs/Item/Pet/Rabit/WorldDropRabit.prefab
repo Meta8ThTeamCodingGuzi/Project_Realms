@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 3572597518591415842}
   - component: {fileID: 5678895247640724913}
   - component: {fileID: -7667872454795359623}
+  - component: {fileID: 3520394836831515992}
   m_Layer: 0
   m_Name: WorldDropRabit
   m_TagString: Untagged
@@ -195,6 +196,27 @@ MonoBehaviour:
   spawnJumpHeight: 2
   spawnRotationSpeed: 720
   spawnAnimationTime: 0.5
+--- !u!135 &3520394836831515992
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4242314086637178008}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.55
+  m_Center: {x: 0, y: 0.34, z: 0}
 --- !u!1 &4358233925196102585
 GameObject:
   m_ObjectHideFlags: 0

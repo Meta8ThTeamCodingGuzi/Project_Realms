@@ -13,7 +13,6 @@ public class MonsterMoveState : State<Monster>
 
     public override void OnEnter()
     {
-        Debug.Log("¹´½ºÅ×ÀÌÆ®");
         target.StopMoving();
         MoveStateTime = target.UpdateTime;
         if (!target.IsMoving)
@@ -31,7 +30,6 @@ public class MonsterMoveState : State<Monster>
 
     public override void OnUpdate()
     {
-        Debug.Log($"{target.IsMoving}");
         MoveStateTime += Time.deltaTime;
 
         //if (!target.IsMoving)

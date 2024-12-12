@@ -7,13 +7,9 @@ public class Pet : Unit
     private Player targetPlayer;
     public Transform enemyTarget;
     public Transform attackPoint;
-    private new NavMeshAgent agent;
-    public Animator animator;
-    [Header("������� �Ÿ��α�"), Range(1f, 12f)]
+    public Animator P_Animator;
     public float playDis;
-    [Header("������� �Ÿ��α�"), Range(1f, 12f)]
     public float EnemyDis;
-    [Header("���� ȣ��Ÿ�"), Range(15f, 25f)]
     public float playerTellme = 15f;
 
     [SerializeField] private Transform FirePoint;
@@ -22,15 +18,13 @@ public class Pet : Unit
 
     public Skill petSkill;
 
-    private float lastAttackTime = 0f;  // 마지막 공격 시간 추가
-
     public void Initialize(Player player)
     {
         base.Initialize();
         targetPlayer = player;
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-        Animator = animator;
+        P_Animator = GetComponent<Animator>();
+        Animator = P_Animator;
         agent.stoppingDistance = 8;
         petSkill = Instantiate(petSkill, transform);
         petSkill.Initialize(this);
@@ -64,7 +58,7 @@ public class Pet : Unit
         {
             transform.position = targetPlayer.transform.position;
             enemyTarget = null;
-            animator.SetTrigger("Tell");
+            P_Animator.SetTrigger("Tell");
             StartCoroutine(SpawnEffect());
         }
 
@@ -81,11 +75,11 @@ public class Pet : Unit
     {
         if (agent.velocity.sqrMagnitude < 0.01f)
         {
-            animator.SetBool("isRunning", false);
+            P_Animator.SetBool("isRunning", false);
         }
         else
         {
-            animator.SetBool("isRunning", true);
+            P_Animator.SetBool("isRunning", true);
         }
     }
 
@@ -93,11 +87,9 @@ public class Pet : Unit
     {
         if (enemyTarget == null) return;
 
-        // 공격 속도에 따른 딜레이 체크
         float attackDelay = 1f / CharacterStats.GetStatValue(StatType.AttackSpeed);
         if (Time.time - lastAttackTime < attackDelay) return;
 
-        // 적 방향으로 회전
         Vector3 directionToTarget = (enemyTarget.position - transform.position).normalized;
         transform.rotation = Quaternion.LookRotation(directionToTarget);
 
@@ -120,7 +112,7 @@ public class Pet : Unit
     {
         if (other.TryGetComponent<Monster>(out Monster monster))
         {
-            enemyTarget = null;  // �� ���� ����
+            enemyTarget = null;
         }
     }
 }

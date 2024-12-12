@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43823a802b2f4f14d8fcb3972fb9337c, type: 3}
   m_Name: Default Armor
   m_EditorClassIdentifier: 
-  itemID: 4
+  itemID: 5
   itemType: 4
-  rarity: 0
+  rarity: 4
   itemName: Old Armor
   description: Testing
-  icon: {fileID: 21300000, guid: 876c9b00cf6bf4d4cbd646f0af998877, type: 3}
+  icon: {fileID: 21300000, guid: 731d1105ff3ff8348b90d12096afbb81, type: 3}
   stats:
   - statType: 1
     flatValue: 20000
@@ -26,7 +26,7 @@ MonoBehaviour:
     flatValue: 2000
     percentValue: 0
   - statType: 7
-    flatValue: 20000
+    flatValue: 200000
     percentValue: 0
   - statType: 4
     flatValue: 20000
@@ -34,7 +34,10 @@ MonoBehaviour:
   - statType: 5
     flatValue: 20000
     percentValue: 0
-  itemPrefab: {fileID: 755291920908959832, guid: b5c08529ab053994f8724db69eba8859, type: 3}
-  worldDropPrefab: {fileID: 2388823743613003883, guid: f75c50faf95a75c489e46d6448109b30, type: 3}
+  - statType: 9
+    flatValue: 35
+    percentValue: 0
+  itemPrefab: {fileID: 5218882441851534846, guid: 7ba6aca33f10ca648a6ba4ce2a29f567, type: 3}
+  worldDropPrefab: {fileID: 5218882441851534846, guid: d8f10fff5e2d37c40b81454b37877e71, type: 3}
   nameColor: {r: 1, g: 1, b: 1, a: 1}
   defaultWeaponSkill: {fileID: 0}

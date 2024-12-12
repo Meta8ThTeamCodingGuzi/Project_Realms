@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
-using UnityEditor;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 
 public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializable
 {
@@ -62,18 +59,17 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
         if (!IsAlive) return;
 
         float defense = characterStats.GetStatValue(StatType.Defense);
-
-        // 최종데미지 = 데미지 * (100 / (100 + 방어력))
         float damageMultiplier = 100f / (100f + defense);
         float finalDamage = damage * damageMultiplier;
 
-        // 최소 1의 데미지는 들어가도록 설정했읍니다.
         finalDamage = Mathf.Max(1f, finalDamage);
+
+        float currentHealth = characterStats.GetStatValue(StatType.Health);
+        finalDamage = Mathf.Min(finalDamage, currentHealth);
 
         StatModifier healthMod = new StatModifier(-finalDamage, StatModifierType.Flat);
         characterStats.AddModifier(StatType.Health, healthMod);
         wasAttacked = true;
-        //print($"{this} Take Damage호출");
     }
     #endregion
 
@@ -94,9 +90,9 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
 
         NavMeshHit hit;
         if (NavMesh.SamplePosition(destination, out hit, 1f, NavMesh.AllAreas))
-        {          
+        {
             agent.SetDestination(hit.position);
-        }       
+        }
     }
 
     public virtual void StopMoving()
@@ -116,11 +112,11 @@ public abstract class Unit : MonoBehaviour, IDamageable, IMovable, IInitializabl
     }
     public virtual bool HasReachedDestination()
     {
-        
+
         if (agent == null || !agent.isActiveAndEnabled)
             return false;
 
-        
+
         if (agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathPending)
             return false;
 

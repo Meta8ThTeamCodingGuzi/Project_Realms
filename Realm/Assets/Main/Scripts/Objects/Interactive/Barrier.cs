@@ -17,10 +17,7 @@ public class Barrier : MonoBehaviour
 
     public void EnableBarrier()
     {
-        if (TryGetComponent<Collider>(out Collider collider))
-        {
-            collider.enabled = true;
-        }
+        gameObject.SetActive(true);
     }
 
     public int CheckpointId => checkpointId;

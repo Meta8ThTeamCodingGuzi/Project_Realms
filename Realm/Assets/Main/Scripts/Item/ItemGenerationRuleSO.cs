@@ -1,43 +1,56 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "New Item Generation Rule", menuName = "Game/Item Generation Rule")]
 public class ItemGenerationRuleSO : ScriptableObject
 {
-    // 기본 레어도 색상 정의
-    private static readonly Color[] DefaultRarityColors = new Color[]
-    {
-        Color.white,                              // Common
-        new Color(0.118f, 1f, 0f),               // Uncommon (초록)
-        new Color(0f, 0.439f, 0.867f),           // Rare (파랑)
-        new Color(0.639f, 0.208f, 0.933f),       // Epic (보라)
-        new Color(1f, 0.502f, 0f)                // Legendary (주황)
-    };
-
     [Serializable]
-    public class RaritySettings
+    public class RarityColorSettings
     {
         public ItemRarity rarity;
-        [Range(0f, 100f)]
-        public float dropChance;
-        [SerializeField]
-        internal Vector2Int _statCountRange;
-        public Vector2Int statCountRange
-        {
-            get => _statCountRange;
-            set
-            {
-                _statCountRange.x = Mathf.Max(0, value.x);
-                _statCountRange.y = value.y;
-            }
-        }
-        public Vector2 statValueRange;
-        public Color itemNameColor = Color.white;
+        public Color color = Color.white;
+    }
 
-        public void SetDefaultColor()
-        {
-            itemNameColor = DefaultRarityColors[(int)rarity];
-        }
+    [Header("Rarity Colors")]
+    public RarityColorSettings[] rarityColors = new[]
+    {
+        new RarityColorSettings { rarity = ItemRarity.Common, color = Color.white },
+        new RarityColorSettings { rarity = ItemRarity.Uncommon, color = new Color(0.118f, 1f, 0f) },
+        new RarityColorSettings { rarity = ItemRarity.Rare, color = new Color(0f, 0.439f, 0.867f) },
+        new RarityColorSettings { rarity = ItemRarity.Epic, color = new Color(0.639f, 0.208f, 0.933f) },
+        new RarityColorSettings { rarity = ItemRarity.Legendary, color = new Color(1f, 0.502f, 0f) }
+    };
+
+    public Color GetColorForRarity(ItemRarity rarity)
+    {
+        var setting = Array.Find(rarityColors, x => x.rarity == rarity);
+        return setting?.color ?? Color.white;
+    }
+
+    [Serializable]
+    public class StatGenerationRule
+    {
+        public StatType statType;
+        [Header("Value Settings")]
+        public Vector2 flatValueRange; 
+        public Vector2 percentValueRange;  
+        public bool usePercentValue;  
+
+        [Header("Generation Settings")]
+        [Range(0f, 100f)]
+        public float generationChance;
+    }
+
+    [Serializable]
+    public class ItemGenerationRule
+    {
+        public ItemData itemTemplate; 
+        [Range(0f, 100f)]
+        public float baseDropChance; 
+        public List<StatGenerationRule> possibleStats;  
+        [Range(0, 6)]
+        public int maxStatCount = 4; 
     }
 
     [Serializable]
@@ -45,10 +58,8 @@ public class ItemGenerationRuleSO : ScriptableObject
     {
         public MonsterType monsterType;
         [Range(0f, 100f)]
-        public float itemDropChance;
-        public ItemType[] possibleItemTypes;
-        public StatType[] possibleStatTypes;
-        public RaritySettings[] raritySettings;
+        public float itemDropChance; 
+        public List<ItemGenerationRule> possibleItems; 
     }
 
     public MonsterDropRule[] monsterDropRules;
@@ -56,44 +67,5 @@ public class ItemGenerationRuleSO : ScriptableObject
     public MonsterDropRule GetDropRuleForMonster(MonsterType monsterType)
     {
         return Array.Find(monsterDropRules, rule => rule.monsterType == monsterType);
-    }
-
-    public RaritySettings GetRaritySettings(MonsterDropRule rule)
-    {
-        float randomValue = UnityEngine.Random.Range(0f, 100f);
-        float accumulatedChance = 0f;
-
-        foreach (var settings in rule.raritySettings)
-        {
-            accumulatedChance += settings.dropChance;
-            if (randomValue <= accumulatedChance)
-            {
-                return settings;
-            }
-        }
-
-        return rule.raritySettings[0]; // 기본값으로 첫 번째 레어도 반환
-    }
-
-    private void OnValidate()
-    {
-        // 에디터에서 레어도 설정 시 기본 색상 자동 적용 및 스탯 개수 범위 검증
-        foreach (var rule in monsterDropRules)
-        {
-            if (rule.raritySettings != null)
-            {
-                foreach (var settings in rule.raritySettings)
-                {
-                    if (settings.itemNameColor == Color.white)
-                    {
-                        settings.SetDefaultColor();
-                    }
-
-                    int maxPossibleStats = rule.possibleStatTypes?.Length ?? 0;
-                    settings._statCountRange.x = Mathf.Max(0, settings._statCountRange.x);
-                    settings._statCountRange.y = Mathf.Min(settings._statCountRange.y, maxPossibleStats);
-                }
-            }
-        }
     }
 }
