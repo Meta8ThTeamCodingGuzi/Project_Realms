@@ -23,21 +23,18 @@ public class DragonAttackState : State<Dragon>
 
     public override void OnExit()
     {
-        if (target.dragonHp < target.CharacterStats.GetStatValue(StatType.MaxHealth) / 2f)
-        {
-            target.DragonFormChange();
-        }
+
     }
 
     public override void OnUpdate()
     {
+        if (target.dragonHp < target.CharacterStats.GetStatValue(StatType.MaxHealth) / 2f)
+        {
+            target.DragonFormChange();
+        }
         var currentAnimatorState = target.Animator.GetCurrentAnimatorStateInfo(0);
         if (currentAnimatorState.normalizedTime >= 1f)
         {
-            if (target.wasAttacked)
-            {
-                target.M_StateHandler.TransitionTo(new DragonTakeDamageState(target));
-            }
             if (!target.wasAttacked || !target.CanAttack(target.Target))
             {
                 target.Animator.SetTrigger("Idle");

@@ -35,9 +35,9 @@ public class MonsterMoveState : State<Monster>
 
         if (target is Dragon dragon)
         {
-            if (target.wasAttacked)
+            if (!target.IsAlive)
             {
-                target.M_StateHandler.TransitionTo(new DragonTakeDamageState(dragon));
+                target.M_StateHandler.TransitionTo(new MonsterDieState(dragon));
                 return;
             }
             if (target.FindPlayer(15f))
@@ -55,6 +55,11 @@ public class MonsterMoveState : State<Monster>
         }
         else
         {
+            if (!target.IsAlive)
+            {
+                target.M_StateHandler.TransitionTo(new MonsterDieState(target));
+                return;
+            }
             if (target.wasAttacked)
             {
                 target.M_StateHandler.TransitionTo(new MonsterTakeDamageState(target));

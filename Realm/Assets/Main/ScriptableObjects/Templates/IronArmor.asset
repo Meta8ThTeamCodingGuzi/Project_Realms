@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 5
   itemType: 4
-  rarity: 3
+  rarity: 1
   itemName: IronArmor
   description: this IronArmor
   icon: {fileID: 21300000, guid: 731d1105ff3ff8348b90d12096afbb81, type: 3}
